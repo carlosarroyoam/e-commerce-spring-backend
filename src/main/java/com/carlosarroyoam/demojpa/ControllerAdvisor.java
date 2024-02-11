@@ -20,13 +20,13 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
-	private final Logger logger = LoggerFactory.getLogger(ControllerAdvisor.class);
+
+	private static final Logger log = LoggerFactory.getLogger(ControllerAdvisor.class);
 
 	@Override
 	protected ResponseEntity<Object> createResponseEntity(Object body, HttpHeaders headers, HttpStatusCode statusCode,
 			WebRequest request) {
-		if (body instanceof ProblemDetail) {
-			ProblemDetail originalBody = (ProblemDetail) body;
+		if (body instanceof ProblemDetail originalBody) {
 			Map<String, Object> modifiedBody = createResponseBody(new Exception(originalBody.getDetail()), request,
 					HttpStatus.valueOf(statusCode.value()));
 
@@ -39,10 +39,9 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(ResponseStatusException.class)
 	public ResponseEntity<Object> handleSQLException(WebRequest request, ResponseStatusException ex) {
 		Map<String, Object> body = createResponseBody(ex, request, HttpStatus.valueOf(ex.getStatusCode().value()));
-
 		body.put("message", ex.getReason());
 
-		logger.error("Error: {}", ex.getReason());
+		log.error("Error: {}", ex.getReason());
 
 		return new ResponseEntity<>(body, ex.getStatusCode());
 	}
@@ -51,14 +50,13 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 	public ResponseEntity<Object> exception(Exception ex, WebRequest request) {
 		Map<String, Object> body = createResponseBody(ex, request, HttpStatus.INTERNAL_SERVER_ERROR);
 
-		logger.error("Exception: {}", ex.getMessage());
+		log.error("Exception: {}", ex.getMessage());
 
 		return ResponseEntity.internalServerError().body(body);
 	}
 
 	private Map<String, Object> createResponseBody(Exception ex, WebRequest request, HttpStatus status) {
 		Map<String, Object> body = new LinkedHashMap<>();
-
 		body.put("message", ex.getMessage());
 		body.put("error", status.getReasonPhrase());
 		body.put("status", status.value());
@@ -67,4 +65,5 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
 		return body;
 	}
+
 }

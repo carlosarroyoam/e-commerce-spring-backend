@@ -14,14 +14,13 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "categories", uniqueConstraints = {
 		@UniqueConstraint(name = "categories_title_idx", columnNames = "title") })
 @Data
-@NoArgsConstructor
 public class Category {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -29,10 +28,11 @@ public class Category {
 	@Column(length = 45, nullable = false)
 	private String title;
 
-	@Column()
-	private LocalDateTime deleted_at;
-
 	@JsonIgnore
 	@OneToMany(mappedBy = "category")
 	private List<Product> products;
+
+	@Column()
+	private LocalDateTime deletedAt;
+
 }

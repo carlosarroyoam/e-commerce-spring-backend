@@ -10,14 +10,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "attributes", uniqueConstraints = {
 		@UniqueConstraint(name = "attributes_title_idx", columnNames = "title") })
 @Data
-@NoArgsConstructor
 public class Attribute {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -26,5 +25,6 @@ public class Attribute {
 	private String title;
 
 	@Column()
-	private LocalDateTime deleted_at;
+	private LocalDateTime deletedAt;
+
 }

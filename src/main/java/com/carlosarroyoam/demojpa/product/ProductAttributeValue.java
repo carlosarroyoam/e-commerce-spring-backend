@@ -12,14 +12,13 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "product_attribute_values", uniqueConstraints = {
 		@UniqueConstraint(name = "product_attribute_values_idx", columnNames = { "product_id", "attribute_id" }) })
 @Data
-@NoArgsConstructor
 public class ProductAttributeValue {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -35,4 +34,5 @@ public class ProductAttributeValue {
 	@OneToOne
 	@JoinColumn(name = "attribute_id", referencedColumnName = "id")
 	private Attribute property;
+
 }

@@ -18,13 +18,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "variants", uniqueConstraints = { @UniqueConstraint(name = "variants_sku_idx", columnNames = "sku") })
 @Data
-@NoArgsConstructor
 public class Variant {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -54,4 +53,5 @@ public class Variant {
 
 	@OneToMany(mappedBy = "variant")
 	private List<VariantImage> images;
+
 }

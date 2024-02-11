@@ -16,13 +16,12 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "products", uniqueConstraints = { @UniqueConstraint(name = "products_slug_idx", columnNames = "slug") })
 @Data
-@NoArgsConstructor
 public class Product {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -53,11 +52,12 @@ public class Product {
 	private List<Variant> variants;
 
 	@Column()
-	private LocalDateTime created_at;
+	private LocalDateTime createdAt;
 
 	@Column()
-	private LocalDateTime updated_at;
+	private LocalDateTime updatedAt;
 
 	@Column()
-	private LocalDateTime deleted_at;
+	private LocalDateTime deletedAt;
+
 }

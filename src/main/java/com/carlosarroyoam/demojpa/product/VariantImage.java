@@ -1,6 +1,5 @@
 package com.carlosarroyoam.demojpa.product;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
@@ -13,14 +12,13 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "variant_images", uniqueConstraints = {
 		@UniqueConstraint(name = "variant_images_url_idx", columnNames = "url") })
 @Data
-@NoArgsConstructor
 public class VariantImage {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -32,4 +30,5 @@ public class VariantImage {
 	@ManyToOne
 	@JoinColumn(name = "variant_id", referencedColumnName = "id")
 	private Variant variant;
+
 }

@@ -12,14 +12,13 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "variant_attribute_values", uniqueConstraints = {
 		@UniqueConstraint(name = "variant_attribute_values_idx", columnNames = { "variant_id", "attribute_id" }) })
 @Data
-@NoArgsConstructor
 public class VariantAttributeValue {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -35,4 +34,5 @@ public class VariantAttributeValue {
 	@OneToOne
 	@JoinColumn(name = "attribute_id", referencedColumnName = "id")
 	private Attribute attribute;
+
 }
