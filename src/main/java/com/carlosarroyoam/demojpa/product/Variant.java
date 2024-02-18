@@ -5,10 +5,8 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,27 +26,27 @@ public class Variant {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(length = 64, nullable = false)
+	@Column(name = "sku", length = 64, nullable = false)
 	private String sku;
 
-	@Column(nullable = false)
+	@Column(name = "price", nullable = false)
 	private BigDecimal price;
 
-	@Column(nullable = false)
+	@Column(name = "compared_at_price", nullable = false)
 	private BigDecimal comparedAtPrice;
 
-	@Column(nullable = false)
+	@Column(name = "cost_per_item", nullable = false)
 	private BigDecimal costPerItem;
 
-	@Column(nullable = false)
+	@Column(name = "quantity_on_stock", nullable = false)
 	private Integer quantityOnStock;
 
 	@JsonIgnore
-	@ManyToOne()
+	@ManyToOne
 	@JoinColumn(name = "product_id", referencedColumnName = "id")
 	private Product product;
 
-	@OneToMany(mappedBy = "variant", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "variant")
 	List<VariantAttributeValue> attributes;
 
 	@OneToMany(mappedBy = "variant")

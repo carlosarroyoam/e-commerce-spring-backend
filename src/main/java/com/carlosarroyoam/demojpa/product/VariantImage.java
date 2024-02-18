@@ -23,7 +23,7 @@ public class VariantImage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(length = 128, nullable = false)
+	@Column(name = "url", length = 128, nullable = false)
 	private String url;
 
 	@JsonIgnore

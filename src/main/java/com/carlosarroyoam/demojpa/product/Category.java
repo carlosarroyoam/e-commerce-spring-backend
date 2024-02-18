@@ -23,16 +23,16 @@ public class Category {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+	private Byte id;
 
-	@Column(length = 45, nullable = false)
+	@Column(name = "title", length = 45, nullable = false)
 	private String title;
 
 	@JsonIgnore
 	@OneToMany(mappedBy = "category")
 	private List<Product> products;
 
-	@Column()
+	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
 }

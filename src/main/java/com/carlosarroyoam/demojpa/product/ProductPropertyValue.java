@@ -8,16 +8,16 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Entity
-@Table(name = "product_attribute_values", uniqueConstraints = {
-		@UniqueConstraint(name = "product_attribute_values_idx", columnNames = { "product_id", "attribute_id" }) })
+@Table(name = "product_property_values", uniqueConstraints = {
+		@UniqueConstraint(name = "product_property_values_idx", columnNames = { "product_id", "property_id" }) })
 @Data
-public class ProductAttributeValue {
+public class ProductPropertyValue {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +27,12 @@ public class ProductAttributeValue {
 	private String value;
 
 	@JsonIgnore
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "product_id", referencedColumnName = "id")
 	private Product product;
 
-	@OneToOne
-	@JoinColumn(name = "attribute_id", referencedColumnName = "id")
-	private Attribute property;
+	@ManyToOne
+	@JoinColumn(name = "property_id", referencedColumnName = "id")
+	private Property property;
 
 }

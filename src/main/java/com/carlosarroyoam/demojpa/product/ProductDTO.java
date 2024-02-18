@@ -15,7 +15,7 @@ public class ProductDTO {
 	private boolean featured;
 	private boolean active;
 	private String category;
-	private List<ProductAttributeValue> properties;
+	private List<ProductPropertyValue> properties;
 	private List<Variant> variants;
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;

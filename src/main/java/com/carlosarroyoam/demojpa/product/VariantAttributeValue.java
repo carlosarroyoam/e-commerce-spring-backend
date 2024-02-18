@@ -8,7 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
@@ -23,15 +23,15 @@ public class VariantAttributeValue {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(length = 45, nullable = false)
+	@Column(name = "value", length = 45, nullable = false)
 	private String value;
 
 	@JsonIgnore
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "variant_id", referencedColumnName = "id")
 	private Variant variant;
 
-	@OneToOne
+	@ManyToOne
 	@JoinColumn(name = "attribute_id", referencedColumnName = "id")
 	private Attribute attribute;
 

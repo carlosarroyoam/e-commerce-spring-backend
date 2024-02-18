@@ -3,10 +3,8 @@ package com.carlosarroyoam.demojpa.product;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -26,38 +24,38 @@ public class Product {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(length = 96, nullable = false)
+	@Column(name = "title", length = 96, nullable = false)
 	private String title;
 
-	@Column(length = 96, nullable = false)
+	@Column(name = "slug", length = 96, nullable = false)
 	private String slug;
 
-	@Column()
+	@Column(name = "description")
 	private String description;
 
-	@Column(columnDefinition = "TINYINT", nullable = false)
+	@Column(name = "featured", columnDefinition = "BIT", nullable = false)
 	private boolean featured;
 
-	@Column(columnDefinition = "TINYINT", nullable = false)
+	@Column(name = "active", columnDefinition = "BIT", nullable = false)
 	private boolean active;
 
-	@ManyToOne()
-	@JoinColumn(name = "category_id")
+	@ManyToOne
+	@JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
 	private Category category;
 
-	@OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<ProductAttributeValue> properties;
+	@OneToMany(mappedBy = "product")
+	private List<ProductPropertyValue> properties;
 
 	@OneToMany(mappedBy = "product")
 	private List<Variant> variants;
 
-	@Column()
+	@Column(name = "created_at", nullable = false)
 	private LocalDateTime createdAt;
 
-	@Column()
+	@Column(name = "updated_at", nullable = false)
 	private LocalDateTime updatedAt;
 
-	@Column()
+	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
 
 }

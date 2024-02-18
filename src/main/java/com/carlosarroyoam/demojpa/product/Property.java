@@ -12,10 +12,10 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Entity
-@Table(name = "attributes", uniqueConstraints = {
-		@UniqueConstraint(name = "attributes_title_idx", columnNames = "title") })
+@Table(name = "properties", uniqueConstraints = {
+		@UniqueConstraint(name = "property_title_idx", columnNames = "title") })
 @Data
-public class Attribute {
+public class Property {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
