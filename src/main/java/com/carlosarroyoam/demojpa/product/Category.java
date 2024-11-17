@@ -20,7 +20,6 @@ import lombok.Data;
 		@UniqueConstraint(name = "categories_title_idx", columnNames = "title") })
 @Data
 public class Category {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Byte id;
@@ -34,5 +33,4 @@ public class Category {
 
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
-
 }

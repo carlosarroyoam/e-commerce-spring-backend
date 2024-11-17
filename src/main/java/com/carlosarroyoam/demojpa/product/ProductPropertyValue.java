@@ -18,7 +18,6 @@ import lombok.Data;
 		@UniqueConstraint(name = "product_property_values_idx", columnNames = { "product_id", "property_id" }) })
 @Data
 public class ProductPropertyValue {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -34,5 +33,4 @@ public class ProductPropertyValue {
 	@ManyToOne
 	@JoinColumn(name = "property_id", referencedColumnName = "id")
 	private Property property;
-
 }

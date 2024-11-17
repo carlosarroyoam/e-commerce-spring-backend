@@ -19,7 +19,6 @@ import lombok.Data;
 @Table(name = "products", uniqueConstraints = { @UniqueConstraint(name = "products_slug_idx", columnNames = "slug") })
 @Data
 public class Product {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -57,5 +56,4 @@ public class Product {
 
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
-
 }

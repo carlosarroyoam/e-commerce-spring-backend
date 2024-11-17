@@ -7,8 +7,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class ProductService {
-
-	private ProductRepository productRepository;
+	private final ProductRepository productRepository;
 
 	public ProductService(ProductRepository productRepository) {
 		this.productRepository = productRepository;
@@ -21,5 +20,4 @@ public class ProductService {
 	public Optional<Product> findById(Long productId) {
 		return productRepository.findById(productId);
 	}
-
 }

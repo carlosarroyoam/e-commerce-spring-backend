@@ -21,7 +21,6 @@ import lombok.Data;
 @Table(name = "variants", uniqueConstraints = { @UniqueConstraint(name = "variants_sku_idx", columnNames = "sku") })
 @Data
 public class Variant {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -51,5 +50,4 @@ public class Variant {
 
 	@OneToMany(mappedBy = "variant")
 	private List<VariantImage> images;
-
 }

@@ -16,7 +16,6 @@ import lombok.Data;
 		@UniqueConstraint(name = "property_title_idx", columnNames = "title") })
 @Data
 public class Property {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -26,5 +25,4 @@ public class Property {
 
 	@Column(name = "deleted_at")
 	private LocalDateTime deletedAt;
-
 }

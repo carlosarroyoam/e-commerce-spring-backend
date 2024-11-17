@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @RestControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
-
 	private static final Logger log = LoggerFactory.getLogger(ControllerAdvisor.class);
 
 	@Override
@@ -65,5 +64,4 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
 
 		return body;
 	}
-
 }

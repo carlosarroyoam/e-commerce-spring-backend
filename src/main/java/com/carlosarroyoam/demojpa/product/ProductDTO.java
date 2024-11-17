@@ -7,7 +7,6 @@ import lombok.Data;
 
 @Data
 public class ProductDTO {
-
 	private Long id;
 	private String title;
 	private String slug;
@@ -20,5 +19,4 @@ public class ProductDTO {
 	private LocalDateTime createdAt;
 	private LocalDateTime updatedAt;
 	private LocalDateTime deletedAt;
-
 }

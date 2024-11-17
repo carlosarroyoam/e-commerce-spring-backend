@@ -18,7 +18,6 @@ import lombok.Data;
 		@UniqueConstraint(name = "variant_images_url_idx", columnNames = "url") })
 @Data
 public class VariantImage {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -30,5 +29,4 @@ public class VariantImage {
 	@ManyToOne
 	@JoinColumn(name = "variant_id", referencedColumnName = "id")
 	private Variant variant;
-
 }

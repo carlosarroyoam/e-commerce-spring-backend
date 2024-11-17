@@ -18,7 +18,6 @@ import lombok.Data;
 		@UniqueConstraint(name = "variant_attribute_values_idx", columnNames = { "variant_id", "attribute_id" }) })
 @Data
 public class VariantAttributeValue {
-
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
@@ -34,5 +33,4 @@ public class VariantAttributeValue {
 	@ManyToOne
 	@JoinColumn(name = "attribute_id", referencedColumnName = "id")
 	private Attribute attribute;
-
 }

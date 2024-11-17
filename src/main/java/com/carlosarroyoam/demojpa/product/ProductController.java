@@ -11,8 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
-
-	private ProductService productService;
+	private final ProductService productService;
 
 	public ProductController(ProductService productService) {
 		this.productService = productService;
@@ -27,5 +26,4 @@ public class ProductController {
 	public Optional<Product> findById(@PathVariable Long productId) {
 		return productService.findById(productId);
 	}
-
 }
