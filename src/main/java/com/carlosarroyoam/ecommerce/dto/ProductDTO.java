@@ -1,7 +1,10 @@
-package com.carlosarroyoam.demojpa.product;
+package com.carlosarroyoam.ecommerce.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
+import com.carlosarroyoam.ecommerce.entity.ProductPropertyValue;
+import com.carlosarroyoam.ecommerce.entity.Variant;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.carlosarroyoam.demojpa.product;
+package com.carlosarroyoam.ecommerce.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -22,11 +22,14 @@ public class VariantImage {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "url", length = 128, nullable = false)
+	@Column(name = "url", length = 128, unique = true, nullable = false)
 	private String url;
+
+	@Column(name = "variant_id", nullable = false)
+	private Long variantId;
 
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "variant_id", referencedColumnName = "id")
+	@JoinColumn(name = "variant_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
 	private Variant variant;
 }

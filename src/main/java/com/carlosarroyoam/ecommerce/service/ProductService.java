@@ -1,9 +1,12 @@
-package com.carlosarroyoam.demojpa.product;
+package com.carlosarroyoam.ecommerce.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
+
+import com.carlosarroyoam.ecommerce.entity.Product;
+import com.carlosarroyoam.ecommerce.repository.ProductRepository;
 
 @Service
 public class ProductService {

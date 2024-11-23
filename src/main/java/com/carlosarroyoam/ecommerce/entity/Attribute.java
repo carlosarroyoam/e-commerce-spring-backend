@@ -1,4 +1,4 @@
-package com.carlosarroyoam.demojpa.product;
+package com.carlosarroyoam.ecommerce.entity;
 
 import java.time.LocalDateTime;
 
@@ -12,15 +12,15 @@ import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
 
 @Entity
-@Table(name = "properties", uniqueConstraints = {
-		@UniqueConstraint(name = "property_title_idx", columnNames = "title") })
+@Table(name = "attributes", uniqueConstraints = {
+		@UniqueConstraint(name = "attributes_title_idx", columnNames = "title") })
 @Data
-public class Property {
+public class Attribute {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "title", length = 45, nullable = false)
+	@Column(name = "title", length = 45, unique = true, nullable = false)
 	private String title;
 
 	@Column(name = "deleted_at")

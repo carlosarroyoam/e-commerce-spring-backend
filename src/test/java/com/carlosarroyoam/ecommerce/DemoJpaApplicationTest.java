@@ -1,4 +1,4 @@
-package com.carlosarroyoam.demojpa;
+package com.carlosarroyoam.ecommerce;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

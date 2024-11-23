@@ -1,4 +1,4 @@
-package com.carlosarroyoam.demojpa.product;
+package com.carlosarroyoam.ecommerce.entity;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -25,7 +25,7 @@ public class Variant {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "sku", length = 64, nullable = false)
+	@Column(name = "sku", length = 64, unique = true, nullable = false)
 	private String sku;
 
 	@Column(name = "price", nullable = false)
@@ -40,13 +40,16 @@ public class Variant {
 	@Column(name = "quantity_on_stock", nullable = false)
 	private Integer quantityOnStock;
 
+	@Column(name = "product_id", nullable = false)
+	private Long productId;
+
 	@JsonIgnore
 	@ManyToOne
-	@JoinColumn(name = "product_id", referencedColumnName = "id")
+	@JoinColumn(name = "product_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
 	private Product product;
 
 	@OneToMany(mappedBy = "variant")
-	List<VariantAttributeValue> attributes;
+	private List<VariantAttributeValue> attributes;
 
 	@OneToMany(mappedBy = "variant")
 	private List<VariantImage> images;

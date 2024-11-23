@@ -1,4 +1,4 @@
-package com.carlosarroyoam.demojpa.product;
+package com.carlosarroyoam.ecommerce.entity;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,7 +24,7 @@ public class Category {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Byte id;
 
-	@Column(name = "title", length = 45, nullable = false)
+	@Column(name = "title", length = 45, unique = true, nullable = false)
 	private String title;
 
 	@JsonIgnore
