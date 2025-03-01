@@ -1,8 +1,5 @@
 package com.carlosarroyoam.ecommerce.entity;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,50 +10,59 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
+import java.time.LocalDateTime;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "products", uniqueConstraints = { @UniqueConstraint(name = "products_slug_idx", columnNames = "slug") })
+@Table(name = "products", uniqueConstraints = {
+    @UniqueConstraint(name = "products_slug_idx", columnNames = "slug") })
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Product {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-	@Column(name = "title", length = 96, nullable = false)
-	private String title;
+  @Column(name = "title", length = 96, nullable = false)
+  private String title;
 
-	@Column(name = "slug", length = 96, nullable = false)
-	private String slug;
+  @Column(name = "slug", length = 96, nullable = false)
+  private String slug;
 
-	@Column(name = "description")
-	private String description;
+  @Column(name = "description")
+  private String description;
 
-	@Column(name = "featured", columnDefinition = "BIT", nullable = false)
-	private boolean featured;
+  @Column(name = "featured", columnDefinition = "BIT", nullable = false)
+  private boolean featured;
 
-	@Column(name = "active", columnDefinition = "BIT", nullable = false)
-	private boolean active;
+  @Column(name = "active", columnDefinition = "BIT", nullable = false)
+  private boolean active;
 
-	@Column(name = "category_id", nullable = false)
-	private Byte categoryId;
+  @Column(name = "category_id", nullable = false)
+  private Byte categoryId;
 
-	@ManyToOne
-	@JoinColumn(name = "category_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
-	private Category category;
+  @ManyToOne
+  @JoinColumn(name = "category_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+  private Category category;
 
-	@OneToMany(mappedBy = "product")
-	private List<ProductPropertyValue> properties;
+  @OneToMany(mappedBy = "product")
+  private List<ProductPropertyValue> properties;
 
-	@OneToMany(mappedBy = "product")
-	private List<Variant> variants;
+  @OneToMany(mappedBy = "product")
+  private List<Variant> variants;
 
-	@Column(name = "created_at", nullable = false)
-	private LocalDateTime createdAt;
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
 
-	@Column(name = "updated_at", nullable = false)
-	private LocalDateTime updatedAt;
+  @Column(name = "updated_at", nullable = false)
+  private LocalDateTime updatedAt;
 
-	@Column(name = "deleted_at")
-	private LocalDateTime deletedAt;
+  @Column(name = "deleted_at")
+  private LocalDateTime deletedAt;
 }
