@@ -7,14 +7,14 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.9</version>
+		<version>3.5.6</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<groupId>com.carlosarroyoam</groupId>
-	<artifactId>e-commerce</artifactId>
+	<artifactId>e-commerce-backend</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>e-commerce</name>
+	<name>e-commerce-backend</name>
 	<description>Demo project for Spring Boot and Data JPA</description>
 
 	<properties>
@@ -74,8 +74,4 @@
 			</plugin>
 		</plugins>
 	</build>
-	<url />
-	<licenses>
-		<license />
-	</licenses>
 </project>

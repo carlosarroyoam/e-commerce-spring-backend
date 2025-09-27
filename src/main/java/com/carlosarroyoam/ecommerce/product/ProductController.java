@@ -1,13 +1,13 @@
-package com.carlosarroyoam.ecommerce.controller;
+package com.carlosarroyoam.ecommerce.product;
 
-import com.carlosarroyoam.ecommerce.entity.Product;
-import com.carlosarroyoam.ecommerce.service.ProductService;
+import com.carlosarroyoam.ecommerce.product.entity.Product;
 import java.util.List;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,9 +21,8 @@ public class ProductController {
 
   @GetMapping(produces = "application/json")
   public ResponseEntity<List<Product>> findAll(
-      @RequestParam(required = false, defaultValue = "0") Integer page,
-      @RequestParam(required = false, defaultValue = "25") Integer size) {
-    List<Product> products = productService.findAll(page, size);
+      @PageableDefault(page = 0, size = 25) Pageable pageable) {
+    List<Product> products = productService.findAll(pageable);
     return ResponseEntity.ok(products);
   }
 

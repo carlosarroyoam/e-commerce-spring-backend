@@ -1,13 +1,11 @@
-package com.carlosarroyoam.ecommerce.service;
+package com.carlosarroyoam.ecommerce.product;
 
-import com.carlosarroyoam.ecommerce.constant.AppMessages;
-import com.carlosarroyoam.ecommerce.entity.Product;
-import com.carlosarroyoam.ecommerce.repository.ProductRepository;
+import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.product.entity.Product;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -22,8 +20,7 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public List<Product> findAll(Integer page, Integer size) {
-    Pageable pageable = PageRequest.of(page, size);
+  public List<Product> findAll(Pageable pageable) {
     Page<Product> products = productRepository.findAll(pageable);
     return products.getContent();
   }

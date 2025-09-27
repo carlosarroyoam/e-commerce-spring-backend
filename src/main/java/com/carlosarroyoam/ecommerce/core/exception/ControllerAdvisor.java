@@ -1,4 +1,4 @@
-package com.carlosarroyoam.ecommerce.controller;
+package com.carlosarroyoam.ecommerce.core.exception;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;

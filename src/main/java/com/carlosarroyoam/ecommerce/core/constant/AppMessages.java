@@ -1,4 +1,4 @@
-package com.carlosarroyoam.ecommerce.constant;
+package com.carlosarroyoam.ecommerce.core.constant;
 
 public class AppMessages {
   public static final String ILLEGAL_ACCESS_EXCEPTION = "Illegal access to utility class";
