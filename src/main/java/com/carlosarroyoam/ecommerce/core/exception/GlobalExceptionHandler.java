@@ -18,8 +18,8 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RestControllerAdvice
-public class ControllerAdvisor extends ResponseEntityExceptionHandler {
-  private static final Logger log = LoggerFactory.getLogger(ControllerAdvisor.class);
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+  private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
   @Override
   protected ResponseEntity<Object> createResponseEntity(Object body, HttpHeaders headers,
