@@ -1,8 +1,11 @@
 package com.carlosarroyoam.ecommerce.product;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto;
+import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto.PagedResponseDtoMapper;
+import com.carlosarroyoam.ecommerce.product.dto.ProductDto;
+import com.carlosarroyoam.ecommerce.product.dto.ProductDto.ProductDtoMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Product;
-import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -20,12 +23,18 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public List<Product> findAll(Pageable pageable) {
+  public PagedResponseDto<ProductDto> findAll(Pageable pageable) {
     Page<Product> products = productRepository.findAll(pageable);
-    return products.getContent();
+    return PagedResponseDtoMapper.INSTANCE
+        .toPagedResponseDto(products.map(ProductDtoMapper.INSTANCE::toDto));
   }
 
-  public Product findById(Long productId) {
+  public ProductDto findById(Long productId) {
+    Product productById = findProductEntityById(productId);
+    return ProductDtoMapper.INSTANCE.toDto(productById);
+  }
+
+  private Product findProductEntityById(Long productId) {
     return productRepository.findById(productId).orElseThrow(() -> {
       log.warn(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,

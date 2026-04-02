@@ -1,7 +1,7 @@
 package com.carlosarroyoam.ecommerce.product;
 
-import com.carlosarroyoam.ecommerce.product.entity.Product;
-import java.util.List;
+import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto;
+import com.carlosarroyoam.ecommerce.product.dto.ProductDto;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +20,14 @@ public class ProductController {
   }
 
   @GetMapping(produces = "application/json")
-  public ResponseEntity<List<Product>> findAll(
+  public ResponseEntity<PagedResponseDto<ProductDto>> findAll(
       @PageableDefault(page = 0, size = 25) Pageable pageable) {
-    List<Product> products = productService.findAll(pageable);
+    PagedResponseDto<ProductDto> products = productService.findAll(pageable);
     return ResponseEntity.ok(products);
   }
 
   @GetMapping(value = "/{productId}", produces = "application/json")
-  public ResponseEntity<Product> findById(@PathVariable Long productId) {
+  public ResponseEntity<ProductDto> findById(@PathVariable Long productId) {
     return ResponseEntity.ok(productService.findById(productId));
   }
 }
