@@ -1,4 +1,4 @@
-package com.carlosarroyoam.ecommerce.order.entity;
+package com.carlosarroyoam.ecommerce.shipment.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,17 +13,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "movement_types", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_movement_types_title", columnNames = "title") })
+@Table(name = "carriers", uniqueConstraints = {
+    @UniqueConstraint(name = "uk_carriers_name", columnNames = "name") })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MovementType {
+public class Carrier {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Byte id;
 
-  @Column(name = "title", length = 45, nullable = false)
-  private String title;
+  @Column(name = "name", length = 45, nullable = false)
+  private String name;
+
+  @Column(name = "active", nullable = false, columnDefinition = "BIT")
+  private Boolean active;
 }

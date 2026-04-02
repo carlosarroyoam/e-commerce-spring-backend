@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.inventory.entity;
 
-import com.carlosarroyoam.ecommerce.order.entity.Movement;
 import com.carlosarroyoam.ecommerce.product.entity.Variant;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;

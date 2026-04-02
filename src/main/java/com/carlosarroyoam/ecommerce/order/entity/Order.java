@@ -2,6 +2,8 @@ package com.carlosarroyoam.ecommerce.order.entity;
 
 import com.carlosarroyoam.ecommerce.customer.entity.Customer;
 import com.carlosarroyoam.ecommerce.customer.entity.CustomerAddress;
+import com.carlosarroyoam.ecommerce.refund.entity.Refund;
+import com.carlosarroyoam.ecommerce.shipment.entity.Shipment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
