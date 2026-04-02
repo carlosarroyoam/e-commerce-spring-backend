@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "order_statuses", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_order_statuses_name", columnNames = "name") })
+    @UniqueConstraint(name = "uk_order_statuses_title", columnNames = "title") })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,6 +24,6 @@ public class OrderStatus {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Byte id;
 
-  @Column(name = "name", length = 32, nullable = false)
-  private String name;
+  @Column(name = "title", length = 32, nullable = false)
+  private String title;
 }

@@ -218,16 +218,16 @@ CREATE TABLE IF NOT EXISTS inventory_movements (
 
 CREATE TABLE IF NOT EXISTS order_payment_statuses (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name VARCHAR(32) NOT NULL,
+    title VARCHAR(32) NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE KEY uk_order_payment_statuses_name (name)
+    UNIQUE KEY uk_order_payment_statuses_title (title)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS order_statuses (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name VARCHAR(32) NOT NULL,
+    title VARCHAR(32) NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE KEY uk_order_statuses_name (name)
+    UNIQUE KEY uk_order_statuses_title (title)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS carriers (

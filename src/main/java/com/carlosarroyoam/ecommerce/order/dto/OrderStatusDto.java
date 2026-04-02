@@ -17,7 +17,7 @@ import org.mapstruct.factory.Mappers;
 @Builder
 public class OrderStatusDto {
   private Byte id;
-  private String name;
+  private String title;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface OrderStatusDtoMapper {
