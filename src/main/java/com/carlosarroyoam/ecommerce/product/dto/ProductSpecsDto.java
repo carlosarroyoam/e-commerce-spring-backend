@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ProductFilterDto {
+public class ProductSpecsDto {
   @Size(max = 96, message = "Title should be max 96")
   private String title;
 }
