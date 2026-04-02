@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
-import com.carlosarroyoam.ecommerce.product.dto.CategoryDto.CategoryDtoMapper;
+import com.carlosarroyoam.ecommerce.category.dto.CategoryDto;
+import com.carlosarroyoam.ecommerce.category.dto.CategoryDto.CategoryDtoMapper;
 import com.carlosarroyoam.ecommerce.product.dto.ProductPropertyValueDto.ProductPropertyValueDtoMapper;
 import com.carlosarroyoam.ecommerce.product.dto.VariantDto.VariantDtoMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Product;

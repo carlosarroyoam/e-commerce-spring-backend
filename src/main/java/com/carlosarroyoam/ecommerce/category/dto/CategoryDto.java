@@ -1,6 +1,6 @@
-package com.carlosarroyoam.ecommerce.product.dto;
+package com.carlosarroyoam.ecommerce.category.dto;
 
-import com.carlosarroyoam.ecommerce.product.entity.Category;
+import com.carlosarroyoam.ecommerce.category.entity.Category;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;

@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.product.entity;
 
+import com.carlosarroyoam.ecommerce.category.entity.Category;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
