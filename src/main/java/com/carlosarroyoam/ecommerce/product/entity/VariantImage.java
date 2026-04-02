@@ -30,11 +30,8 @@ public class VariantImage {
   @Column(name = "url", length = 128, unique = true, nullable = false)
   private String url;
 
-  @Column(name = "variant_id", nullable = false)
-  private Long variantId;
-
   @JsonIgnore
   @ManyToOne
-  @JoinColumn(name = "variant_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+  @JoinColumn(name = "variant_id", referencedColumnName = "id", nullable = false)
   private Variant variant;
 }

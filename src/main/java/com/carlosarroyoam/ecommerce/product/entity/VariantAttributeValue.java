@@ -31,18 +31,12 @@ public class VariantAttributeValue {
   @Column(name = "value", length = 45, nullable = false)
   private String value;
 
-  @Column(name = "variant_id", nullable = false)
-  private Long variantId;
-
   @JsonIgnore
   @ManyToOne
-  @JoinColumn(name = "variant_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+  @JoinColumn(name = "variant_id", referencedColumnName = "id", nullable = false)
   private Variant variant;
 
-  @Column(name = "attribute_id", nullable = false)
-  private Long attributeId;
-
   @ManyToOne
-  @JoinColumn(name = "attribute_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+  @JoinColumn(name = "attribute_id", referencedColumnName = "id", nullable = false)
   private Attribute attribute;
 }

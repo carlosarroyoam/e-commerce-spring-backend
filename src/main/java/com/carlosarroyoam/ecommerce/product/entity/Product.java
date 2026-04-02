@@ -44,11 +44,8 @@ public class Product {
   @Column(name = "active", columnDefinition = "BIT", nullable = false)
   private boolean active;
 
-  @Column(name = "category_id", nullable = false)
-  private Byte categoryId;
-
   @ManyToOne
-  @JoinColumn(name = "category_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+  @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
   private Category category;
 
   @OneToMany(mappedBy = "product")

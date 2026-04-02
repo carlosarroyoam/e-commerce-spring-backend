@@ -31,18 +31,12 @@ public class ProductPropertyValue {
   @Column(length = 45, nullable = false)
   private String value;
 
-  @Column(name = "product_id", nullable = false)
-  private Long productId;
-
   @JsonIgnore
   @ManyToOne
-  @JoinColumn(name = "product_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+  @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
   private Product product;
 
-  @Column(name = "property_id", nullable = false)
-  private Long propertyId;
-
   @ManyToOne
-  @JoinColumn(name = "property_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+  @JoinColumn(name = "property_id", referencedColumnName = "id", nullable = false)
   private Property property;
 }

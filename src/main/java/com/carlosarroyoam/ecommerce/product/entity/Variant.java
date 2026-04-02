@@ -45,12 +45,9 @@ public class Variant {
   @Column(name = "quantity_on_stock", nullable = false)
   private Integer quantityOnStock;
 
-  @Column(name = "product_id", nullable = false)
-  private Long productId;
-
   @JsonIgnore
   @ManyToOne
-  @JoinColumn(name = "product_id", referencedColumnName = "id", insertable = false, updatable = false, nullable = false)
+  @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
   private Product product;
 
   @OneToMany(mappedBy = "variant")
