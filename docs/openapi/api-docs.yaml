@@ -1,0 +1,3114 @@
+openapi: 3.0.3
+info:
+  title: e-commerce-backend
+  description: |
+    API for managing a e-commerce.
+    Supports customer management, products, categories.
+  contact:
+    email: carlosarroyoam@gmail.com
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.4.0-snapshot
+
+servers:
+  - url: http://localhost:3000/api/v1
+    description: Localhost server url
+
+tags:
+  - name: auth
+    description: Operations about authentication
+  - name: user
+    description: Operations about users
+  - name: admin
+    description: Operations about admin users
+  - name: customer
+    description: Operations about customer users
+  - name: customer-address
+    description: Operations about customer addresses
+  - name: product
+    description: Operations about products
+  - name: product-variant
+    description: Operations about product variants
+  - name: attribute
+    description: Operations about attributes
+  - name: property
+    description: Operations about properties
+  - name: category
+    description: Operations about categories
+  - name: order
+    description: Operations about orders
+  - name: shipment
+    description: Operations about shipments
+  - name: refund
+    description: Operations about refunds
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: Authenticates a user
+      operationId: authLogin
+      requestBody:
+        description: User credentials object that will be authenticated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/logout:
+    post:
+      tags:
+        - auth
+      summary: Revokes a refresh token
+      operationId: authLogout
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/refresh-token:
+    post:
+      tags:
+        - auth
+      summary: Renews a user token
+      operationId: refreshToken
+      requestBody:
+        description: User token object that will be renewed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/forgot-password:
+    post:
+      tags:
+        - auth
+      summary: Requests a user password reset
+      operationId: forgotPassword
+      requestBody:
+        description: User credentials object that will be reseted
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ForgotPasswordRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /auth/reset-password:
+    post:
+      tags:
+        - auth
+      summary: Resets a user password
+      operationId: resetPassword
+      parameters:
+        - $ref: '#/components/parameters/resetPasswordTokenParam'
+      requestBody:
+        description: User password object that will be changed
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ResetPasswordRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /users:
+    get:
+      tags:
+        - user
+      summary: Gets all users
+      operationId: getUsers
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/UserSortParam'
+        - $ref: '#/components/parameters/UserStatusParam'
+        - $ref: '#/components/parameters/SearchParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedUsersResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /users/{user_id}:
+    get:
+      tags:
+        - user
+      summary: Gets a user by its id
+      operationId: getUserById
+      parameters:
+        - name: user_id
+          in: path
+          description: ID of user to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    delete:
+      tags:
+        - user
+      summary: Deactivates a user by its id
+      operationId: deactivateUser
+      parameters:
+        - name: user_id
+          in: path
+          description: ID of user to deactivate
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /users/{user_id}/change-password:
+    put:
+      tags:
+        - user
+      summary: Changes a user's password
+      operationId: changeUserPassword
+      parameters:
+        - name: user_id
+          in: path
+          description: ID of user to change its password
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Admin object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChangePasswordRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /users/{user_id}/restore:
+    put:
+      tags:
+        - user
+      summary: Restores a user by its id
+      operationId: restoreUser
+      parameters:
+        - name: user_id
+          in: path
+          description: ID of user to restore
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /admins:
+    get:
+      tags:
+        - admin
+      summary: Gets all admins
+      operationId: getAdmins
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/UserSortParam'
+        - $ref: '#/components/parameters/UserStatusParam'
+        - $ref: '#/components/parameters/SearchParam'
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    post:
+      tags:
+        - admin
+      summary: Adds a new admin
+      operationId: addAdmin
+      requestBody:
+        description: Admin object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAdminRequest'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    put:
+      tags:
+        - admin
+      summary: Updates a admin by its id
+      operationId: updateAdmin
+      requestBody:
+        description: Admin object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAdminRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /admins/{admin_id}:
+    get:
+      tags:
+        - admin
+      summary: Gets a admin by its id
+      operationId: getAdminById
+      parameters:
+        - name: admin_id
+          in: path
+          description: ID of admin to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Admin'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /customers:
+    get:
+      tags:
+        - customer
+      summary: Gets all customers
+      operationId: getCustomers
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/UserSortParam'
+        - $ref: '#/components/parameters/UserStatusParam'
+        - $ref: '#/components/parameters/SearchParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCustomersResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    post:
+      tags:
+        - customer
+      summary: Adds a new customer
+      operationId: addCustomer
+      requestBody:
+        description: Customer object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerRequest'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    put:
+      tags:
+        - customer
+      summary: Updates a customer by its id
+      operationId: updateCustomer
+      requestBody:
+        description: Customer object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /customers/{customer_id}:
+    get:
+      tags:
+        - customer
+      summary: Gets a customer by its id
+      operationId: getCustomerById
+      parameters:
+        - name: customer_id
+          in: path
+          description: ID of customer to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /customers/{customer_id}/addresses:
+    get:
+      tags:
+        - customer-address
+      summary: Gets all customer addresses by customer_id
+      operationId: getCustomerAddresses
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          description: ID of the customer to retrieve its addresses
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CustomerAddress'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    post:
+      tags:
+        - customer-address
+      summary: Adds a new customer address
+      operationId: addCustomerAddress
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          description: ID of the customer to retrieve its addresses
+          schema:
+            type: integer
+      requestBody:
+        description: Address object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCustomerAddressRequest'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /customers/{customer_id}/addresses/{address_id}:
+    get:
+      tags:
+        - customer-address
+      summary: Gets a customer address by its id
+      operationId: getCustomerAddressById
+      parameters:
+        - name: customer_id
+          in: path
+          required: true
+          description: ID of the customer to query
+          schema:
+            type: integer
+            format: int64
+        - name: address_id
+          in: path
+          required: true
+          description: ID of the address to query
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomerAddress'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    put:
+      tags:
+        - customer-address
+      summary: Updates a customer address by its id
+      operationId: updateCustomerAddressById
+      parameters:
+        - name: customer_id
+          in: path
+          description: ID of the customer to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: address_id
+          in: path
+          description: ID of the address to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Address object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCustomerAddressRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    delete:
+      tags:
+        - customer-address
+      summary: Deletes a customer address by its id
+      operationId: deleteCustomerAddress
+      parameters:
+        - name: customer_id
+          in: path
+          description: ID of the customer to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: address_id
+          in: path
+          description: ID of the address to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /products:
+    get:
+      tags:
+        - product
+      summary: Gets all products
+      operationId: getProducts
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/ProductSortParam'
+        - $ref: '#/components/parameters/SearchParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedProductsResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /products/{product_id}:
+    get:
+      tags:
+        - product
+      summary: Gets a product by its id
+      operationId: getProductById
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of product to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /products/{product_id}/variants:
+    get:
+      tags:
+        - product-variant
+      summary: Gets all product variants by product_id
+      operationId: getProductVariants
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of product to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ProductVariant'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /products/{product_id}/variants/{variant_id}:
+    get:
+      tags:
+        - product-variant
+      summary: Gets a product variant by its id
+      operationId: getProductVariantById
+      parameters:
+        - name: product_id
+          in: path
+          description: ID of product to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: variant_id
+          in: path
+          description: ID of variant to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductVariant'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /attributes:
+    get:
+      tags:
+        - attribute
+      summary: Gets all attributes
+      operationId: getAttributes
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/AttributeSortParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedAttributesResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    post:
+      tags:
+        - attribute
+      summary: Adds a new attribute
+      operationId: addAttribute
+      requestBody:
+        description: attribute object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAttributeRequest'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /attributes/{attribute_id}:
+    get:
+      tags:
+        - attribute
+      summary: Gets a attribute by its id
+      operationId: getAttributeById
+      parameters:
+        - name: attribute_id
+          in: path
+          description: ID of attribute to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attribute'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    put:
+      tags:
+        - attribute
+      summary: Updates a Attribute by its id
+      operationId: updateAttribute
+      parameters:
+        - name: attribute_id
+          in: path
+          description: ID of attribute to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Attribute object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAttributeRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    delete:
+      tags:
+        - attribute
+      summary: Deactivates a attribute by its id
+      operationId: deactivateAttribute
+      parameters:
+        - name: attribute_id
+          in: path
+          description: ID of attribute to deactivate
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /attributes/{attribute_id}/restore:
+    put:
+      tags:
+        - attribute
+      summary: Restores a attribute by its id
+      operationId: restoreAttribute
+      parameters:
+        - name: attribute_id
+          in: path
+          description: ID of attribute to restore
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /properties:
+    get:
+      tags:
+        - property
+      summary: Gets all properties
+      operationId: getProperties
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/PropertySortParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedPropertiesResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    post:
+      tags:
+        - property
+      summary: Adds a new property
+      operationId: addProperty
+      requestBody:
+        description: property object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePropertyRequest'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /properties/{property_id}:
+    get:
+      tags:
+        - property
+      summary: Gets a property by its id
+      operationId: getPropertyById
+      parameters:
+        - name: property_id
+          in: path
+          description: ID of property to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Property'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    put:
+      tags:
+        - property
+      summary: Updates a Property by its id
+      operationId: updateProperty
+      parameters:
+        - name: property_id
+          in: path
+          description: ID of property to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Property object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePropertyRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    delete:
+      tags:
+        - property
+      summary: Deactivates a property by its id
+      operationId: deactivateProperty
+      parameters:
+        - name: property_id
+          in: path
+          description: ID of property to deactivate
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /properties/{property_id}/restore:
+    put:
+      tags:
+        - property
+      summary: Restores a property by its id
+      operationId: restoreProperty
+      parameters:
+        - name: property_id
+          in: path
+          description: ID of property to restore
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /categories:
+    get:
+      tags:
+        - category
+      summary: Gets all categories
+      operationId: getCategories
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/CategorySortParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedCategoriesResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    post:
+      tags:
+        - category
+      summary: Adds a new category
+      operationId: addCategory
+      requestBody:
+        description: category object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoryRequest'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /categories/{category_id}:
+    get:
+      tags:
+        - category
+      summary: Gets a category by its id
+      operationId: getCategoryById
+      parameters:
+        - name: category_id
+          in: path
+          description: ID of category to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Category'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+    put:
+      tags:
+        - category
+      summary: Updates a category by its id
+      operationId: updateCategory
+      parameters:
+        - name: category_id
+          in: path
+          description: ID of category to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: category object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCategoryRequest'
+        required: true
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    delete:
+      tags:
+        - category
+      summary: Deactivates a category by its id
+      operationId: deactivateCategory
+      parameters:
+        - name: category_id
+          in: path
+          description: ID of category to deactivate
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /categories/{category_id}/restore:
+    put:
+      tags:
+        - category
+      summary: Restores a category by its id
+      operationId: restoreCategory
+      parameters:
+        - name: category_id
+          in: path
+          description: ID of category to restore
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /orders:
+    get:
+      tags:
+        - order
+      summary: Gets all orders
+      operationId: getOrders
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/OrderSortParam'
+        - $ref: '#/components/parameters/SearchParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedOrdersResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    post:
+      tags:
+        - order
+      summary: Creates a new order
+      operationId: createOrder
+      requestBody:
+        description: Order object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /orders/track/{orderNumber}:
+    get:
+      tags:
+        - order
+      summary: Tracks an order by its order number
+      operationId: trackOrder
+      parameters:
+        - name: orderNumber
+          in: path
+          description: Order number to track
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderTrack'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /orders/{order_id}:
+    get:
+      tags:
+        - order
+      summary: Gets an order by its id
+      operationId: getOrderById
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /orders/{order_id}/status:
+    patch:
+      tags:
+        - order
+      summary: Updates an order status
+      operationId: updateOrderStatus
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Order status update object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /orders/{order_id}/payment-status:
+    patch:
+      tags:
+        - order
+      summary: Updates an order payment status
+      operationId: updateOrderPaymentStatus
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Order payment status update object
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderPaymentStatusRequest'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /shipments:
+    get:
+      tags:
+        - shipment
+      summary: Gets all shipments
+      operationId: getShipments
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/ShipmentSortParam'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedShipmentsResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /shipments/carriers:
+    get:
+      tags:
+        - shipment
+      summary: Gets all active carriers
+      operationId: getCarriers
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Carrier'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /shipments/{shipment_id}:
+    get:
+      tags:
+        - shipment
+      summary: Gets a shipment by its id
+      operationId: getShipmentById
+      parameters:
+        - name: shipment_id
+          in: path
+          description: ID of shipment to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shipment'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /shipments/order/{order_id}:
+    get:
+      tags:
+        - shipment
+      summary: Gets a shipment by order id
+      operationId: getShipmentByOrderId
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to query its shipment
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Shipment'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /shipments/{order_id}:
+    post:
+      tags:
+        - shipment
+      summary: Creates a shipment for an order
+      operationId: createShipment
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to create a shipment for
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Shipment object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateShipmentRequest'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /shipments/{shipment_id}/delivered:
+    patch:
+      tags:
+        - shipment
+      summary: Marks a shipment as delivered
+      operationId: markShipmentDelivered
+      parameters:
+        - name: shipment_id
+          in: path
+          description: ID of shipment to mark as delivered
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '204':
+          $ref: '#/components/responses/NoContent'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /refunds:
+    get:
+      tags:
+        - refund
+      summary: Gets all refunds
+      operationId: getRefunds
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/SortParam'
+        - name: order_id
+          in: query
+          description: Filter refunds by order id
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedRefundsResponse'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /refunds/{refund_id}:
+    get:
+      tags:
+        - refund
+      summary: Gets a refund by its id
+      operationId: getRefundById
+      parameters:
+        - name: refund_id
+          in: path
+          description: ID of refund to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+  /refunds/order/{order_id}:
+    get:
+      tags:
+        - refund
+      summary: Gets a refund by order id
+      operationId: getRefundByOrderId
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to query its refund
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+    post:
+      tags:
+        - refund
+      summary: Creates a refund for an order
+      operationId: createRefund
+      parameters:
+        - name: order_id
+          in: path
+          description: ID of order to create a refund for
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Refund object that needs to be created
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRefundRequest'
+        required: true
+      responses:
+        '201':
+          $ref: '#/components/responses/Created'
+        '422':
+          $ref: '#/components/responses/UnprocesableEntity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - BearerAuth: []
+
+components:
+  schemas:
+    LoginRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        device_fingerprint:
+          type: string
+      required:
+        - email
+        - password
+        - device_fingerprint
+
+    LoginResponse:
+      type: object
+      description: Login response with user information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the user
+        first_name:
+          type: string
+          description: User's first name
+        last_name:
+          type: string
+          description: User's last name
+        email:
+          type: string
+          description: User's email address
+        user_role_id:
+          type: integer
+          description: Foreign key to user roles table
+        access_token:
+          type: string
+          description: Access token
+        refresh_token:
+          type: string
+          description: Refresh token
+
+    RefreshTokenRequest:
+      type: object
+      properties:
+        device_fingerprint:
+          type: string
+      required:
+        - device_fingerprint
+
+    ForgotPasswordRequest:
+      type: object
+      properties:
+        email:
+          type: string
+      required:
+        - email
+
+    ResetPasswordRequest:
+      type: object
+      properties:
+        password:
+          type: string
+        confirm_password:
+          type: string
+      required:
+        - password
+        - confirm_password
+
+    ChangePasswordRequest:
+      type: object
+      properties:
+        current_password:
+          type: string
+        new_password:
+          type: string
+        confirm_password:
+          type: string
+      required:
+        - current_password
+        - new_password
+        - confirm_password
+
+    PagedUsersResponse:
+      type: object
+      description: Paginated list of users response
+      properties:
+        items:
+          type: array
+          description: List of users
+          items:
+            $ref: '#/components/schemas/User'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    PagedAdminsResponse:
+      type: object
+      description: Paginated list of admins response
+      properties:
+        items:
+          type: array
+          description: List of admins
+          items:
+            $ref: '#/components/schemas/Admin'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    CreateAdminRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        password_confirm:
+          type: string
+        is_super:
+          type: boolean
+          default: false
+      required:
+        - first_name
+        - last_name
+        - email
+        - password
+        - password_confirm
+
+    UpdateAdminRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        is_super:
+          type: boolean
+          default: false
+      required:
+        - first_name
+        - last_name
+        - password
+
+    PagedCustomersResponse:
+      type: object
+      description: Paginated list of customers response
+      properties:
+        items:
+          type: array
+          description: List of customers
+          items:
+            $ref: '#/components/schemas/Customer'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    CreateCustomerRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+        email:
+          type: string
+        password:
+          type: string
+        password_confirm:
+          type: string
+      required:
+        - first_name
+        - last_name
+        - email
+        - password
+        - password_confirm
+
+    UpdateCustomerRequest:
+      type: object
+      properties:
+        first_name:
+          type: string
+        last_name:
+          type: string
+      required:
+        - first_name
+        - last_name
+        - password
+
+    CreateCustomerAddressRequest:
+      type: object
+      properties:
+        street_name:
+          type: string
+        street_number:
+          type: string
+        sublocality:
+          type: string
+        locality:
+          type: string
+        state:
+          type: string
+        postal_code:
+          type: string
+      required:
+        - street_name
+        - street_number
+        - sublocality
+        - locality
+        - state
+        - postal_code
+
+    UpdateCustomerAddressRequest:
+      type: object
+      properties:
+        street_name:
+          type: string
+        street_number:
+          type: string
+        sublocality:
+          type: string
+        locality:
+          type: string
+        state:
+          type: string
+        postal_code:
+          type: string
+      required:
+        - street_name
+        - street_number
+        - sublocality
+        - locality
+        - state
+        - postal_code
+
+    PagedProductsResponse:
+      type: object
+      description: Paginated list of products response
+      properties:
+        items:
+          type: array
+          description: List of products
+          items:
+            $ref: '#/components/schemas/Product'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    PagedCategoriesResponse:
+      type: object
+      description: Paginated list of categories response
+      properties:
+        items:
+          type: array
+          description: List of categories
+          items:
+            $ref: '#/components/schemas/Category'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    CreateCategoryRequest:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+
+    UpdateCategoryRequest:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+
+    PagedAttributesResponse:
+      type: object
+      description: Paginated list of attributes response
+      properties:
+        items:
+          type: array
+          description: List of attributes
+          items:
+            $ref: '#/components/schemas/Attribute'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    CreateAttributeRequest:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+
+    UpdateAttributeRequest:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+
+    PagedPropertiesResponse:
+      type: object
+      description: Paginated list of properties response
+      properties:
+        items:
+          type: array
+          description: List of properties
+          items:
+            $ref: '#/components/schemas/Property'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    CreatePropertyRequest:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+
+    UpdatePropertyRequest:
+      type: object
+      properties:
+        title:
+          type: string
+      required:
+        - title
+
+    PagedOrdersResponse:
+      type: object
+      description: Paginated list of orders response
+      properties:
+        items:
+          type: array
+          description: List of orders
+          items:
+            $ref: '#/components/schemas/Order'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    CreateOrderRequest:
+      type: object
+      properties:
+        customer_id:
+          type: integer
+        shipping_address_id:
+          type: integer
+        subtotal:
+          type: number
+        tax_total:
+          type: number
+        shipping_total:
+          type: number
+        total:
+          type: number
+        notes:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItemRequest'
+      required:
+        - customer_id
+        - shipping_address_id
+        - subtotal
+        - total
+        - items
+
+    UpdateOrderStatusRequest:
+      type: object
+      properties:
+        status_id:
+          type: integer
+        notes:
+          type: string
+      required:
+        - status_id
+
+    UpdateOrderPaymentStatusRequest:
+      type: object
+      properties:
+        payment_status_id:
+          type: integer
+      required:
+        - payment_status_id
+
+    OrderItemRequest:
+      type: object
+      properties:
+        product_id:
+          type: integer
+        variant_id:
+          type: integer
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+      required:
+        - product_id
+        - variant_id
+        - quantity
+        - unit_price
+
+    PagedRefundsResponse:
+      type: object
+      description: Paginated list of refunds response
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Refund'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    CreateRefundRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundItemRequest'
+      required:
+        - items
+
+    RefundItemRequest:
+      type: object
+      properties:
+        order_item_id:
+          type: integer
+        quantity:
+          type: integer
+        amount:
+          type: number
+      required:
+        - order_item_id
+        - quantity
+        - amount
+
+    PagedShipmentsResponse:
+      type: object
+      description: Paginated list of shipments response
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Shipment'
+        pagination:
+          $ref: '#/components/schemas/PaginationDto'
+
+    CreateShipmentRequest:
+      type: object
+      properties:
+        carrier_id:
+          type: integer
+        tracking_number:
+          type: string
+      required:
+        - carrier_id
+
+    UserRole:
+      type: object
+      description: User role information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the role
+        type:
+          type: string
+          description: Type of user role
+
+    User:
+      type: object
+      description: User information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the user
+        first_name:
+          type: string
+          description: User's first name
+        last_name:
+          type: string
+          description: User's last name
+        email:
+          type: string
+          description: User's email address
+        user_role_id:
+          type: integer
+          description: Foreign key to user roles table
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the user was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the user was last updated
+        deleted_at:
+          type: string
+          format: date-time
+          description: Timestamp when the user was deleted (soft delete)
+          nullable: true
+
+    Admin:
+      type: object
+      description: Admin user information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the admin
+        user_id:
+          type: integer
+          description: Foreign key to users table
+        first_name:
+          type: string
+          description: Admin's first name
+        last_name:
+          type: string
+          description: Admin's last name
+        email:
+          type: string
+          description: Admin's email address
+        is_super:
+          type: boolean
+          description: Indicates if admin has super privileges
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the admin was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the admin was last updated
+        deleted_at:
+          type: string
+          format: date-time
+          description: Timestamp when the admin was deleted (soft delete)
+          nullable: true
+
+    Customer:
+      type: object
+      description: Customer information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the customer
+        user_id:
+          type: integer
+          description: Foreign key to users table
+        first_name:
+          type: string
+          description: Customer's first name
+        last_name:
+          type: string
+          description: Customer's last name
+        email:
+          type: string
+          description: Customer's email address
+        addresses:
+          type: array
+          description: List of customer addresses
+          items:
+            $ref: '#/components/schemas/CustomerAddress'
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the customer was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the customer was last updated
+        deleted_at:
+          type: string
+          format: date-time
+          description: Timestamp when the customer was deleted (soft delete)
+          nullable: true
+
+    CustomerAddress:
+      type: object
+      description: Customer address information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the address
+        street_name:
+          type: string
+          description: Street name of the address
+        street_number:
+          type: string
+          description: Street number
+        apartament_number:
+          type: string
+          description: Apartment or suite number
+          nullable: true
+        sublocality:
+          type: string
+          description: Sublocality or neighborhood
+        locality:
+          type: string
+          description: City or locality
+        state:
+          type: string
+          description: State or province
+        postal_code:
+          type: string
+          description: Postal code
+        phone_number:
+          type: string
+          description: Contact phone number
+        customer_id:
+          type: integer
+          description: Foreign key to customers table
+
+    Category:
+      type: object
+      description: Category information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the category
+        title:
+          type: string
+          description: Category title
+
+    ProductCategory:
+      type: object
+      description: Product category reference
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the category
+        title:
+          type: string
+          description: Category title
+
+    Product:
+      type: object
+      description: Product information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the product
+        title:
+          type: string
+          description: Product title
+        slug:
+          type: string
+          description: URL-friendly product identifier
+        description:
+          type: string
+          description: Product description
+        featured:
+          type: boolean
+          description: Indicates if product is featured
+        active:
+          type: boolean
+          description: Indicates if product is active
+        category:
+          type: string
+          description: Product category
+        attribute_combinations:
+          $ref: '#/components/schemas/Attribute'
+        images:
+          $ref: '#/components/schemas/VariantImage'
+        created_at:
+          type: string
+          format: date-time
+          description: Timestamp when the product was created
+        updated_at:
+          type: string
+          format: date-time
+          description: Timestamp when the product was last updated
+        deleted_at:
+          type: string
+          format: date-time
+          description: Timestamp when the product was deleted (soft delete)
+          nullable: true
+
+    ProductVariant:
+      type: object
+      description: Product variant information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the variant
+        sku:
+          type: string
+          description: Stock keeping unit
+        price:
+          type: number
+          description: Variant price
+        compared_at_price:
+          type: number
+          description: Original price for comparison
+        cost_per_item:
+          type: number
+          description: Cost per item
+        quantity_on_stock:
+          type: integer
+          description: Available stock quantity
+        product_id:
+          type: integer
+          description: Foreign key to products table
+        attribute_combinations:
+          $ref: '#/components/schemas/Attribute'
+        images:
+          $ref: '#/components/schemas/VariantImage'
+
+    VariantImage:
+      type: object
+      description: Variant image information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the image
+        url:
+          type: string
+          description: Image URL
+        variant_id:
+          type: integer
+          description: Foreign key to variants table
+
+    Attribute:
+      type: object
+      description: Attribute information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the attribute
+        title:
+          type: string
+          description: Attribute title (e.g., Color, Storage)
+        value:
+          type: string
+          description: Attribute value
+
+    Property:
+      type: object
+      description: Property information for products
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the property
+        title:
+          type: string
+          description: Property title (e.g., Brand, Model)
+        value:
+          type: string
+          description: Property value
+        deleted_at:
+          type: string
+          format: date-time
+          description: Timestamp when the property was deleted (soft delete)
+          nullable: true
+
+    Order:
+      type: object
+      properties:
+        id:
+          type: integer
+        orderNumber:
+          type: string
+        customer_id:
+          type: integer
+        status:
+          type: string
+        paymentStatus:
+          type: string
+        total:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+
+    OrderItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        product_id:
+          type: integer
+        productTitle:
+          type: string
+        variant_id:
+          type: integer
+        variantSku:
+          type: string
+        variantName:
+          type: string
+        quantity:
+          type: integer
+        unit_price:
+          type: number
+        total:
+          type: number
+
+    OrderStatusHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        status_id:
+          type: integer
+        status:
+          type: string
+        notes:
+          type: string
+        changedAt:
+          type: string
+          format: date-time
+
+    OrderRefund:
+      type: object
+      properties:
+        id:
+          type: integer
+        amount:
+          type: number
+        reason:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundItem'
+
+    OrderTrack:
+      type: object
+      properties:
+        orderNumber:
+          type: string
+        status:
+          type: string
+        total:
+          type: number
+        createdAt:
+          type: string
+          format: date-time
+        statusHistory:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderStatusHistory'
+        shipment:
+          $ref: '#/components/schemas/Shipment'
+
+    ShippingAddress:
+      type: object
+      properties:
+        streetName:
+          type: string
+        streetNumber:
+          type: string
+        apartamentNumber:
+          type: string
+        sublocality:
+          type: string
+        locality:
+          type: string
+        state:
+          type: string
+        postalCode:
+          type: string
+        country:
+          type: string
+        phoneNumber:
+          type: string
+
+    Carrier:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+
+    Shipment:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_id:
+          type: integer
+        orderNumber:
+          type: string
+        carrier_id:
+          type: integer
+        carrier:
+          type: string
+        tracking_number:
+          type: string
+        shippedAt:
+          type: string
+          format: date-time
+          nullable: true
+        deliveredAt:
+          type: string
+          format: date-time
+          nullable: true
+
+    Refund:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_id:
+          type: integer
+        orderNumber:
+          type: string
+        amount:
+          type: number
+        reason:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/RefundItem'
+        createdAt:
+          type: string
+          format: date-time
+
+    RefundItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        order_item_id:
+          type: integer
+        product_id:
+          type: integer
+        productTitle:
+          type: string
+        variant_id:
+          type: integer
+        variantSku:
+          type: string
+        quantity:
+          type: integer
+        amount:
+          type: number
+
+    PaginationDto:
+      type: object
+      description: Pagination information for list endpoints
+      properties:
+        page:
+          type: integer
+          description: Current page number
+        size:
+          type: integer
+          description: Number of items per page
+        total_items:
+          type: integer
+          description: Total number of items
+        total_pages:
+          type: integer
+          description: Total number of pages
+
+    AppExceptionDto:
+      type: object
+      description: Standard error response returned when an application exception occurs.
+      properties:
+        message:
+          type: string
+          description: Human-readable error message.
+        error:
+          type: string
+          description: Short error identifier or error type.
+        status:
+          type: integer
+          description: HTTP status code associated with the error.
+        details:
+          type: object
+          description: Additional validation or error details.
+          additionalProperties:
+            type: string
+        path:
+          type: string
+          description: API endpoint path where the error occurred.
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp when the error was generated.
+
+  parameters:
+    SizeParam:
+      name: size
+      in: query
+      description: Pagination size items
+      schema:
+        type: integer
+        default: 50
+
+    PageParam:
+      name: page
+      in: query
+      description: Pagination page number
+      schema:
+        type: integer
+        default: 1
+
+    SearchParam:
+      name: search
+      in: query
+      description: Search criteria
+      schema:
+        type: string
+
+    UserSortParam:
+      name: sort
+      in: query
+      description: Sort by
+      schema:
+        type: string
+        enum:
+          - id
+          - -id
+          - first_name
+          - -first_name
+          - last_name
+          - -last_name
+          - email
+          - -email
+
+    UserStatusParam:
+      name: status
+      in: query
+      description: User status
+      schema:
+        type: string
+        enum:
+          - active
+          - inactive
+
+    resetPasswordTokenParam:
+      name: token
+      in: query
+      required: true
+      schema:
+        type: string
+
+    ProductSortParam:
+      name: sort
+      in: query
+      description: Sort by
+      schema:
+        type: string
+        enum:
+          - id
+          - -id
+          - title
+          - -title
+
+    CategorySortParam:
+      name: sort
+      in: query
+      description: Sort by
+      schema:
+        type: string
+        enum:
+          - id
+          - -id
+          - title
+          - -title
+
+    AttributeSortParam:
+      name: sort
+      in: query
+      description: Sort by
+      schema:
+        type: string
+        enum:
+          - id
+          - -id
+          - title
+          - -title
+
+    PropertySortParam:
+      name: sort
+      in: query
+      description: Sort by
+      schema:
+        type: string
+        enum:
+          - id
+          - -id
+          - title
+          - -title
+
+    OrderSortParam:
+      name: sort
+      in: query
+      description: Sort by
+      schema:
+        type: string
+        enum:
+          - id
+          - -id
+          - created_at
+          - -created_at
+          - total
+          - -total
+
+    ShipmentSortParam:
+      name: sort
+      in: query
+      description: Sort by
+      schema:
+        type: string
+        enum:
+          - id
+          - -id
+          - shipped_at
+          - -shipped_at
+
+    SortParam:
+      name: sort
+      in: query
+      description: Sort by
+      schema:
+        type: string
+        enum:
+          - id
+          - -id
+          - created_at
+          - -created_at
+
+  responses:
+    Created:
+      description: Created
+
+    NoContent:
+      description: No content
+
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AppExceptionDto'
+
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AppExceptionDto'
+
+    UnprocesableEntity:
+      description: Unprocessable entity
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AppExceptionDto'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AppExceptionDto'
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AppExceptionDto'
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/AppExceptionDto'
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
