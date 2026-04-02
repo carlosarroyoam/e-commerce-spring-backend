@@ -2,10 +2,13 @@ package com.carlosarroyoam.ecommerce.product;
 
 import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto;
 import com.carlosarroyoam.ecommerce.product.dto.ProductDto;
+import com.carlosarroyoam.ecommerce.product.dto.ProductFilterDto;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -21,8 +24,9 @@ public class ProductController {
 
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponseDto<ProductDto>> findAll(
-      @PageableDefault(page = 0, size = 25) Pageable pageable) {
-    PagedResponseDto<ProductDto> products = productService.findAll(pageable);
+      @PageableDefault(page = 0, size = 25) Pageable pageable,
+      @Valid @ModelAttribute ProductFilterDto filters) {
+    PagedResponseDto<ProductDto> products = productService.findAll(pageable, filters);
     return ResponseEntity.ok(products);
   }
 

@@ -5,11 +5,13 @@ import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto;
 import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto.PagedResponseDtoMapper;
 import com.carlosarroyoam.ecommerce.product.dto.ProductDto;
 import com.carlosarroyoam.ecommerce.product.dto.ProductDto.ProductDtoMapper;
+import com.carlosarroyoam.ecommerce.product.dto.ProductFilterDto;
 import com.carlosarroyoam.ecommerce.product.entity.Product;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -23,8 +25,12 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public PagedResponseDto<ProductDto> findAll(Pageable pageable) {
-    Page<Product> products = productRepository.findAll(pageable);
+  public PagedResponseDto<ProductDto> findAll(Pageable pageable, ProductFilterDto filters) {
+    Specification<Product> spec = Specification.unrestricted();
+    spec = spec.and(ProductSpecification.titleContains(filters.getTitle()));
+
+    Page<Product> products = productRepository.findAll(spec, pageable);
+
     return PagedResponseDtoMapper.INSTANCE
         .toPagedResponseDto(products.map(ProductDtoMapper.INSTANCE::toDto));
   }
