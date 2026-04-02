@@ -1,4 +1,4 @@
-package com.carlosarroyoam.ecommerce.product.entity;
+package com.carlosarroyoam.ecommerce.order.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -7,27 +7,26 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "properties", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_properties_title", columnNames = "title") })
+@Table(name = "carriers", uniqueConstraints = {
+    @UniqueConstraint(name = "uk_carriers_name", columnNames = "name") })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class Property {
+public class Carrier {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
+  private Byte id;
 
-  @Column(name = "title", length = 45, unique = true, nullable = false)
-  private String title;
+  @Column(name = "name", length = 45, nullable = false)
+  private String name;
 
-  @Column(name = "deleted_at")
-  private LocalDateTime deletedAt;
+  @Column(name = "active", nullable = false, columnDefinition = "BIT")
+  private Boolean active;
 }

@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "attributes", uniqueConstraints = {
-    @UniqueConstraint(name = "attributes_title_idx", columnNames = "title") })
+    @UniqueConstraint(name = "uk_attributes_title", columnNames = "title") })
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
