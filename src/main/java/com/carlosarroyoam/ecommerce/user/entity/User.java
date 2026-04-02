@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -50,7 +49,6 @@ public class User {
   @Column(name = "updated_at", nullable = false)
   private LocalDateTime updatedAt;
 
-  @JsonIgnore
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;
 }

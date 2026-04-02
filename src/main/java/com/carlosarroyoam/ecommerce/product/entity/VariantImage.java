@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.product.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,7 +29,6 @@ public class VariantImage {
   @Column(name = "url", length = 128, unique = true, nullable = false)
   private String url;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "variant_id", referencedColumnName = "id", nullable = false)
   private Variant variant;

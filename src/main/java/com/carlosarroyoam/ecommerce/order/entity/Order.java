@@ -4,7 +4,6 @@ import com.carlosarroyoam.ecommerce.customer.entity.Customer;
 import com.carlosarroyoam.ecommerce.customer.entity.CustomerAddress;
 import com.carlosarroyoam.ecommerce.refund.entity.Refund;
 import com.carlosarroyoam.ecommerce.shipment.entity.Shipment;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -38,7 +37,6 @@ public class Order {
   @Column(name = "order_number", length = 36, nullable = false)
   private String orderNumber;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
   private Customer customer;

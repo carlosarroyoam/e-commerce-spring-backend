@@ -1,7 +1,6 @@
 package com.carlosarroyoam.ecommerce.shipment.entity;
 
 import com.carlosarroyoam.ecommerce.order.entity.Order;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +28,6 @@ public class Shipment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
   private Order order;

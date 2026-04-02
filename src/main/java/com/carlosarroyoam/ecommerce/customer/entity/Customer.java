@@ -1,7 +1,6 @@
 package com.carlosarroyoam.ecommerce.customer.entity;
 
 import com.carlosarroyoam.ecommerce.user.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -27,7 +26,6 @@ public class Customer {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @JsonIgnore
   @OneToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
   private User user;

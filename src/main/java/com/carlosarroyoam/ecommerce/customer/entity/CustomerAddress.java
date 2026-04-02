@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.customer.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -52,7 +51,6 @@ public class CustomerAddress {
   @Column(name = "phone_number", length = 10, nullable = false)
   private String phoneNumber;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
   private Customer customer;

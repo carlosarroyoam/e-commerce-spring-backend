@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.product.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +30,6 @@ public class Category {
   @Column(name = "title", length = 45, unique = true, nullable = false)
   private String title;
 
-  @JsonIgnore
   @OneToMany(mappedBy = "category")
   private List<Product> products;
 

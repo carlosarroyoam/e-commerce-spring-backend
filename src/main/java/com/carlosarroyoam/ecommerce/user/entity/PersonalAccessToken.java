@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.user.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,7 +41,6 @@ public class PersonalAccessToken {
   @Column(name = "user_agent", length = 254)
   private String userAgent;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
   private User user;

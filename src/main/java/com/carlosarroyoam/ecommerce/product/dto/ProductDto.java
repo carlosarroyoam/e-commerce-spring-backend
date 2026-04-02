@@ -1,9 +1,9 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
-import com.carlosarroyoam.ecommerce.product.entity.Category;
+import com.carlosarroyoam.ecommerce.product.dto.CategoryDto.CategoryDtoMapper;
+import com.carlosarroyoam.ecommerce.product.dto.ProductPropertyValueDto.ProductPropertyValueDtoMapper;
+import com.carlosarroyoam.ecommerce.product.dto.VariantDto.VariantDtoMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Product;
-import com.carlosarroyoam.ecommerce.product.entity.ProductPropertyValue;
-import com.carlosarroyoam.ecommerce.product.entity.Variant;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -33,7 +33,8 @@ public class ProductDto {
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
+      CategoryDtoMapper.class, ProductPropertyValueDtoMapper.class, VariantDtoMapper.class })
   public interface ProductDtoMapper {
     ProductDtoMapper INSTANCE = Mappers.getMapper(ProductDtoMapper.class);
 

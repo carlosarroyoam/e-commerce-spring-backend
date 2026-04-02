@@ -1,7 +1,6 @@
 package com.carlosarroyoam.ecommerce.admin.entity;
 
 import com.carlosarroyoam.ecommerce.user.entity.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +30,6 @@ public class Admin {
   @Column(name = "is_super", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
   private Boolean isSuper;
 
-  @JsonIgnore
   @OneToOne
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
   private User user;

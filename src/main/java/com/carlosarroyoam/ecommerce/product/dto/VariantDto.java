@@ -1,8 +1,8 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
+import com.carlosarroyoam.ecommerce.product.dto.VariantAttributeValueDto.VariantAttributeValueDtoMapper;
+import com.carlosarroyoam.ecommerce.product.dto.VariantImageDto.VariantImageDtoMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Variant;
-import com.carlosarroyoam.ecommerce.product.entity.VariantAttributeValue;
-import com.carlosarroyoam.ecommerce.product.entity.VariantImage;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -25,10 +25,11 @@ public class VariantDto {
   private BigDecimal comparedAtPrice;
   private BigDecimal costPerItem;
   private Integer quantityOnStock;
-  private List<VariantAttributeValue> attributes;
-  private List<VariantImage> images;
+  private List<VariantAttributeValueDto> attributes;
+  private List<VariantImageDto> images;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
+      VariantAttributeValueDtoMapper.class, VariantImageDtoMapper.class })
   public interface VariantDtoMapper {
     VariantDtoMapper INSTANCE = Mappers.getMapper(VariantDtoMapper.class);
 

@@ -1,7 +1,6 @@
 package com.carlosarroyoam.ecommerce.inventory.entity;
 
 import com.carlosarroyoam.ecommerce.product.entity.Variant;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -29,7 +28,6 @@ public class InventoryMovement {
   @Column(name = "quantity", nullable = false)
   private Integer quantity;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "variant_id", referencedColumnName = "id", nullable = false)
   private Variant variant;

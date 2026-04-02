@@ -1,7 +1,6 @@
 package com.carlosarroyoam.ecommerce.refund.entity;
 
 import com.carlosarroyoam.ecommerce.order.entity.OrderItem;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +26,6 @@ public class RefundItem {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "refund_id", referencedColumnName = "id", nullable = false)
   private Refund refund;
