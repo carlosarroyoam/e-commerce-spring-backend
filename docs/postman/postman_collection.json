@@ -1,7 +1,7 @@
 {
   "info": {
-    "_postman_id": "5b13f529-43c6-48ff-b1a9-b3df55734fb4",
-    "name": "Nodejs e-commerce",
+    "_postman_id": "17ecc3ce-e69c-431e-b015-de6cd0e1f5c2",
+    "name": "Spring e-commerce",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "6677786"
   },
@@ -260,34 +260,60 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/users",
+              "raw": "{{baseUrl}}/users?page=0&size=20&sort=id,asc",
               "host": ["{{baseUrl}}"],
               "path": ["users"],
               "query": [
                 {
-                  "key": "status",
-                  "value": "active",
+                  "key": "firstName",
+                  "value": "Carlos Alberto",
+                  "type": "text",
                   "disabled": true
                 },
                 {
-                  "key": "search",
-                  "value": "Carlos",
+                  "key": "lastName",
+                  "value": "Arroyo Martinez",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "email",
+                  "value": "carlos.arroyo@e-commerce.com",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "disabled": true
+                },
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "disabled": true
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-05-01",
+                  "disabled": true
+                },
+                {
+                  "key": "roleId",
+                  "value": "1",
+                  "type": "text",
                   "disabled": true
                 },
                 {
                   "key": "page",
-                  "value": "1",
-                  "disabled": true
+                  "value": "0"
                 },
                 {
                   "key": "size",
-                  "value": "20",
-                  "disabled": true
+                  "value": "20"
                 },
                 {
                   "key": "sort",
-                  "value": "-email",
-                  "disabled": true
+                  "value": "id,asc"
                 }
               ]
             }
@@ -425,14 +451,14 @@
               "path": ["admins"],
               "query": [
                 {
-                  "key": "status",
-                  "value": "inactive",
+                  "key": "search",
+                  "value": "martinez",
                   "type": "text",
                   "disabled": true
                 },
                 {
-                  "key": "search",
-                  "value": "martinez",
+                  "key": "status",
+                  "value": "inactive",
                   "type": "text",
                   "disabled": true
                 },
@@ -566,14 +592,14 @@
               "path": ["customers"],
               "query": [
                 {
-                  "key": "status",
-                  "value": "inactive",
+                  "key": "search",
+                  "value": "martinez",
                   "type": "text",
                   "disabled": true
                 },
                 {
-                  "key": "search",
-                  "value": "martinez",
+                  "key": "status",
+                  "value": "inactive",
                   "type": "text",
                   "disabled": true
                 },
@@ -838,31 +864,61 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/products",
+              "raw": "{{baseUrl}}/products?page=0&size=20&sort=id,asc",
               "host": ["{{baseUrl}}"],
               "path": ["products"],
               "query": [
                 {
-                  "key": "search",
-                  "value": "moto g100",
+                  "key": "title",
+                  "value": "Moto",
+                  "type": "text",
                   "disabled": true
                 },
                 {
-                  "key": "page",
+                  "key": "slug",
+                  "value": "moto-g",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "isFeatured",
+                  "value": "false",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "isActive",
+                  "value": "true",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "disabled": true
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-05-01",
+                  "disabled": true
+                },
+                {
+                  "key": "categoryId",
                   "value": "1",
                   "type": "text",
                   "disabled": true
                 },
                 {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
                   "key": "size",
-                  "value": "20",
-                  "type": "text",
-                  "disabled": true
+                  "value": "20"
                 },
                 {
                   "key": "sort",
-                  "value": "title",
-                  "disabled": true
+                  "value": "id,asc"
                 }
               ]
             }
@@ -1514,7 +1570,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"status_id\": 2,\r\n    \"notes\": \"Packed and ready for shipment\"\r\n}",
+              "raw": "{\r\n    \"status_id\": 2,\r\n    \"note\": \"Packed and ready for shipment\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"

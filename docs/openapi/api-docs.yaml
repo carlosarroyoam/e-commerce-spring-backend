@@ -55,21 +55,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginRequest'
+              $ref: "#/components/schemas/LoginRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/LoginResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /auth/logout:
     post:
@@ -78,12 +78,12 @@ paths:
       summary: Revokes a refresh token
       operationId: authLogout
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /auth/refresh-token:
     post:
@@ -96,17 +96,17 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/RefreshTokenRequest'
+              $ref: "#/components/schemas/RefreshTokenRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /auth/forgot-password:
     post:
@@ -119,15 +119,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ForgotPasswordRequest'
+              $ref: "#/components/schemas/ForgotPasswordRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /auth/reset-password:
     post:
@@ -136,21 +136,21 @@ paths:
       summary: Resets a user password
       operationId: resetPassword
       parameters:
-        - $ref: '#/components/parameters/resetPasswordTokenParam'
+        - $ref: "#/components/parameters/resetPasswordTokenParam"
       requestBody:
         description: User password object that will be changed
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ResetPasswordRequest'
+              $ref: "#/components/schemas/ResetPasswordRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /users:
     get:
@@ -159,26 +159,72 @@ paths:
       summary: Gets all users
       operationId: getUsers
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/UserSortParam'
-        - $ref: '#/components/parameters/UserStatusParam'
-        - $ref: '#/components/parameters/SearchParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
+        - name: firstName
+          in: query
+          required: false
+          description: User's first name.
+          schema:
+            type: string
+            maxLength: 64
+        - name: lastName
+          in: query
+          required: false
+          description: User's last name.
+          schema:
+            type: string
+            maxLength: 64
+        - name: email
+          in: query
+          required: false
+          description: User's email address.
+          schema:
+            type: string
+            maxLength: 64
+        - name: isActive
+          in: query
+          required: false
+          description: Whether the user is active or not.
+          schema:
+            type: boolean
+        - name: startDate
+          in: query
+          required: false
+          description: Start date for date range filter in the ISO format YYYY-MM-DD.
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          description: End date for date range filter in the ISO format YYYY-MM-DD.
+          schema:
+            type: string
+            format: date
+        - name: userRoleId
+          in: query
+          required: false
+          description: User role identifier.
+          schema:
+            type: integer
+            format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedUsersResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/PagedUsersResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -197,22 +243,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/User'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/User"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -230,18 +276,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -264,21 +310,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/ChangePasswordRequest'
+              $ref: "#/components/schemas/ChangePasswordRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -297,18 +343,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -319,22 +365,20 @@ paths:
       summary: Gets all admins
       operationId: getAdmins
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/UserSortParam'
-        - $ref: '#/components/parameters/UserStatusParam'
-        - $ref: '#/components/parameters/SearchParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -348,19 +392,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateAdminRequest'
+              $ref: "#/components/schemas/CreateAdminRequest"
         required: true
       responses:
-        '201':
-          $ref: '#/components/responses/Created'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "201":
+          $ref: "#/components/responses/Created"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -374,21 +418,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateAdminRequest'
+              $ref: "#/components/schemas/UpdateAdminRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -407,22 +451,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Admin'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Admin"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -433,26 +477,24 @@ paths:
       summary: Gets all customers
       operationId: getCustomers
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/UserSortParam'
-        - $ref: '#/components/parameters/UserStatusParam'
-        - $ref: '#/components/parameters/SearchParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedCustomersResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/PagedCustomersResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -466,19 +508,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCustomerRequest'
+              $ref: "#/components/schemas/CreateCustomerRequest"
         required: true
       responses:
-        '201':
-          $ref: '#/components/responses/Created'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "201":
+          $ref: "#/components/responses/Created"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -492,21 +534,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateCustomerRequest'
+              $ref: "#/components/schemas/UpdateCustomerRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -525,22 +567,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Customer'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Customer"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -558,22 +600,22 @@ paths:
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/CustomerAddress'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                  $ref: "#/components/schemas/CustomerAddress"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -594,19 +636,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCustomerAddressRequest'
+              $ref: "#/components/schemas/CreateCustomerAddressRequest"
         required: true
       responses:
-        '201':
-          $ref: '#/components/responses/Created'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "201":
+          $ref: "#/components/responses/Created"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -632,22 +674,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomerAddress'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/CustomerAddress"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -676,21 +718,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateCustomerAddressRequest'
+              $ref: "#/components/schemas/UpdateCustomerAddressRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -715,18 +757,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -737,25 +779,71 @@ paths:
       summary: Gets all products
       operationId: getProducts
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/ProductSortParam'
-        - $ref: '#/components/parameters/SearchParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
+        - name: title
+          in: query
+          required: false
+          description: Product's title.
+          schema:
+            type: string
+            maxLength: 64
+        - name: slug
+          in: query
+          required: false
+          description: Product's slug.
+          schema:
+            type: string
+            maxLength: 64
+        - name: isFeatured
+          in: query
+          required: false
+          description: Whether the product is featured or not.
+          schema:
+            type: boolean
+        - name: isActive
+          in: query
+          required: false
+          description: Whether the product is active or not.
+          schema:
+            type: boolean
+        - name: startDate
+          in: query
+          required: false
+          description: Start date for date range filter in the ISO format YYYY-MM-DD.
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          description: End date for date range filter in the ISO format YYYY-MM-DD.
+          schema:
+            type: string
+            format: date
+        - name: categoryId
+          in: query
+          required: false
+          description: Category identifier.
+          schema:
+            type: integer
+            format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedProductsResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/PagedProductsResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /products/{product_id}:
     get:
@@ -772,22 +860,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Product'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Product"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /products/{product_id}/variants:
     get:
@@ -804,22 +892,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ProductVariant'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                  $ref: "#/components/schemas/ProductVariant"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /products/{product_id}/variants/{variant_id}:
     get:
@@ -843,22 +931,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductVariant'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/ProductVariant"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
 
   /attributes:
     get:
@@ -867,24 +955,24 @@ paths:
       summary: Gets all attributes
       operationId: getAttributes
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/AttributeSortParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedAttributesResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/PagedAttributesResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -898,19 +986,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateAttributeRequest'
+              $ref: "#/components/schemas/CreateAttributeRequest"
         required: true
       responses:
-        '201':
-          $ref: '#/components/responses/Created'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "201":
+          $ref: "#/components/responses/Created"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -929,22 +1017,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Attribute'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Attribute"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -966,19 +1054,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateAttributeRequest'
+              $ref: "#/components/schemas/UpdateAttributeRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -996,18 +1084,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1026,18 +1114,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1048,24 +1136,24 @@ paths:
       summary: Gets all properties
       operationId: getProperties
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/PropertySortParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedPropertiesResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/PagedPropertiesResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1079,19 +1167,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreatePropertyRequest'
+              $ref: "#/components/schemas/CreatePropertyRequest"
         required: true
       responses:
-        '201':
-          $ref: '#/components/responses/Created'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "201":
+          $ref: "#/components/responses/Created"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1110,22 +1198,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Property'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Property"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1147,19 +1235,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdatePropertyRequest'
+              $ref: "#/components/schemas/UpdatePropertyRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1177,18 +1265,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1207,18 +1295,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1229,24 +1317,24 @@ paths:
       summary: Gets all categories
       operationId: getCategories
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/CategorySortParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedCategoriesResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/PagedCategoriesResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
     post:
       tags:
         - category
@@ -1257,19 +1345,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateCategoryRequest'
+              $ref: "#/components/schemas/CreateCategoryRequest"
         required: true
       responses:
-        '201':
-          $ref: '#/components/responses/Created'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "201":
+          $ref: "#/components/responses/Created"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1288,22 +1376,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Category'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Category"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
     put:
       tags:
         - category
@@ -1322,19 +1410,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateCategoryRequest'
+              $ref: "#/components/schemas/UpdateCategoryRequest"
         required: true
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1352,18 +1440,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1382,18 +1470,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1404,25 +1492,24 @@ paths:
       summary: Gets all orders
       operationId: getOrders
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/OrderSortParam'
-        - $ref: '#/components/parameters/SearchParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedOrdersResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/PagedOrdersResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1436,19 +1523,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateOrderRequest'
+              $ref: "#/components/schemas/CreateOrderRequest"
         required: true
       responses:
-        '201':
-          $ref: '#/components/responses/Created'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "201":
+          $ref: "#/components/responses/Created"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1466,22 +1553,22 @@ paths:
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OrderTrack'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/OrderTrack"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1500,22 +1587,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Order"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1538,25 +1625,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+              $ref: "#/components/schemas/UpdateOrderStatusRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Order"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1579,25 +1666,25 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/UpdateOrderPaymentStatusRequest'
+              $ref: "#/components/schemas/UpdateOrderPaymentStatusRequest"
         required: true
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Order'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Order"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1608,24 +1695,24 @@ paths:
       summary: Gets all shipments
       operationId: getShipments
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/ShipmentSortParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedShipmentsResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/PagedShipmentsResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1636,22 +1723,22 @@ paths:
       summary: Gets all active carriers
       operationId: getCarriers
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Carrier'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                  $ref: "#/components/schemas/Carrier"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1670,22 +1757,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Shipment'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Shipment"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1704,22 +1791,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Shipment'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Shipment"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1742,21 +1829,21 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateShipmentRequest'
+              $ref: "#/components/schemas/CreateShipmentRequest"
         required: true
       responses:
-        '201':
-          $ref: '#/components/responses/Created'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "201":
+          $ref: "#/components/responses/Created"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1775,18 +1862,18 @@ paths:
             type: integer
             format: int64
       responses:
-        '204':
-          $ref: '#/components/responses/NoContent'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1797,29 +1884,29 @@ paths:
       summary: Gets all refunds
       operationId: getRefunds
       parameters:
-        - $ref: '#/components/parameters/PageParam'
-        - $ref: '#/components/parameters/SizeParam'
-        - $ref: '#/components/parameters/SortParam'
+        - $ref: "#/components/parameters/PageParam"
+        - $ref: "#/components/parameters/SizeParam"
+        - $ref: "#/components/parameters/SortParam"
         - name: order_id
           in: query
           description: Filter refunds by order id
           schema:
             type: integer
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/PagedRefundsResponse'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/PagedRefundsResponse"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1838,22 +1925,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Refund'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Refund"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1872,22 +1959,22 @@ paths:
             type: integer
             format: int64
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Refund'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/NotFound'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+                $ref: "#/components/schemas/Refund"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -1909,19 +1996,19 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateRefundRequest'
+              $ref: "#/components/schemas/CreateRefundRequest"
         required: true
       responses:
-        '201':
-          $ref: '#/components/responses/Created'
-        '422':
-          $ref: '#/components/responses/UnprocesableEntity'
-        '401':
-          $ref: '#/components/responses/Unauthorized'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '500':
-          $ref: '#/components/responses/InternalServerError'
+        "201":
+          $ref: "#/components/responses/Created"
+        "422":
+          $ref: "#/components/responses/UnprocesableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
       security:
         - BearerAuth: []
 
@@ -2016,9 +2103,9 @@ components:
           type: array
           description: List of users
           items:
-            $ref: '#/components/schemas/User'
+            $ref: "#/components/schemas/User"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     PagedAdminsResponse:
       type: object
@@ -2028,9 +2115,9 @@ components:
           type: array
           description: List of admins
           items:
-            $ref: '#/components/schemas/Admin'
+            $ref: "#/components/schemas/Admin"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     CreateAdminRequest:
       type: object
@@ -2078,9 +2165,9 @@ components:
           type: array
           description: List of customers
           items:
-            $ref: '#/components/schemas/Customer'
+            $ref: "#/components/schemas/Customer"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     CreateCustomerRequest:
       type: object
@@ -2168,9 +2255,9 @@ components:
           type: array
           description: List of products
           items:
-            $ref: '#/components/schemas/Product'
+            $ref: "#/components/schemas/Product"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     PagedCategoriesResponse:
       type: object
@@ -2180,9 +2267,9 @@ components:
           type: array
           description: List of categories
           items:
-            $ref: '#/components/schemas/Category'
+            $ref: "#/components/schemas/Category"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     CreateCategoryRequest:
       type: object
@@ -2208,9 +2295,9 @@ components:
           type: array
           description: List of attributes
           items:
-            $ref: '#/components/schemas/Attribute'
+            $ref: "#/components/schemas/Attribute"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     CreateAttributeRequest:
       type: object
@@ -2236,9 +2323,9 @@ components:
           type: array
           description: List of properties
           items:
-            $ref: '#/components/schemas/Property'
+            $ref: "#/components/schemas/Property"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     CreatePropertyRequest:
       type: object
@@ -2264,9 +2351,9 @@ components:
           type: array
           description: List of orders
           items:
-            $ref: '#/components/schemas/Order'
+            $ref: "#/components/schemas/Order"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     CreateOrderRequest:
       type: object
@@ -2288,7 +2375,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/OrderItemRequest'
+            $ref: "#/components/schemas/OrderItemRequest"
       required:
         - customer_id
         - shipping_address_id
@@ -2338,9 +2425,9 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Refund'
+            $ref: "#/components/schemas/Refund"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     CreateRefundRequest:
       type: object
@@ -2350,7 +2437,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/RefundItemRequest'
+            $ref: "#/components/schemas/RefundItemRequest"
       required:
         - items
 
@@ -2375,9 +2462,9 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/Shipment'
+            $ref: "#/components/schemas/Shipment"
         pagination:
-          $ref: '#/components/schemas/PaginationDto'
+          $ref: "#/components/schemas/PaginationDto"
 
     CreateShipmentRequest:
       type: object
@@ -2416,9 +2503,11 @@ components:
         email:
           type: string
           description: User's email address
-        user_role_id:
-          type: integer
-          description: Foreign key to user roles table
+        is_active:
+          type: boolean
+          description: Indicates if user is active
+        user_role:
+          $ref: "#/components/schemas/UserRole"
         created_at:
           type: string
           format: date-time
@@ -2492,7 +2581,7 @@ components:
           type: array
           description: List of customer addresses
           items:
-            $ref: '#/components/schemas/CustomerAddress'
+            $ref: "#/components/schemas/CustomerAddress"
         created_at:
           type: string
           format: date-time
@@ -2581,19 +2670,22 @@ components:
         description:
           type: string
           description: Product description
-        featured:
+        is_featured:
           type: boolean
           description: Indicates if product is featured
-        active:
+        is_active:
           type: boolean
           description: Indicates if product is active
         category:
-          type: string
-          description: Product category
-        attribute_combinations:
-          $ref: '#/components/schemas/Attribute'
-        images:
-          $ref: '#/components/schemas/VariantImage'
+          $ref: "#/components/schemas/Category"
+        properties:
+          type: array
+          items:
+          $ref: "#/components/schemas/ProductPropertyValue"
+        variants:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductVariant'
         created_at:
           type: string
           format: date-time
@@ -2607,6 +2699,30 @@ components:
           format: date-time
           description: Timestamp when the product was deleted (soft delete)
           nullable: true
+
+    Property:
+      type: object
+      description: Property information for products
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the property
+        title:
+          type: string
+          description: Property title (e.g., Brand, Model)
+
+    ProductPropertyValue:
+      type: object
+      description: Product property value information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the Product property value
+        value:
+          type: string
+          description: Product property value
+        property:
+          $ref: "#/components/schemas/Property"
 
     ProductVariant:
       type: object
@@ -2630,13 +2746,34 @@ components:
         quantity_on_stock:
           type: integer
           description: Available stock quantity
-        product_id:
-          type: integer
-          description: Foreign key to products table
-        attribute_combinations:
-          $ref: '#/components/schemas/Attribute'
+        attributes:
+          $ref: "#/components/schemas/VariantAttributeValue"
         images:
-          $ref: '#/components/schemas/VariantImage'
+          $ref: "#/components/schemas/VariantImage"
+
+    Attribute:
+      type: object
+      description: Attribute information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the attribute
+        title:
+          type: string
+          description: Attribute title (e.g., Color, Storage)
+
+    VariantAttributeValue:
+      type: object
+      description: Variant attribute value information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the Variant attribute value
+        value:
+          type: string
+          description: Variant attribute value
+        attribute:
+          $ref: "#/components/schemas/Attribute"
 
     VariantImage:
       type: object
@@ -2651,39 +2788,6 @@ components:
         variant_id:
           type: integer
           description: Foreign key to variants table
-
-    Attribute:
-      type: object
-      description: Attribute information
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the attribute
-        title:
-          type: string
-          description: Attribute title (e.g., Color, Storage)
-        value:
-          type: string
-          description: Attribute value
-
-    Property:
-      type: object
-      description: Property information for products
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the property
-        title:
-          type: string
-          description: Property title (e.g., Brand, Model)
-        value:
-          type: string
-          description: Property value
-        deleted_at:
-          type: string
-          format: date-time
-          description: Timestamp when the property was deleted (soft delete)
-          nullable: true
 
     Order:
       type: object
@@ -2756,7 +2860,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/RefundItem'
+            $ref: "#/components/schemas/RefundItem"
 
     OrderTrack:
       type: object
@@ -2773,9 +2877,9 @@ components:
         statusHistory:
           type: array
           items:
-            $ref: '#/components/schemas/OrderStatusHistory'
+            $ref: "#/components/schemas/OrderStatusHistory"
         shipment:
-          $ref: '#/components/schemas/Shipment'
+          $ref: "#/components/schemas/Shipment"
 
     ShippingAddress:
       type: object
@@ -2847,7 +2951,7 @@ components:
         items:
           type: array
           items:
-            $ref: '#/components/schemas/RefundItem'
+            $ref: "#/components/schemas/RefundItem"
         createdAt:
           type: string
           format: date-time
@@ -2932,38 +3036,14 @@ components:
         type: integer
         default: 1
 
-    SearchParam:
-      name: search
-      in: query
-      description: Search criteria
-      schema:
-        type: string
-
-    UserSortParam:
+    SortParam:
       name: sort
       in: query
-      description: Sort by
+      required: false
+      description: Sorting criteria in the format field,asc or field,desc.
       schema:
         type: string
-        enum:
-          - id
-          - -id
-          - first_name
-          - -first_name
-          - last_name
-          - -last_name
-          - email
-          - -email
-
-    UserStatusParam:
-      name: status
-      in: query
-      description: User status
-      schema:
-        type: string
-        enum:
-          - active
-          - inactive
+        default: id,asc
 
     resetPasswordTokenParam:
       name: token
@@ -2971,92 +3051,6 @@ components:
       required: true
       schema:
         type: string
-
-    ProductSortParam:
-      name: sort
-      in: query
-      description: Sort by
-      schema:
-        type: string
-        enum:
-          - id
-          - -id
-          - title
-          - -title
-
-    CategorySortParam:
-      name: sort
-      in: query
-      description: Sort by
-      schema:
-        type: string
-        enum:
-          - id
-          - -id
-          - title
-          - -title
-
-    AttributeSortParam:
-      name: sort
-      in: query
-      description: Sort by
-      schema:
-        type: string
-        enum:
-          - id
-          - -id
-          - title
-          - -title
-
-    PropertySortParam:
-      name: sort
-      in: query
-      description: Sort by
-      schema:
-        type: string
-        enum:
-          - id
-          - -id
-          - title
-          - -title
-
-    OrderSortParam:
-      name: sort
-      in: query
-      description: Sort by
-      schema:
-        type: string
-        enum:
-          - id
-          - -id
-          - created_at
-          - -created_at
-          - total
-          - -total
-
-    ShipmentSortParam:
-      name: sort
-      in: query
-      description: Sort by
-      schema:
-        type: string
-        enum:
-          - id
-          - -id
-          - shipped_at
-          - -shipped_at
-
-    SortParam:
-      name: sort
-      in: query
-      description: Sort by
-      schema:
-        type: string
-        enum:
-          - id
-          - -id
-          - created_at
-          - -created_at
 
   responses:
     Created:
@@ -3070,42 +3064,42 @@ components:
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AppExceptionDto'
+            $ref: "#/components/schemas/AppExceptionDto"
 
     BadRequest:
       description: Bad request
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AppExceptionDto'
+            $ref: "#/components/schemas/AppExceptionDto"
 
     UnprocesableEntity:
       description: Unprocessable entity
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AppExceptionDto'
+            $ref: "#/components/schemas/AppExceptionDto"
 
     Unauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AppExceptionDto'
+            $ref: "#/components/schemas/AppExceptionDto"
 
     Forbidden:
       description: Forbidden
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AppExceptionDto'
+            $ref: "#/components/schemas/AppExceptionDto"
 
     InternalServerError:
       description: Internal server error
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/AppExceptionDto'
+            $ref: "#/components/schemas/AppExceptionDto"
 
   securitySchemes:
     BearerAuth:

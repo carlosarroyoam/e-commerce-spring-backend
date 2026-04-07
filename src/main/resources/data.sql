@@ -1,23 +1,23 @@
 -- E-commerce Management System MySQL Seed Data
 
-USE `ecommerce`;
+USE `spring-boot-e-commerce`;
 
 INSERT INTO user_roles (id, type) VALUES
 (1, 'App/Admin'),
 (2, 'App/Customer');
 
-INSERT INTO users (id, first_name, last_name, email, password_hash, user_role_id, created_at, updated_at, deleted_at) VALUES
-(1, 'Carlos Alberto', 'Arroyo Martínez', 'carlos.arroyo@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(2, 'Cathy Stefania', 'Guido Rojas', 'cathy.guido@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(3, 'Roberto Carlos', 'García López', 'roberto.garcia@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(4, 'María Elena', 'Hernández Sánchez', 'maria.hernandez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(5, 'Jorge Antonio', 'Rodríguez Pérez', 'jorge.rodriguez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(6, 'Laura Patricia', 'Martínez González', 'laura.martinez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(7, 'Fernando', 'Torres Rivera', 'fernando.torres@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(8, 'Ana Guadalupe', 'Flores Morales', 'ana.flores@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(9, 'Luis Miguel', 'Ramírez Castro', 'luis.ramirez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(10, 'Patricia', 'Jiménez Vargas', 'patricia.jimenez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
-(11, 'Alejandro', 'Ortega Mendoza', 'alejandro.ortega@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL);
+INSERT INTO users (id, first_name, last_name, email, password_hash, is_active, user_role_id, created_at, updated_at, deleted_at) VALUES
+(1, 'Carlos Alberto', 'Arroyo Martínez', 'carlos.arroyo@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(2, 'Cathy Stefania', 'Guido Rojas', 'cathy.guido@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(3, 'Roberto Carlos', 'García López', 'roberto.garcia@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(4, 'María Elena', 'Hernández Sánchez', 'maria.hernandez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(5, 'Jorge Antonio', 'Rodríguez Pérez', 'jorge.rodriguez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(6, 'Laura Patricia', 'Martínez González', 'laura.martinez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(7, 'Fernando', 'Torres Rivera', 'fernando.torres@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(8, 'Ana Guadalupe', 'Flores Morales', 'ana.flores@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(9, 'Luis Miguel', 'Ramírez Castro', 'luis.ramirez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(10, 'Patricia', 'Jiménez Vargas', 'patricia.jimenez@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 2, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
+(11, 'Alejandro', 'Ortega Mendoza', 'alejandro.ortega@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL);
 
 INSERT INTO customers (id, user_id) VALUES
 (1, 2),
@@ -54,7 +54,7 @@ INSERT INTO categories (id, title, deleted_at) VALUES
 (7, 'Gaming', NULL),
 (8, 'Covers & Cases', NULL);
 
-INSERT INTO products (id, title, slug, description, featured, active, category_id, created_at, updated_at, deleted_at) VALUES
+INSERT INTO products (id, title, slug, description, is_featured, is_active, category_id, created_at, updated_at, deleted_at) VALUES
 (1, 'Moto G100', 'moto-g100', 'Moto G100', 0, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
 (2, 'Moto G60', 'moto-g60', 'Moto G60', 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
 (3, 'iPhone 15 Pro', 'iphone-15-pro', 'iPhone 15 Pro Max 256GB', 1, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
@@ -343,21 +343,21 @@ INSERT INTO movements (id, title, movement_type_id) VALUES
 (7, 'Theft/Loss', 2),
 (8, 'Inventory adjustment', 2);
 
-INSERT INTO order_payment_statuses (id, name) VALUES
+INSERT INTO order_payment_statuses (id, title) VALUES
 (1, 'pending'),
 (2, 'paid'),
 (3, 'failed'),
 (4, 'refunded'),
 (5, 'partially_refunded');
 
-INSERT INTO order_statuses (id, name) VALUES
+INSERT INTO order_statuses (id, title) VALUES
 (1, 'pending'),
 (2, 'processing'),
 (3, 'shipped'),
 (4, 'delivered'),
 (5, 'cancelled');
 
-INSERT INTO carriers (id, name, active) VALUES
+INSERT INTO carriers (id, name, is_active) VALUES
 (1, 'FedEx', 1),
 (2, 'UPS', 1),
 (3, 'DHL', 1),
@@ -378,7 +378,7 @@ INSERT INTO order_items (id, order_id, product_id, variant_id, quantity, unit_pr
 (4, 4, 7, 15, 1, 4999.00, 4999.00),
 (5, 5, 10, 20, 1, 15999.00, 15999.00);
 
-INSERT INTO order_status_history (id, order_id, status_id, note, changed_at) VALUES
+INSERT INTO order_status_history (id, order_id, status_id, notes, changed_at) VALUES
 (1, 1, 1, 'Order created', '2025-01-15 10:30:00'),
 (2, 1, 2, 'Payment received', '2025-01-15 11:00:00'),
 (3, 1, 3, 'Order shipped', '2025-01-16 09:00:00'),

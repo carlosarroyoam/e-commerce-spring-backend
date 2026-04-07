@@ -25,8 +25,8 @@ public class ProductDto {
   private String title;
   private String slug;
   private String description;
-  private boolean featured;
-  private boolean active;
+  private Boolean isFeatured;
+  private Boolean isActive;
   private CategoryDto category;
   private List<ProductPropertyValueDto> properties;
   private List<VariantDto> variants;

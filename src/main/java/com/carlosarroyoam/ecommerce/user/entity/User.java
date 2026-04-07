@@ -39,6 +39,9 @@ public class User {
   @Column(name = "password_hash", length = 96, nullable = false)
   private String passwordHash;
 
+  @Column(name = "is_active", columnDefinition = "TINYINT", nullable = false)
+  private Boolean isActive;
+
   @ManyToOne
   @JoinColumn(name = "user_role_id", referencedColumnName = "id", nullable = false)
   private UserRole userRole;

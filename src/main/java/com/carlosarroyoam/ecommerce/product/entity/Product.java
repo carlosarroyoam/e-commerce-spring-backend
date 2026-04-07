@@ -39,11 +39,11 @@ public class Product {
   @Column(name = "description")
   private String description;
 
-  @Column(name = "featured", columnDefinition = "BIT", nullable = false)
-  private boolean featured;
+  @Column(name = "is_featured", columnDefinition = "TINYINT", nullable = false)
+  private Boolean isFeatured;
 
-  @Column(name = "active", columnDefinition = "BIT", nullable = false)
-  private boolean active;
+  @Column(name = "is_active", columnDefinition = "TINYINT", nullable = false)
+  private Boolean isActive;
 
   @ManyToOne
   @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)

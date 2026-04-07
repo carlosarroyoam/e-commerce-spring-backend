@@ -1,8 +1,8 @@
 -- E-commerce Management System MySQL Schema
 
-CREATE DATABASE IF NOT EXISTS `ecommerce`;
+CREATE DATABASE IF NOT EXISTS `spring-boot-e-commerce`;
 
-USE `ecommerce`;
+USE `spring-boot-e-commerce`;
 
 CREATE TABLE IF NOT EXISTS user_roles (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(64) NOT NULL,
     email VARCHAR(64) NOT NULL,
     password_hash VARCHAR(96) NOT NULL,
+    is_active TINYINT NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
     user_role_id TINYINT UNSIGNED NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -96,8 +97,8 @@ CREATE TABLE IF NOT EXISTS products (
     title VARCHAR(96) NOT NULL,
     slug VARCHAR(96) NOT NULL,
     description TEXT,
-    featured TINYINT NOT NULL DEFAULT 0 CHECK (featured IN (0, 1)),
-    active TINYINT NOT NULL DEFAULT 0 CHECK (active IN (0, 1)),
+    is_featured TINYINT NOT NULL DEFAULT 0 CHECK (is_featured IN (0, 1)),
+    is_active TINYINT NOT NULL DEFAULT 0 CHECK (is_active IN (0, 1)),
     category_id TINYINT UNSIGNED NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -233,7 +234,7 @@ CREATE TABLE IF NOT EXISTS order_statuses (
 CREATE TABLE IF NOT EXISTS carriers (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
-    active TINYINT NOT NULL DEFAULT 0 CHECK (active IN (0, 1)),
+    is_active TINYINT NOT NULL DEFAULT 0 CHECK (is_active IN (0, 1)),
     PRIMARY KEY (id),
     UNIQUE KEY uk_carriers_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

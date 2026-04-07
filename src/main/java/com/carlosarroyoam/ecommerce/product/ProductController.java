@@ -24,14 +24,15 @@ public class ProductController {
 
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponseDto<ProductDto>> findAll(
-      @PageableDefault(page = 0, size = 25) Pageable pageable,
-      @Valid @ModelAttribute ProductSpecsDto productSpecs) {
-    PagedResponseDto<ProductDto> products = productService.findAll(pageable, productSpecs);
+      @Valid @ModelAttribute ProductSpecsDto productSpecs,
+      @PageableDefault(page = 0, size = 25, sort = "id") Pageable pageable) {
+    PagedResponseDto<ProductDto> products = productService.findAll(productSpecs, pageable);
     return ResponseEntity.ok(products);
   }
 
   @GetMapping(value = "/{productId}", produces = "application/json")
   public ResponseEntity<ProductDto> findById(@PathVariable Long productId) {
-    return ResponseEntity.ok(productService.findById(productId));
+    ProductDto productById = productService.findById(productId);
+    return ResponseEntity.ok(productById);
   }
 }

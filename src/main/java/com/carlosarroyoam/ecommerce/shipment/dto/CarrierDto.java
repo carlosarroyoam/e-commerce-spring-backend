@@ -18,7 +18,7 @@ import org.mapstruct.factory.Mappers;
 public class CarrierDto {
   private Byte id;
   private String name;
-  private Boolean active;
+  private Boolean isActive;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface CarrierDtoMapper {

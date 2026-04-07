@@ -27,6 +27,6 @@ public class Carrier {
   @Column(name = "name", length = 45, nullable = false)
   private String name;
 
-  @Column(name = "active", nullable = false, columnDefinition = "BIT")
-  private Boolean active;
+  @Column(name = "is_active", nullable = false, columnDefinition = "TINYINT")
+  private Boolean isActive;
 }

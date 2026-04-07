@@ -1,68 +1,88 @@
 package com.carlosarroyoam.ecommerce.core.exception;
 
+import com.carlosarroyoam.ecommerce.core.exception.dto.AppExceptionDto;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 @RestControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+public class GlobalExceptionHandler {
   private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-  @Override
-  protected ResponseEntity<Object> createResponseEntity(Object body, HttpHeaders headers,
-      HttpStatusCode statusCode, WebRequest request) {
-    if (body instanceof ProblemDetail originalBody) {
-      Map<String, Object> modifiedBody = createResponseBody(new Exception(originalBody.getDetail()),
-          request, HttpStatus.valueOf(statusCode.value()));
-
-      body = modifiedBody;
-    }
-
-    return super.createResponseEntity(body, headers, statusCode, request);
+  @ExceptionHandler({ ResponseStatusException.class })
+  public ResponseEntity<AppExceptionDto> handleResponseStatus(ResponseStatusException ex,
+      WebRequest request) {
+    return buildResponseEntity(HttpStatus.valueOf(ex.getStatusCode().value()), ex.getReason(),
+        request);
   }
 
-  @ExceptionHandler(ResponseStatusException.class)
-  public ResponseEntity<Object> handleSQLException(WebRequest request, ResponseStatusException ex) {
-    Map<String, Object> body = createResponseBody(ex, request,
-        HttpStatus.valueOf(ex.getStatusCode().value()));
-    body.put("message", ex.getReason());
+  @ExceptionHandler({ MethodArgumentNotValidException.class })
+  public ResponseEntity<AppExceptionDto> handleValidation(MethodArgumentNotValidException ex,
+      WebRequest request) {
+    Map<String, String> details = ex.getBindingResult()
+        .getFieldErrors()
+        .stream()
+        .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage,
+            (first, second) -> second));
 
-    log.error("Error: {}", ex.getReason());
-
-    return new ResponseEntity<>(body, ex.getStatusCode());
+    return buildResponseEntity(HttpStatus.BAD_REQUEST, "Invalid request data", request, details);
   }
 
-  @ExceptionHandler(Exception.class)
-  public ResponseEntity<Object> exception(Exception ex, WebRequest request) {
-    Map<String, Object> body = createResponseBody(ex, request, HttpStatus.INTERNAL_SERVER_ERROR);
-
-    log.error("Exception: {}", ex.getMessage());
-
-    return ResponseEntity.internalServerError().body(body);
+  @ExceptionHandler({ NoHandlerFoundException.class })
+  public ResponseEntity<AppExceptionDto> handleNotFound(NoHandlerFoundException ex,
+      WebRequest request) {
+    return buildResponseEntity(HttpStatus.NOT_FOUND, "Endpoint not found", request);
   }
 
-  private Map<String, Object> createResponseBody(Exception ex, WebRequest request,
-      HttpStatus status) {
-    Map<String, Object> body = new LinkedHashMap<>();
-    body.put("message", ex.getMessage());
-    body.put("error", status.getReasonPhrase());
-    body.put("status", status.value());
-    body.put("path", request.getDescription(false).replace("uri=", ""));
-    body.put("timestamp", ZonedDateTime.now(ZoneId.of("UTC")));
+  @ExceptionHandler({ NoResourceFoundException.class })
+  public ResponseEntity<AppExceptionDto> handleNoResourceFound(NoResourceFoundException ex,
+      WebRequest request) {
+    return buildResponseEntity(HttpStatus.NOT_FOUND, "Static resource not found", request);
+  }
 
-    return body;
+  @ExceptionHandler({ HttpRequestMethodNotSupportedException.class })
+  public ResponseEntity<AppExceptionDto> handleMethodNotSupported(
+      HttpRequestMethodNotSupportedException ex, WebRequest request) {
+    return buildResponseEntity(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler({ Exception.class })
+  public ResponseEntity<AppExceptionDto> handleGenericException(Exception ex, WebRequest request) {
+    log.error("Unhandled exception:", ex);
+    return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Whoops! Something went wrong",
+        request);
+  }
+
+  private ResponseEntity<AppExceptionDto> buildResponseEntity(HttpStatus status, String message,
+      WebRequest request, Map<String, String> details) {
+    AppExceptionDto appExceptionDto = AppExceptionDto.builder()
+        .message(message)
+        .error(status.getReasonPhrase())
+        .status(status.value())
+        .path(request.getDescription(false).replace("uri=", ""))
+        .timestamp(ZonedDateTime.now(ZoneId.of("UTC")))
+        .details(details)
+        .build();
+
+    return ResponseEntity.status(status).body(appExceptionDto);
+  }
+
+  private ResponseEntity<AppExceptionDto> buildResponseEntity(HttpStatus status, String message,
+      WebRequest request) {
+    return buildResponseEntity(status, message, request, null);
   }
 }
