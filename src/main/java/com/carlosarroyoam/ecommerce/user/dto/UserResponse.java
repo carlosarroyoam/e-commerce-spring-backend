@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.user.dto;
 
-import com.carlosarroyoam.ecommerce.user.dto.UserRoleDto.UserRoleDtoMapper;
+import com.carlosarroyoam.ecommerce.user.dto.UserRoleResponse.UserRoleResponseMapper;
 import com.carlosarroyoam.ecommerce.user.entity.User;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,24 +17,24 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserDto {
+public class UserResponse {
   private Long id;
   private String firstName;
   private String lastName;
   private String email;
   private Boolean isActive;
-  private UserRoleDto userRole;
+  private UserRoleResponse userRole;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      UserRoleDtoMapper.class })
-  public interface UserDtoMapper {
-    UserDtoMapper INSTANCE = Mappers.getMapper(UserDtoMapper.class);
+      UserRoleResponseMapper.class })
+  public interface UserResponseMapper {
+    UserResponseMapper INSTANCE = Mappers.getMapper(UserResponseMapper.class);
 
-    UserDto toDto(User entity);
+    UserResponse toDto(User entity);
 
-    List<UserDto> toDtos(List<User> entities);
+    List<UserResponse> toDtos(List<User> entities);
   }
 }

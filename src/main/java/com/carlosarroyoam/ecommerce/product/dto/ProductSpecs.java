@@ -8,10 +8,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @Builder
-public class ProductSpecsDto {
+public class ProductSpecs {
   @Size(max = 96, message = "Title should be max 96")
   private String title;
-  
+
   @Size(max = 96, message = "Slug should be max 96")
   private String slug;
 

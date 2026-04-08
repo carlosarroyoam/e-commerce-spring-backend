@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 @Data
 @Builder
-public class UserSpecsDto {
+public class UserSpecs {
   @Size(max = 128, message = "Search should be max 128")
   private String search;
 

@@ -1,8 +1,8 @@
 package com.carlosarroyoam.ecommerce.refund.dto;
 
-import com.carlosarroyoam.ecommerce.order.dto.OrderItemDto;
-import com.carlosarroyoam.ecommerce.order.dto.OrderItemDto.OrderItemDtoMapper;
-import com.carlosarroyoam.ecommerce.refund.dto.RefundDto.RefundDtoMapper;
+import com.carlosarroyoam.ecommerce.order.dto.OrderItemResponse;
+import com.carlosarroyoam.ecommerce.order.dto.OrderItemResponse.OrderItemResponseMapper;
+import com.carlosarroyoam.ecommerce.refund.dto.RefundResponse.RefundResponseMapper;
 import com.carlosarroyoam.ecommerce.refund.entity.RefundItem;
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,20 +19,20 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RefundItemDto {
+public class RefundItemResponse {
   private Long id;
   private Integer quantity;
   private BigDecimal amount;
-  private RefundDto refund;
-  private OrderItemDto orderItem;
+  private RefundResponse refund;
+  private OrderItemResponse orderItem;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      RefundDtoMapper.class, OrderItemDtoMapper.class })
-  public interface RefundItemDtoMapper {
-    RefundItemDtoMapper INSTANCE = Mappers.getMapper(RefundItemDtoMapper.class);
+      RefundResponseMapper.class, OrderItemResponseMapper.class })
+  public interface RefundItemResponseMapper {
+    RefundItemResponseMapper INSTANCE = Mappers.getMapper(RefundItemResponseMapper.class);
 
-    RefundItemDto toDto(RefundItem entity);
+    RefundItemResponse toDto(RefundItem entity);
 
-    List<RefundItemDto> toDtos(List<RefundItem> entities);
+    List<RefundItemResponse> toDtos(List<RefundItem> entities);
   }
 }

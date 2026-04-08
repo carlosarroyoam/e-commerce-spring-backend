@@ -1,8 +1,8 @@
 package com.carlosarroyoam.ecommerce.admin.dto;
 
 import com.carlosarroyoam.ecommerce.admin.entity.Admin;
-import com.carlosarroyoam.ecommerce.user.dto.UserDto;
-import com.carlosarroyoam.ecommerce.user.dto.UserDto.UserDtoMapper;
+import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
+import com.carlosarroyoam.ecommerce.user.dto.UserResponse.UserResponseMapper;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,18 +17,18 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AdminDto {
+public class AdminResponse {
   private Long id;
   private Boolean isSuper;
-  private UserDto user;
+  private UserResponse user;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      UserDtoMapper.class })
-  public interface AdminDtoMapper {
-    AdminDtoMapper INSTANCE = Mappers.getMapper(AdminDtoMapper.class);
+      UserResponseMapper.class })
+  public interface AdminResponseMapper {
+    AdminResponseMapper INSTANCE = Mappers.getMapper(AdminResponseMapper.class);
 
-    AdminDto toDto(Admin entity);
+    AdminResponse toDto(Admin entity);
 
-    List<AdminDto> toDtos(List<Admin> entities);
+    List<AdminResponse> toDtos(List<Admin> entities);
   }
 }

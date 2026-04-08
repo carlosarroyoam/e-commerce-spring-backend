@@ -1,6 +1,6 @@
-package com.carlosarroyoam.ecommerce.user.dto;
+package com.carlosarroyoam.ecommerce.order.dto;
 
-import com.carlosarroyoam.ecommerce.user.entity.UserRole;
+import com.carlosarroyoam.ecommerce.order.entity.OrderStatus;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,16 +15,16 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRoleDto {
+public class OrderStatusResponse {
   private Byte id;
-  private String type;
+  private String title;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-  public interface UserRoleDtoMapper {
-    UserRoleDtoMapper INSTANCE = Mappers.getMapper(UserRoleDtoMapper.class);
+  public interface OrderStatusResponseMapper {
+    OrderStatusResponseMapper INSTANCE = Mappers.getMapper(OrderStatusResponseMapper.class);
 
-    UserRoleDto toDto(UserRole entity);
+    OrderStatusResponse toDto(OrderStatus entity);
 
-    List<UserRoleDto> toDtos(List<UserRole> entities);
+    List<OrderStatusResponse> toDtos(List<OrderStatus> entities);
   }
 }

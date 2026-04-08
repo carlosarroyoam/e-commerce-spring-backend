@@ -1,7 +1,7 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
-import com.carlosarroyoam.ecommerce.product.dto.VariantAttributeValueDto.VariantAttributeValueDtoMapper;
-import com.carlosarroyoam.ecommerce.product.dto.VariantImageDto.VariantImageDtoMapper;
+import com.carlosarroyoam.ecommerce.product.dto.VariantAttributeValueResponse.VariantAttributeValueResponseMapper;
+import com.carlosarroyoam.ecommerce.product.dto.VariantImageResponse.VariantImageResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Variant;
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,23 +18,23 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VariantDto {
+public class VariantResponse {
   private Long id;
   private String sku;
   private BigDecimal price;
   private BigDecimal comparedAtPrice;
   private BigDecimal costPerItem;
   private Integer quantityOnStock;
-  private List<VariantAttributeValueDto> attributes;
-  private List<VariantImageDto> images;
+  private List<VariantAttributeValueResponse> attributes;
+  private List<VariantImageResponse> images;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      VariantAttributeValueDtoMapper.class, VariantImageDtoMapper.class })
-  public interface VariantDtoMapper {
-    VariantDtoMapper INSTANCE = Mappers.getMapper(VariantDtoMapper.class);
+      VariantAttributeValueResponseMapper.class, VariantImageResponseMapper.class })
+  public interface VariantResponseMapper {
+    VariantResponseMapper INSTANCE = Mappers.getMapper(VariantResponseMapper.class);
 
-    VariantDto toDto(Variant entity);
+    VariantResponse toDto(Variant entity);
 
-    List<VariantDto> toDtos(List<Variant> entities);
+    List<VariantResponse> toDtos(List<Variant> entities);
   }
 }

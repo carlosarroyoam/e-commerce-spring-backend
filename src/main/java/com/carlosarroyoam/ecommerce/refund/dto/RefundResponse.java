@@ -1,7 +1,7 @@
 package com.carlosarroyoam.ecommerce.refund.dto;
 
-import com.carlosarroyoam.ecommerce.order.dto.OrderDto;
-import com.carlosarroyoam.ecommerce.order.dto.OrderDto.OrderDtoMapper;
+import com.carlosarroyoam.ecommerce.order.dto.OrderResponse;
+import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
 import com.carlosarroyoam.ecommerce.refund.entity.Refund;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,20 +19,20 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RefundDto {
+public class RefundResponse {
   private Long id;
   private BigDecimal amount;
-  private OrderDto order;
+  private OrderResponse order;
   private String reason;
   private LocalDateTime createdAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      OrderDtoMapper.class })
-  public interface RefundDtoMapper {
-    RefundDtoMapper INSTANCE = Mappers.getMapper(RefundDtoMapper.class);
+      OrderResponseMapper.class })
+  public interface RefundResponseMapper {
+    RefundResponseMapper INSTANCE = Mappers.getMapper(RefundResponseMapper.class);
 
-    RefundDto toDto(Refund entity);
+    RefundResponse toDto(Refund entity);
 
-    List<RefundDto> toDtos(List<Refund> entities);
+    List<RefundResponse> toDtos(List<Refund> entities);
   }
 }

@@ -1,8 +1,8 @@
 package com.carlosarroyoam.ecommerce.shipment.dto;
 
-import com.carlosarroyoam.ecommerce.order.dto.OrderDto;
-import com.carlosarroyoam.ecommerce.order.dto.OrderDto.OrderDtoMapper;
-import com.carlosarroyoam.ecommerce.shipment.dto.CarrierDto.CarrierDtoMapper;
+import com.carlosarroyoam.ecommerce.order.dto.OrderResponse;
+import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
+import com.carlosarroyoam.ecommerce.shipment.dto.CarrierResponse.CarrierResponseMapper;
 import com.carlosarroyoam.ecommerce.shipment.entity.Shipment;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,21 +19,21 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ShipmentDto {
+public class ShipmentResponse {
   private Long id;
-  private OrderDto order;
-  private CarrierDto carrier;
+  private OrderResponse order;
+  private CarrierResponse carrier;
   private String trackingNumber;
   private LocalDateTime shippedAt;
   private LocalDateTime deliveredAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      OrderDtoMapper.class, CarrierDtoMapper.class })
-  public interface ShipmentDtoMapper {
-    ShipmentDtoMapper INSTANCE = Mappers.getMapper(ShipmentDtoMapper.class);
+      OrderResponseMapper.class, CarrierResponseMapper.class })
+  public interface ShipmentResponseMapper {
+    ShipmentResponseMapper INSTANCE = Mappers.getMapper(ShipmentResponseMapper.class);
 
-    ShipmentDto toDto(Shipment entity);
+    ShipmentResponse toDto(Shipment entity);
 
-    List<ShipmentDto> toDtos(List<Shipment> entities);
+    List<ShipmentResponse> toDtos(List<Shipment> entities);
   }
 }

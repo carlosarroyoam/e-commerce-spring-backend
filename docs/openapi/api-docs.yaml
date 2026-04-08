@@ -286,7 +286,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/User"
+                $ref: "#/components/schemas/UserResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -512,7 +512,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Admin"
+                $ref: "#/components/schemas/AdminResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -640,7 +640,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Customer"
+                $ref: "#/components/schemas/CustomerResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -677,7 +677,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/CustomerAddress"
+                  $ref: "#/components/schemas/CustomerAddressResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -757,7 +757,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/CustomerAddress"
+                $ref: "#/components/schemas/CustomerAddressResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -951,7 +951,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/ProductResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -987,7 +987,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/ProductVariant"
+                  $ref: "#/components/schemas/VariantResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1028,7 +1028,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ProductVariant"
+                $ref: "#/components/schemas/VariantResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1120,7 +1120,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Attribute"
+                $ref: "#/components/schemas/AttributeResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1307,7 +1307,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Property"
+                $ref: "#/components/schemas/PropertyResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1495,7 +1495,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Category"
+                $ref: "#/components/schemas/CategoryResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1690,7 +1690,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/OrderTrack"
+                $ref: "#/components/schemas/OrderTrackResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1726,7 +1726,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Order"
+                $ref: "#/components/schemas/OrderResponse"
         "422":
           $ref: "#/components/responses/UnprocesableEntity"
         "401":
@@ -1767,7 +1767,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Order"
+                $ref: "#/components/schemas/OrderResponse"
         "422":
           $ref: "#/components/responses/UnprocesableEntity"
         "401":
@@ -1808,7 +1808,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Order"
+                $ref: "#/components/schemas/OrderResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -1836,7 +1836,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Cart"
+                $ref: "#/components/schemas/CartResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2027,7 +2027,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Payment"
+                $ref: "#/components/schemas/PaymentResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2106,7 +2106,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Payment"
+                $ref: "#/components/schemas/PaymentResponse"
         "422":
           $ref: "#/components/responses/UnprocesableEntity"
         "401":
@@ -2166,7 +2166,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Carrier"
+                  $ref: "#/components/schemas/CarrierResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2202,7 +2202,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Shipment"
+                $ref: "#/components/schemas/ShipmentResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2238,7 +2238,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Shipment"
+                $ref: "#/components/schemas/ShipmentResponse"
         "422":
           $ref: "#/components/responses/UnprocesableEntity"
         "401":
@@ -2380,7 +2380,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Refund"
+                $ref: "#/components/schemas/RefundResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2416,7 +2416,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Refund"
+                $ref: "#/components/schemas/RefundResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -2559,9 +2559,9 @@ components:
           type: array
           description: List of users
           items:
-            $ref: "#/components/schemas/User"
+            $ref: "#/components/schemas/UserResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     PagedAdminsResponse:
       type: object
@@ -2571,9 +2571,9 @@ components:
           type: array
           description: List of admins
           items:
-            $ref: "#/components/schemas/Admin"
+            $ref: "#/components/schemas/AdminResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     CreateAdminRequest:
       type: object
@@ -2621,9 +2621,9 @@ components:
           type: array
           description: List of customers
           items:
-            $ref: "#/components/schemas/Customer"
+            $ref: "#/components/schemas/CustomerResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     CreateCustomerRequest:
       type: object
@@ -2711,9 +2711,9 @@ components:
           type: array
           description: List of products
           items:
-            $ref: "#/components/schemas/Product"
+            $ref: "#/components/schemas/ProductResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     PagedCategoriesResponse:
       type: object
@@ -2723,9 +2723,9 @@ components:
           type: array
           description: List of categories
           items:
-            $ref: "#/components/schemas/Category"
+            $ref: "#/components/schemas/CategoryResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     PagedPaymentsResponse:
       type: object
@@ -2735,9 +2735,9 @@ components:
           type: array
           description: List of payments
           items:
-            $ref: "#/components/schemas/Payment"
+            $ref: "#/components/schemas/PaymentResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     AddCartItemRequest:
       type: object
@@ -2770,7 +2770,7 @@ components:
         - cartItemId
         - quantity
 
-    Cart:
+    CartResponse:
       type: object
       description: Shopping cart information
       properties:
@@ -2784,7 +2784,7 @@ components:
           type: array
           description: List of items in cart
           items:
-            $ref: "#/components/schemas/CartItem"
+            $ref: "#/components/schemas/CartItemResponse"
         totalItems:
           type: integer
           description: Total number of items
@@ -2792,7 +2792,7 @@ components:
           type: number
           description: Total price of cart
 
-    CartItem:
+    CartItemResponse:
       type: object
       description: Cart item information
       properties:
@@ -2865,7 +2865,7 @@ components:
       required:
         - status
 
-    Payment:
+    PaymentResponse:
       type: object
       description: Payment information
       properties:
@@ -2920,9 +2920,9 @@ components:
           type: array
           description: List of attributes
           items:
-            $ref: "#/components/schemas/Attribute"
+            $ref: "#/components/schemas/AttributeResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     CreateAttributeRequest:
       type: object
@@ -2948,9 +2948,9 @@ components:
           type: array
           description: List of properties
           items:
-            $ref: "#/components/schemas/Property"
+            $ref: "#/components/schemas/PropertyResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     CreatePropertyRequest:
       type: object
@@ -2976,9 +2976,9 @@ components:
           type: array
           description: List of orders
           items:
-            $ref: "#/components/schemas/Order"
+            $ref: "#/components/schemas/OrderResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     CreateOrderRequest:
       type: object
@@ -3050,9 +3050,9 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/Refund"
+            $ref: "#/components/schemas/RefundResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     CreateRefundRequest:
       type: object
@@ -3087,9 +3087,9 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/Shipment"
+            $ref: "#/components/schemas/ShipmentResponse"
         pagination:
-          $ref: "#/components/schemas/PaginationDto"
+          $ref: "#/components/schemas/PaginationResponse"
 
     CreateShipmentRequest:
       type: object
@@ -3101,7 +3101,7 @@ components:
       required:
         - carrier_id
 
-    UserRole:
+    UserRoleResponse:
       type: object
       description: User role information
       properties:
@@ -3112,7 +3112,7 @@ components:
           type: string
           description: Type of user role
 
-    User:
+    UserResponse:
       type: object
       description: User information
       properties:
@@ -3132,7 +3132,7 @@ components:
           type: boolean
           description: Indicates if user is active
         user_role:
-          $ref: "#/components/schemas/UserRole"
+          $ref: "#/components/schemas/UserRoleResponse"
         created_at:
           type: string
           format: date-time
@@ -3147,7 +3147,7 @@ components:
           description: Timestamp when the user was deleted (soft delete)
           nullable: true
 
-    Admin:
+    AdminResponse:
       type: object
       description: Admin user information
       properties:
@@ -3183,7 +3183,7 @@ components:
           description: Timestamp when the admin was deleted (soft delete)
           nullable: true
 
-    Customer:
+    CustomerResponse:
       type: object
       description: Customer information
       properties:
@@ -3206,7 +3206,7 @@ components:
           type: array
           description: List of customer addresses
           items:
-            $ref: "#/components/schemas/CustomerAddress"
+            $ref: "#/components/schemas/CustomerAddressResponse"
         created_at:
           type: string
           format: date-time
@@ -3221,7 +3221,7 @@ components:
           description: Timestamp when the customer was deleted (soft delete)
           nullable: true
 
-    CustomerAddress:
+    CustomerAddressResponse:
       type: object
       description: Customer address information
       properties:
@@ -3257,7 +3257,7 @@ components:
           type: integer
           description: Foreign key to customers table
 
-    Category:
+    CategoryResponse:
       type: object
       description: Category information
       properties:
@@ -3268,7 +3268,7 @@ components:
           type: string
           description: Category title
 
-    ProductCategory:
+    ProductCategoryResponse:
       type: object
       description: Product category reference
       properties:
@@ -3279,7 +3279,7 @@ components:
           type: string
           description: Category title
 
-    Product:
+    ProductResponse:
       type: object
       description: Product information
       properties:
@@ -3302,15 +3302,15 @@ components:
           type: boolean
           description: Indicates if product is active
         category:
-          $ref: "#/components/schemas/Category"
+          $ref: "#/components/schemas/CategoryResponse"
         properties:
           type: array
           items:
-          $ref: "#/components/schemas/ProductPropertyValue"
+          $ref: "#/components/schemas/ProductPropertyValueResponse"
         variants:
           type: array
           items:
-            $ref: '#/components/schemas/ProductVariant'
+            $ref: '#/components/schemas/VariantResponse'
         created_at:
           type: string
           format: date-time
@@ -3325,7 +3325,7 @@ components:
           description: Timestamp when the product was deleted (soft delete)
           nullable: true
 
-    Property:
+    PropertyResponse:
       type: object
       description: Property information for products
       properties:
@@ -3336,7 +3336,7 @@ components:
           type: string
           description: Property title (e.g., Brand, Model)
 
-    ProductPropertyValue:
+    ProductPropertyValueResponse:
       type: object
       description: Product property value information
       properties:
@@ -3347,9 +3347,9 @@ components:
           type: string
           description: Product property value
         property:
-          $ref: "#/components/schemas/Property"
+          $ref: "#/components/schemas/PropertyResponse"
 
-    ProductVariant:
+    VariantResponse:
       type: object
       description: Product variant information
       properties:
@@ -3372,11 +3372,11 @@ components:
           type: integer
           description: Available stock quantity
         attributes:
-          $ref: "#/components/schemas/VariantAttributeValue"
+          $ref: "#/components/schemas/VariantAttributeValueResponse"
         images:
-          $ref: "#/components/schemas/VariantImage"
+          $ref: "#/components/schemas/VariantImageResponse"
 
-    Attribute:
+    AttributeResponse:
       type: object
       description: Attribute information
       properties:
@@ -3387,7 +3387,7 @@ components:
           type: string
           description: Attribute title (e.g., Color, Storage)
 
-    VariantAttributeValue:
+    VariantAttributeValueResponse:
       type: object
       description: Variant attribute value information
       properties:
@@ -3398,9 +3398,9 @@ components:
           type: string
           description: Variant attribute value
         attribute:
-          $ref: "#/components/schemas/Attribute"
+          $ref: "#/components/schemas/AttributeResponse"
 
-    VariantImage:
+    VariantImageResponse:
       type: object
       description: Variant image information
       properties:
@@ -3414,7 +3414,7 @@ components:
           type: integer
           description: Foreign key to variants table
 
-    Order:
+    OrderResponse:
       type: object
       properties:
         id:
@@ -3433,7 +3433,7 @@ components:
           type: string
           format: date-time
 
-    OrderItem:
+    OrderItemResponse:
       type: object
       properties:
         id:
@@ -3455,7 +3455,7 @@ components:
         total:
           type: number
 
-    OrderStatusHistory:
+    OrderStatusHistoryResponse:
       type: object
       properties:
         id:
@@ -3470,7 +3470,7 @@ components:
           type: string
           format: date-time
 
-    OrderRefund:
+    OrderRefundResponse:
       type: object
       properties:
         id:
@@ -3485,9 +3485,9 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/RefundItem"
+            $ref: "#/components/schemas/RefundItemResponse"
 
-    OrderTrack:
+    OrderTrackResponse:
       type: object
       properties:
         orderNumber:
@@ -3502,11 +3502,11 @@ components:
         statusHistory:
           type: array
           items:
-            $ref: "#/components/schemas/OrderStatusHistory"
+            $ref: "#/components/schemas/OrderStatusHistoryResponse"
         shipment:
-          $ref: "#/components/schemas/Shipment"
+          $ref: "#/components/schemas/ShipmentResponse"
 
-    ShippingAddress:
+    ShippingAddressResponse:
       type: object
       properties:
         streetName:
@@ -3528,7 +3528,7 @@ components:
         phoneNumber:
           type: string
 
-    Carrier:
+    CarrierResponse:
       type: object
       properties:
         id:
@@ -3536,7 +3536,7 @@ components:
         name:
           type: string
 
-    Shipment:
+    ShipmentResponse:
       type: object
       properties:
         id:
@@ -3560,7 +3560,7 @@ components:
           format: date-time
           nullable: true
 
-    Refund:
+    RefundResponse:
       type: object
       properties:
         id:
@@ -3576,12 +3576,12 @@ components:
         items:
           type: array
           items:
-            $ref: "#/components/schemas/RefundItem"
+            $ref: "#/components/schemas/RefundItemResponse"
         createdAt:
           type: string
           format: date-time
 
-    RefundItem:
+    RefundItemResponse:
       type: object
       properties:
         id:
@@ -3601,7 +3601,7 @@ components:
         amount:
           type: number
 
-    PaginationDto:
+    PaginationResponse:
       type: object
       description: Pagination information for list endpoints
       properties:
@@ -3618,7 +3618,7 @@ components:
           type: integer
           description: Total number of pages
 
-    AppExceptionDto:
+    AppExceptionResponse:
       type: object
       description: Standard error response returned when an application exception occurs.
       properties:
@@ -3689,42 +3689,42 @@ components:
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/AppExceptionDto"
+            $ref: "#/components/schemas/AppExceptionResponse"
 
     BadRequest:
       description: Bad request
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/AppExceptionDto"
+            $ref: "#/components/schemas/AppExceptionResponse"
 
     UnprocesableEntity:
       description: Unprocessable entity
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/AppExceptionDto"
+            $ref: "#/components/schemas/AppExceptionResponse"
 
     Unauthorized:
       description: Unauthorized
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/AppExceptionDto"
+            $ref: "#/components/schemas/AppExceptionResponse"
 
     Forbidden:
       description: Forbidden
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/AppExceptionDto"
+            $ref: "#/components/schemas/AppExceptionResponse"
 
     InternalServerError:
       description: Internal server error
       content:
         application/json:
           schema:
-            $ref: "#/components/schemas/AppExceptionDto"
+            $ref: "#/components/schemas/AppExceptionResponse"
 
   securitySchemes:
     BearerAuth:

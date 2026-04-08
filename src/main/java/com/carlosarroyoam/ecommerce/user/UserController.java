@@ -1,8 +1,8 @@
 package com.carlosarroyoam.ecommerce.user;
 
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto;
-import com.carlosarroyoam.ecommerce.user.dto.UserDto;
-import com.carlosarroyoam.ecommerce.user.dto.UserSpecsDto;
+import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
+import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -23,16 +23,16 @@ public class UserController {
   }
 
   @GetMapping(produces = "application/json")
-  public ResponseEntity<PagedResponseDto<UserDto>> findAll(
-      @Valid @ModelAttribute UserSpecsDto productSpecs,
+  public ResponseEntity<PagedResponse<UserResponse>> findAll(
+      @Valid @ModelAttribute UserSpecs productSpecs,
       @PageableDefault(page = 0, size = 25, sort = "id") Pageable pageable) {
-    PagedResponseDto<UserDto> products = userService.findAll(productSpecs, pageable);
+    PagedResponse<UserResponse> products = userService.findAll(productSpecs, pageable);
     return ResponseEntity.ok(products);
   }
 
   @GetMapping(value = "/{userId}", produces = "application/json")
-  public ResponseEntity<UserDto> findById(@PathVariable Long userId) {
-    UserDto userById = userService.findById(userId);
+  public ResponseEntity<UserResponse> findById(@PathVariable Long userId) {
+    UserResponse userById = userService.findById(userId);
     return ResponseEntity.ok(userById);
   }
 }

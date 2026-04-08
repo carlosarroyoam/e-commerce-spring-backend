@@ -2,12 +2,12 @@ package com.carlosarroyoam.ecommerce.product;
 
 import com.carlosarroyoam.ecommerce.category.entity.Category_;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto.PagedResponseDtoMapper;
+import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.dto.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
-import com.carlosarroyoam.ecommerce.product.dto.ProductDto;
-import com.carlosarroyoam.ecommerce.product.dto.ProductDto.ProductDtoMapper;
-import com.carlosarroyoam.ecommerce.product.dto.ProductSpecsDto;
+import com.carlosarroyoam.ecommerce.product.dto.ProductResponse;
+import com.carlosarroyoam.ecommerce.product.dto.ProductResponse.ProductResponseMapper;
+import com.carlosarroyoam.ecommerce.product.dto.ProductSpecs;
 import com.carlosarroyoam.ecommerce.product.entity.Product;
 import com.carlosarroyoam.ecommerce.product.entity.Product_;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
-  public PagedResponseDto<ProductDto> findAll(ProductSpecsDto productSpecs, Pageable pageable) {
+  public PagedResponse<ProductResponse> findAll(ProductSpecs productSpecs, Pageable pageable) {
     Specification<Product> spec = SpecificationBuilder.<Product>builder()
         .likeIfPresent(root -> root.get(Product_.title), productSpecs.getTitle())
         .likeIfPresent(root -> root.get(Product_.slug), productSpecs.getSlug())
@@ -42,13 +42,13 @@ public class ProductService {
 
     Page<Product> products = productRepository.findAll(spec, pageable);
 
-    return PagedResponseDtoMapper.INSTANCE
-        .toPagedResponseDto(products.map(ProductDtoMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE
+        .toPagedResponse(products.map(ProductResponseMapper.INSTANCE::toDto));
   }
 
-  public ProductDto findById(Long productId) {
+  public ProductResponse findById(Long productId) {
     Product productById = findProductEntityById(productId);
-    return ProductDtoMapper.INSTANCE.toDto(productById);
+    return ProductResponseMapper.INSTANCE.toDto(productById);
   }
 
   private Product findProductEntityById(Long productId) {

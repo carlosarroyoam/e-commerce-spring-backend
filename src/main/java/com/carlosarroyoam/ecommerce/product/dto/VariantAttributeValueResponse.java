@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
-import com.carlosarroyoam.ecommerce.product.dto.AttributeDto.AttributeDtoMapper;
+import com.carlosarroyoam.ecommerce.product.dto.AttributeResponse.AttributeResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.VariantAttributeValue;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -16,19 +16,19 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VariantAttributeValueDto {
+public class VariantAttributeValueResponse {
   private Long id;
   private String value;
-  private AttributeDto attribute;
+  private AttributeResponse attribute;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      AttributeDtoMapper.class })
-  public interface VariantAttributeValueDtoMapper {
-    VariantAttributeValueDtoMapper INSTANCE = Mappers
-        .getMapper(VariantAttributeValueDtoMapper.class);
+      AttributeResponseMapper.class })
+  public interface VariantAttributeValueResponseMapper {
+    VariantAttributeValueResponseMapper INSTANCE = Mappers
+        .getMapper(VariantAttributeValueResponseMapper.class);
 
-    VariantAttributeValueDto toDto(VariantAttributeValue entity);
+    VariantAttributeValueResponse toDto(VariantAttributeValue entity);
 
-    List<VariantAttributeValueDto> toDtos(List<VariantAttributeValue> entities);
+    List<VariantAttributeValueResponse> toDtos(List<VariantAttributeValue> entities);
   }
 }

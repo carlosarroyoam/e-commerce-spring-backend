@@ -1,12 +1,12 @@
 package com.carlosarroyoam.ecommerce.user;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponseDto.PagedResponseDtoMapper;
+import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.dto.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
-import com.carlosarroyoam.ecommerce.user.dto.UserDto;
-import com.carlosarroyoam.ecommerce.user.dto.UserDto.UserDtoMapper;
-import com.carlosarroyoam.ecommerce.user.dto.UserSpecsDto;
+import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
+import com.carlosarroyoam.ecommerce.user.dto.UserResponse.UserResponseMapper;
+import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
 import com.carlosarroyoam.ecommerce.user.entity.User;
 import com.carlosarroyoam.ecommerce.user.entity.UserRole_;
 import com.carlosarroyoam.ecommerce.user.entity.User_;
@@ -28,7 +28,7 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
-  public PagedResponseDto<UserDto> findAll(UserSpecsDto userSpecs, Pageable pageable) {
+  public PagedResponse<UserResponse> findAll(UserSpecs userSpecs, Pageable pageable) {
     Specification<User> spec = SpecificationBuilder.<User>builder()
         .likeIfPresent(root -> root.get(User_.firstName), userSpecs.getFirstName())
         .likeIfPresent(root -> root.get(User_.lastName), userSpecs.getLastName())
@@ -42,13 +42,13 @@ public class UserService {
 
     Page<User> users = userRepository.findAll(spec, pageable);
 
-    return PagedResponseDtoMapper.INSTANCE
-        .toPagedResponseDto(users.map(UserDtoMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE
+        .toPagedResponse(users.map(UserResponseMapper.INSTANCE::toDto));
   }
 
-  public UserDto findById(Long userId) {
+  public UserResponse findById(Long userId) {
     User userById = findUserEntityById(userId);
-    return UserDtoMapper.INSTANCE.toDto(userById);
+    return UserResponseMapper.INSTANCE.toDto(userById);
   }
 
   private User findUserEntityById(Long userId) {

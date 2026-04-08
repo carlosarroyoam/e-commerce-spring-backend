@@ -1,6 +1,6 @@
-package com.carlosarroyoam.ecommerce.shipment.dto;
+package com.carlosarroyoam.ecommerce.inventory.dto;
 
-import com.carlosarroyoam.ecommerce.shipment.entity.Carrier;
+import com.carlosarroyoam.ecommerce.inventory.entity.MovementType;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,17 +15,16 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CarrierDto {
+public class MovementTypeResponse {
   private Byte id;
-  private String name;
-  private Boolean isActive;
+  private String title;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-  public interface CarrierDtoMapper {
-    CarrierDtoMapper INSTANCE = Mappers.getMapper(CarrierDtoMapper.class);
+  public interface MovementTypeResponseMapper {
+    MovementTypeResponseMapper INSTANCE = Mappers.getMapper(MovementTypeResponseMapper.class);
 
-    CarrierDto toDto(Carrier entity);
+    MovementTypeResponse toDto(MovementType entity);
 
-    List<CarrierDto> toDtos(List<Carrier> entities);
+    List<MovementTypeResponse> toDtos(List<MovementType> entities);
   }
 }

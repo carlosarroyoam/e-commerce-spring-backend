@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.user.dto;
 
-import com.carlosarroyoam.ecommerce.user.dto.UserDto.UserDtoMapper;
+import com.carlosarroyoam.ecommerce.user.dto.UserResponse.UserResponseMapper;
 import com.carlosarroyoam.ecommerce.user.entity.PersonalAccessToken;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -17,23 +17,24 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PersonalAccessTokenDto {
+public class PersonalAccessTokenResponse {
   private Long id;
   private String token;
   private LocalDateTime lastUsedAt;
   private String fingerprint;
   private String userAgent;
-  private UserDto user;
+  private UserResponse user;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      UserDtoMapper.class })
-  public interface PersonalAccessTokenDtoMapper {
-    PersonalAccessTokenDtoMapper INSTANCE = Mappers.getMapper(PersonalAccessTokenDtoMapper.class);
+      UserResponseMapper.class })
+  public interface PersonalAccessTokenResponseMapper {
+    PersonalAccessTokenResponseMapper INSTANCE = Mappers
+        .getMapper(PersonalAccessTokenResponseMapper.class);
 
-    PersonalAccessTokenDto toDto(PersonalAccessToken entity);
+    PersonalAccessTokenResponse toDto(PersonalAccessToken entity);
 
-    List<PersonalAccessTokenDto> toDtos(List<PersonalAccessToken> entities);
+    List<PersonalAccessTokenResponse> toDtos(List<PersonalAccessToken> entities);
   }
 }

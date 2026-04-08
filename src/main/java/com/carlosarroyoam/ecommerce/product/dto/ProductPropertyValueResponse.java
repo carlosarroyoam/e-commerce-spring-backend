@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
-import com.carlosarroyoam.ecommerce.product.dto.AttributeDto.AttributeDtoMapper;
+import com.carlosarroyoam.ecommerce.product.dto.AttributeResponse.AttributeResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.ProductPropertyValue;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -16,18 +16,19 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductPropertyValueDto {
+public class ProductPropertyValueResponse {
   private Long id;
   private String value;
-  private PropertyDto property;
+  private PropertyResponse property;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      AttributeDtoMapper.class })
-  public interface ProductPropertyValueDtoMapper {
-    ProductPropertyValueDtoMapper INSTANCE = Mappers.getMapper(ProductPropertyValueDtoMapper.class);
+      AttributeResponseMapper.class })
+  public interface ProductPropertyValueResponseMapper {
+    ProductPropertyValueResponseMapper INSTANCE = Mappers
+        .getMapper(ProductPropertyValueResponseMapper.class);
 
-    ProductPropertyValueDto toDto(ProductPropertyValue entity);
+    ProductPropertyValueResponse toDto(ProductPropertyValue entity);
 
-    List<ProductPropertyValueDto> toDtos(List<ProductPropertyValue> entities);
+    List<ProductPropertyValueResponse> toDtos(List<ProductPropertyValue> entities);
   }
 }

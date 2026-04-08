@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.core.exception;
 
-import com.carlosarroyoam.ecommerce.core.exception.dto.AppExceptionDto;
+import com.carlosarroyoam.ecommerce.core.exception.dto.AppExceptionResponse;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Map;
@@ -25,38 +25,38 @@ public class GlobalExceptionHandler {
   private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
   @ExceptionHandler({ ResponseStatusException.class })
-  public ResponseEntity<AppExceptionDto> handleResponseStatus(ResponseStatusException ex,
+  public ResponseEntity<AppExceptionResponse> handleResponseStatus(ResponseStatusException ex,
       WebRequest request) {
     return buildResponseEntity(HttpStatus.valueOf(ex.getStatusCode().value()), ex.getReason(),
         request);
   }
 
   @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<AppExceptionDto> handleMalformedJson(HttpMessageNotReadableException ex,
-      WebRequest request) {
+  public ResponseEntity<AppExceptionResponse> handleMalformedJson(
+      HttpMessageNotReadableException ex, WebRequest request) {
     return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
   }
 
   @ExceptionHandler({ NoHandlerFoundException.class })
-  public ResponseEntity<AppExceptionDto> handleNotFound(NoHandlerFoundException ex,
+  public ResponseEntity<AppExceptionResponse> handleNotFound(NoHandlerFoundException ex,
       WebRequest request) {
     return buildResponseEntity(HttpStatus.NOT_FOUND, "Endpoint not found", request);
   }
 
   @ExceptionHandler({ NoResourceFoundException.class })
-  public ResponseEntity<AppExceptionDto> handleNoResourceFound(NoResourceFoundException ex,
+  public ResponseEntity<AppExceptionResponse> handleNoResourceFound(NoResourceFoundException ex,
       WebRequest request) {
     return buildResponseEntity(HttpStatus.NOT_FOUND, "Static resource not found", request);
   }
 
   @ExceptionHandler({ HttpRequestMethodNotSupportedException.class })
-  public ResponseEntity<AppExceptionDto> handleMethodNotSupported(
+  public ResponseEntity<AppExceptionResponse> handleMethodNotSupported(
       HttpRequestMethodNotSupportedException ex, WebRequest request) {
     return buildResponseEntity(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage(), request);
   }
 
   @ExceptionHandler({ MethodArgumentNotValidException.class })
-  public ResponseEntity<AppExceptionDto> handleValidation(MethodArgumentNotValidException ex,
+  public ResponseEntity<AppExceptionResponse> handleValidation(MethodArgumentNotValidException ex,
       WebRequest request) {
     Map<String, String> details = ex.getBindingResult()
         .getFieldErrors()
@@ -69,15 +69,16 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler({ Exception.class })
-  public ResponseEntity<AppExceptionDto> handleGenericException(Exception ex, WebRequest request) {
+  public ResponseEntity<AppExceptionResponse> handleGenericException(Exception ex,
+      WebRequest request) {
     log.error("Unhandled exception:", ex);
     return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Whoops! Something went wrong",
         request);
   }
 
-  private ResponseEntity<AppExceptionDto> buildResponseEntity(HttpStatus status, String message,
-      WebRequest request, Map<String, String> details) {
-    AppExceptionDto appExceptionDto = AppExceptionDto.builder()
+  private ResponseEntity<AppExceptionResponse> buildResponseEntity(HttpStatus status,
+      String message, WebRequest request, Map<String, String> details) {
+    AppExceptionResponse appExceptionDto = AppExceptionResponse.builder()
         .message(message)
         .error(status.getReasonPhrase())
         .status(status.value())
@@ -89,8 +90,8 @@ public class GlobalExceptionHandler {
     return ResponseEntity.status(status).body(appExceptionDto);
   }
 
-  private ResponseEntity<AppExceptionDto> buildResponseEntity(HttpStatus status, String message,
-      WebRequest request) {
+  private ResponseEntity<AppExceptionResponse> buildResponseEntity(HttpStatus status,
+      String message, WebRequest request) {
     return buildResponseEntity(status, message, request, null);
   }
 }

@@ -1,7 +1,6 @@
-package com.carlosarroyoam.ecommerce.category.dto;
+package com.carlosarroyoam.ecommerce.user.dto;
 
-import com.carlosarroyoam.ecommerce.category.entity.Category;
-import java.time.LocalDateTime;
+import com.carlosarroyoam.ecommerce.user.entity.UserRole;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,17 +15,16 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CategoryDto {
+public class UserRoleResponse {
   private Byte id;
-  private String title;
-  private LocalDateTime deletedAt;
+  private String type;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-  public interface CategoryDtoMapper {
-    CategoryDtoMapper INSTANCE = Mappers.getMapper(CategoryDtoMapper.class);
+  public interface UserRoleResponseMapper {
+    UserRoleResponseMapper INSTANCE = Mappers.getMapper(UserRoleResponseMapper.class);
 
-    CategoryDto toDto(Category entity);
+    UserRoleResponse toDto(UserRole entity);
 
-    List<CategoryDto> toDtos(List<Category> entities);
+    List<UserRoleResponse> toDtos(List<UserRole> entities);
   }
 }

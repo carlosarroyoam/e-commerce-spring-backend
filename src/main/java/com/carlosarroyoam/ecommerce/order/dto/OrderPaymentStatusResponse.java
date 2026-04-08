@@ -1,6 +1,6 @@
-package com.carlosarroyoam.ecommerce.inventory.dto;
+package com.carlosarroyoam.ecommerce.order.dto;
 
-import com.carlosarroyoam.ecommerce.inventory.entity.MovementType;
+import com.carlosarroyoam.ecommerce.order.entity.OrderPaymentStatus;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,16 +15,17 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MovementTypeDto {
+public class OrderPaymentStatusResponse {
   private Byte id;
-  private String title;
+  private String name;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-  public interface MovementTypeDtoMapper {
-    MovementTypeDtoMapper INSTANCE = Mappers.getMapper(MovementTypeDtoMapper.class);
+  public interface OrderPaymentStatusResponseMapper {
+    OrderPaymentStatusResponseMapper INSTANCE = Mappers
+        .getMapper(OrderPaymentStatusResponseMapper.class);
 
-    MovementTypeDto toDto(MovementType entity);
+    OrderPaymentStatusResponse toDto(OrderPaymentStatus entity);
 
-    List<MovementTypeDto> toDtos(List<MovementType> entities);
+    List<OrderPaymentStatusResponse> toDtos(List<OrderPaymentStatus> entities);
   }
 }

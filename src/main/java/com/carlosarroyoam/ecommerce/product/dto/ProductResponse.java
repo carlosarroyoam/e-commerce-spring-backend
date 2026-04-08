@@ -1,9 +1,9 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
-import com.carlosarroyoam.ecommerce.category.dto.CategoryDto;
-import com.carlosarroyoam.ecommerce.category.dto.CategoryDto.CategoryDtoMapper;
-import com.carlosarroyoam.ecommerce.product.dto.ProductPropertyValueDto.ProductPropertyValueDtoMapper;
-import com.carlosarroyoam.ecommerce.product.dto.VariantDto.VariantDtoMapper;
+import com.carlosarroyoam.ecommerce.category.dto.CategoryResponse;
+import com.carlosarroyoam.ecommerce.category.dto.CategoryResponse.CategoryResponseMapper;
+import com.carlosarroyoam.ecommerce.product.dto.ProductPropertyValueResponse.ProductPropertyValueResponseMapper;
+import com.carlosarroyoam.ecommerce.product.dto.VariantResponse.VariantResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Product;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,27 +20,28 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class ProductDto {
+public class ProductResponse {
   private Long id;
   private String title;
   private String slug;
   private String description;
   private Boolean isFeatured;
   private Boolean isActive;
-  private CategoryDto category;
-  private List<ProductPropertyValueDto> properties;
-  private List<VariantDto> variants;
+  private CategoryResponse category;
+  private List<ProductPropertyValueResponse> properties;
+  private List<VariantResponse> variants;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      CategoryDtoMapper.class, ProductPropertyValueDtoMapper.class, VariantDtoMapper.class })
-  public interface ProductDtoMapper {
-    ProductDtoMapper INSTANCE = Mappers.getMapper(ProductDtoMapper.class);
+      CategoryResponseMapper.class, ProductPropertyValueResponseMapper.class,
+      VariantResponseMapper.class })
+  public interface ProductResponseMapper {
+    ProductResponseMapper INSTANCE = Mappers.getMapper(ProductResponseMapper.class);
 
-    ProductDto toDto(Product entity);
+    ProductResponse toDto(Product entity);
 
-    List<ProductDto> toDtos(List<Product> entities);
+    List<ProductResponse> toDtos(List<Product> entities);
   }
 }

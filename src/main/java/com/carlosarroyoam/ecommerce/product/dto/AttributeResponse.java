@@ -16,17 +16,17 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class AttributeDto {
+public class AttributeResponse {
   private Long id;
   private String name;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-  public interface AttributeDtoMapper {
-    AttributeDtoMapper INSTANCE = Mappers.getMapper(AttributeDtoMapper.class);
+  public interface AttributeResponseMapper {
+    AttributeResponseMapper INSTANCE = Mappers.getMapper(AttributeResponseMapper.class);
 
     @Mapping(source = "title", target = "name")
-    AttributeDto toDto(Attribute entity);
+    AttributeResponse toDto(Attribute entity);
 
-    List<AttributeDto> toDtos(List<Attribute> entities);
+    List<AttributeResponse> toDtos(List<Attribute> entities);
   }
 }

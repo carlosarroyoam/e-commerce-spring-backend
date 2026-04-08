@@ -15,16 +15,16 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VariantImageDto {
+public class VariantImageResponse {
   private Long id;
   private String url;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
-  public interface VariantImageDtoMapper {
-    VariantImageDtoMapper INSTANCE = Mappers.getMapper(VariantImageDtoMapper.class);
+  public interface VariantImageResponseMapper {
+    VariantImageResponseMapper INSTANCE = Mappers.getMapper(VariantImageResponseMapper.class);
 
-    VariantImageDto toDto(VariantImage entity);
+    VariantImageResponse toDto(VariantImage entity);
 
-    List<VariantImageDto> toDtos(List<VariantImage> entities);
+    List<VariantImageResponse> toDtos(List<VariantImage> entities);
   }
 }

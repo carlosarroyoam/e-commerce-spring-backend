@@ -1,7 +1,7 @@
 package com.carlosarroyoam.ecommerce.order.dto;
 
-import com.carlosarroyoam.ecommerce.order.dto.OrderDto.OrderDtoMapper;
-import com.carlosarroyoam.ecommerce.order.dto.OrderStatusDto.OrderStatusDtoMapper;
+import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
+import com.carlosarroyoam.ecommerce.order.dto.OrderStatusResponse.OrderStatusResponseMapper;
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatusHistory;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,20 +18,21 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderStatusHistoryDto {
+public class OrderStatusHistoryResponse {
   private Long id;
-  private OrderDto order;
-  private OrderStatusDto status;
+  private OrderResponse order;
+  private OrderStatusResponse status;
   private String notes;
   private LocalDateTime changedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      OrderDtoMapper.class, OrderStatusDtoMapper.class })
-  public interface OrderStatusHistoryDtoMapper {
-    OrderStatusHistoryDtoMapper INSTANCE = Mappers.getMapper(OrderStatusHistoryDtoMapper.class);
+      OrderResponseMapper.class, OrderStatusResponseMapper.class })
+  public interface OrderStatusHistoryResponseMapper {
+    OrderStatusHistoryResponseMapper INSTANCE = Mappers
+        .getMapper(OrderStatusHistoryResponseMapper.class);
 
-    OrderStatusHistoryDto toDto(OrderStatusHistory entity);
+    OrderStatusHistoryResponse toDto(OrderStatusHistory entity);
 
-    List<OrderStatusHistoryDto> toDtos(List<OrderStatusHistory> entities);
+    List<OrderStatusHistoryResponse> toDtos(List<OrderStatusHistory> entities);
   }
 }
