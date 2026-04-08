@@ -8,15 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "variant_images", uniqueConstraints = {
-    @UniqueConstraint(name = "variant_images_url_idx", columnNames = "url") })
+@Table(name = "variant_images")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

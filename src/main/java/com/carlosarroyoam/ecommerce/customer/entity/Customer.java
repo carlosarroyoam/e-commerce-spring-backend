@@ -8,15 +8,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "customers", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_customers_user_id", columnNames = "user_id") })
+@Table(name = "customers")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

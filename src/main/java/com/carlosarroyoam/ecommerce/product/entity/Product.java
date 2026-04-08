@@ -10,7 +10,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -19,8 +18,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "products", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_products_slug", columnNames = "slug") })
+@Table(name = "products")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

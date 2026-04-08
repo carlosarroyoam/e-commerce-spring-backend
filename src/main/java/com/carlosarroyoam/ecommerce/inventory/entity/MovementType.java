@@ -6,15 +6,13 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "movement_types", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_movement_types_title", columnNames = "title") })
+@Table(name = "movement_types")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

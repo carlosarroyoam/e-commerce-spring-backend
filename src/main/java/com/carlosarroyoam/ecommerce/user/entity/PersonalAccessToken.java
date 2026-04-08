@@ -8,7 +8,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,10 +15,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "personal_access_tokens", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_tokens_token", columnNames = "token"),
-    @UniqueConstraint(name = "uk_tokens_user_fingerprint", columnNames = { "user_id",
-        "fingerprint" }) })
+@Table(name = "personal_access_tokens")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

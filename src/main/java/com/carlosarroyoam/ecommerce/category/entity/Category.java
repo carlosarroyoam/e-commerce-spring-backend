@@ -8,7 +8,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -17,8 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "categories", uniqueConstraints = {
-    @UniqueConstraint(name = "uk_categories_title", columnNames = "title") })
+@Table(name = "categories")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
