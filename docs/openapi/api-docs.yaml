@@ -1,21 +1,24 @@
-openapi: 3.0.3
+openapi: 3.1.0
 info:
   title: e-commerce-backend
   description: |
     API for managing an e-commerce.
-    Supports customer management, products, categories, orders, shipments and refunds.
+    Supports for managing customers, products, categories, orders, shipments and refunds.
 
     ## Features
-    - Users and authentication.
-    - Admin management.
-    - Customer management.
-    - Customer addresses.
+    - Auth.
+    - Users.
+    - Admins.
+    - Customers.
+    - Customers addresses.
     - Products.
     - Product variants.
     - Attributes.
     - Properties.
     - Categories.
+    - Carts.
     - Orders.
+    - Payments.
     - Shipments.
     - Refunds.
   contact:
@@ -30,42 +33,42 @@ servers:
     description: Local development server
 
 tags:
-  - name: auth
+  - name: Auth
     description: Operations about authentication
-  - name: user
+  - name: Users
     description: Operations about users
-  - name: admin
+  - name: Admins
     description: Operations about admin users
-  - name: customer
+  - name: Customers
     description: Operations about customer users
-  - name: customer-address
+  - name: Customer addresses
     description: Operations about customer addresses
-  - name: product
+  - name: Products
     description: Operations about products
-  - name: product-variant
+  - name: Product variants
     description: Operations about product variants
-  - name: attribute
+  - name: Attributes
     description: Operations about attributes
-  - name: property
+  - name: Properties
     description: Operations about properties
-  - name: category
+  - name: Categories
     description: Operations about categories
-  - name: order
-    description: Operations about orders
-  - name: cart
+  - name: Carts
     description: Operations about shopping cart
-  - name: payment
+  - name: Orders
+    description: Operations about orders
+  - name: Payments
     description: Operations about payments
-  - name: shipment
+  - name: Shipments
     description: Operations about shipments
-  - name: refund
+  - name: Refunds
     description: Operations about refunds
 
 paths:
   /auth/login:
     post:
       tags:
-        - auth
+        - Auth
       summary: Authenticates a user
       operationId: login
       requestBody:
@@ -94,7 +97,7 @@ paths:
   /auth/logout:
     post:
       tags:
-        - auth
+        - Auth
       summary: Revokes a refresh token
       operationId: logout
       responses:
@@ -116,7 +119,7 @@ paths:
   /auth/refresh-token:
     post:
       tags:
-        - auth
+        - Auth
       summary: Rotates a user's tokens
       operationId: refreshToken
       requestBody:
@@ -141,7 +144,7 @@ paths:
   /auth/forgot-password:
     post:
       tags:
-        - auth
+        - Auth
       summary: Requests a user password reset
       operationId: forgotPassword
       requestBody:
@@ -164,7 +167,7 @@ paths:
   /auth/reset-password:
     post:
       tags:
-        - auth
+        - Auth
       summary: Resets a user password
       operationId: resetPassword
       parameters:
@@ -189,7 +192,7 @@ paths:
   /users:
     get:
       tags:
-        - user
+        - Users
       summary: Lists all users
       operationId: findAllUsers
       parameters:
@@ -269,7 +272,7 @@ paths:
   /users/{userId}:
     get:
       tags:
-        - user
+        - Users
       summary: Gets a user by ID
       operationId: findUserById
       parameters:
@@ -304,7 +307,7 @@ paths:
 
     delete:
       tags:
-        - user
+        - Users
       summary: Deletes a user by ID
       operationId: deleteUser
       parameters:
@@ -331,27 +334,20 @@ paths:
       security:
         - BearerAuth: []
 
-  /users/{userId}/status:
-    put:
+  /users/{userId}/suspend:
+    post:
       tags:
-        - user
-      summary: Changes a user's status
-      operationId: changeUserStatus
+        - Users
+      summary: Suspends a user by ID
+      operationId: suspendUser
       parameters:
         - name: userId
           in: path
-          description: ID of user to change its status
+          description: ID of user to suspend
           required: true
           schema:
             type: integer
             format: int64
-      requestBody:
-        description: ChangeUserStatusRequest object
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/ChangeUserStatusRequest"
-        required: true
       responses:
         "204":
           $ref: "#/components/responses/NoContent"
@@ -368,10 +364,42 @@ paths:
       security:
         - BearerAuth: []
 
+  /users/{userId}/activate:
+    post:
+      tags:
+        - Users
+      summary: Activates a user by ID
+      operationId: activateUser
+      parameters:
+        - name: userId
+          in: path
+          description: ID of user to active
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
   /users/{userId}/change-password:
     put:
       tags:
-        - user
+        - Users
       summary: Changes a user's password
       operationId: changePassword
       parameters:
@@ -405,42 +433,10 @@ paths:
       security:
         - BearerAuth: []
 
-  /users/{userId}/restore:
-    put:
-      tags:
-        - user
-      summary: Restores a user by ID
-      operationId: restoreUser
-      parameters:
-        - name: userId
-          in: path
-          description: ID of user to restore
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          $ref: "#/components/responses/NoContent"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
   /admins:
     get:
       tags:
-        - admin
+        - Admins
       summary: Lists all admins
       operationId: findAllAdmins
       parameters:
@@ -471,7 +467,7 @@ paths:
 
     post:
       tags:
-        - admin
+        - Admins
       summary: Adds a new admin
       operationId: createAdmin
       requestBody:
@@ -501,7 +497,7 @@ paths:
 
     put:
       tags:
-        - admin
+        - Admins
       summary: Updates an admin by ID
       operationId: updateAdmin
       requestBody:
@@ -532,7 +528,7 @@ paths:
   /admins/{adminId}:
     get:
       tags:
-        - admin
+        - Admins
       summary: Gets an admin by ID
       operationId: findAdminById
       parameters:
@@ -568,7 +564,7 @@ paths:
   /customers:
     get:
       tags:
-        - customer
+        - Customers
       summary: Lists all customers
       operationId: findAllCustomers
       parameters:
@@ -599,7 +595,7 @@ paths:
 
     post:
       tags:
-        - customer
+        - Customers
       summary: Adds a new customer
       operationId: createCustomer
       requestBody:
@@ -629,7 +625,7 @@ paths:
 
     put:
       tags:
-        - customer
+        - Customers
       summary: Updates a customer by ID
       operationId: updateCustomer
       requestBody:
@@ -660,7 +656,7 @@ paths:
   /customers/{customerId}:
     get:
       tags:
-        - customer
+        - Customers
       summary: Gets a customer by ID
       operationId: findCustomerById
       parameters:
@@ -696,7 +692,7 @@ paths:
   /customers/{customerId}/addresses:
     get:
       tags:
-        - customer-address
+        - Customer addresses
       summary: Lists all addresses for a customer
       operationId: findAllCustomerAddresses
       parameters:
@@ -732,7 +728,7 @@ paths:
 
     post:
       tags:
-        - customer-address
+        - Customer addresses
       summary: Adds a new customer address
       operationId: createCustomerAddress
       parameters:
@@ -770,7 +766,7 @@ paths:
   /customers/{customerId}/addresses/{addressId}:
     get:
       tags:
-        - customer-address
+        - Customer addresses
       summary: Gets a customer address by ID
       operationId: findCustomerAddressById
       parameters:
@@ -810,9 +806,9 @@ paths:
 
     put:
       tags:
-        - customer-address
+        - Customer addresses
       summary: Updates a customer address by ID
-      operationId: updateCustomerAddressById
+      operationId: updateCustomerAddress
       parameters:
         - name: customerId
           in: path
@@ -855,7 +851,7 @@ paths:
 
     delete:
       tags:
-        - customer-address
+        - Customer addresses
       summary: Deletes a customer address by ID
       operationId: deleteCustomerAddress
       parameters:
@@ -894,7 +890,7 @@ paths:
   /products:
     get:
       tags:
-        - product
+        - Products
       summary: Lists all products
       operationId: findAllProducts
       parameters:
@@ -971,7 +967,7 @@ paths:
   /products/{productId}:
     get:
       tags:
-        - product
+        - Products
       summary: Gets a product by ID
       operationId: findProductById
       parameters:
@@ -1005,7 +1001,7 @@ paths:
   /products/{productId}/variants:
     get:
       tags:
-        - product-variant
+        - Product variants
       summary: Lists all product variants by productId
       operationId: findAllProductVariants
       parameters:
@@ -1041,7 +1037,7 @@ paths:
   /products/{productId}/variants/{variantId}:
     get:
       tags:
-        - product-variant
+        - Product variants
       summary: Gets a product variant by ID
       operationId: findProductVariantById
       parameters:
@@ -1082,7 +1078,7 @@ paths:
   /attributes:
     get:
       tags:
-        - attribute
+        - Attributes
       summary: Lists all attributes
       operationId: findAllAttributes
       parameters:
@@ -1113,7 +1109,7 @@ paths:
 
     post:
       tags:
-        - attribute
+        - Attributes
       summary: Adds a new attribute
       operationId: createAttribute
       requestBody:
@@ -1140,7 +1136,7 @@ paths:
   /attributes/{attributeId}:
     get:
       tags:
-        - attribute
+        - Attributes
       summary: Gets an attribute by ID
       operationId: findAttributeById
       parameters:
@@ -1175,7 +1171,7 @@ paths:
 
     put:
       tags:
-        - attribute
+        - Attributes
       summary: Updates an attribute by ID
       operationId: updateAttribute
       parameters:
@@ -1209,7 +1205,7 @@ paths:
 
     delete:
       tags:
-        - attribute
+        - Attributes
       summary: Deletes an attribute by ID
       operationId: deleteAttribute
       parameters:
@@ -1236,40 +1232,10 @@ paths:
       security:
         - BearerAuth: []
 
-  /attributes/{attributeId}/restore:
-    put:
-      tags:
-        - attribute
-      summary: Restores an attribute by ID
-      operationId: restoreAttribute
-      parameters:
-        - name: attributeId
-          in: path
-          description: ID of attribute to restore
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          $ref: "#/components/responses/NoContent"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
   /properties:
     get:
       tags:
-        - property
+        - Properties
       summary: Lists all properties
       operationId: findAllProperties
       parameters:
@@ -1300,7 +1266,7 @@ paths:
 
     post:
       tags:
-        - property
+        - Properties
       summary: Adds a new property
       operationId: createProperty
       requestBody:
@@ -1327,7 +1293,7 @@ paths:
   /properties/{propertyId}:
     get:
       tags:
-        - property
+        - Properties
       summary: Gets a property by ID
       operationId: findPropertyById
       parameters:
@@ -1362,7 +1328,7 @@ paths:
 
     put:
       tags:
-        - property
+        - Properties
       summary: Updates a property by ID
       operationId: updateProperty
       parameters:
@@ -1396,7 +1362,7 @@ paths:
 
     delete:
       tags:
-        - property
+        - Properties
       summary: Deletes a property by ID
       operationId: deleteProperty
       parameters:
@@ -1423,40 +1389,10 @@ paths:
       security:
         - BearerAuth: []
 
-  /properties/{propertyId}/restore:
-    put:
-      tags:
-        - property
-      summary: Restores a property by ID
-      operationId: restoreProperty
-      parameters:
-        - name: propertyId
-          in: path
-          description: ID of property to restore
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "204":
-          $ref: "#/components/responses/NoContent"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
   /categories:
     get:
       tags:
-        - category
+        - Categories
       summary: Lists all categories
       operationId: findAllCategories
       parameters:
@@ -1484,7 +1420,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
     post:
       tags:
-        - category
+        - Categories
       summary: Adds a new category
       operationId: createCategory
       requestBody:
@@ -1515,7 +1451,7 @@ paths:
   /categories/{categoryId}:
     get:
       tags:
-        - category
+        - Categories
       summary: Gets a category by ID
       operationId: findCategoryById
       parameters:
@@ -1547,7 +1483,7 @@ paths:
           $ref: "#/components/responses/InternalServerError"
     put:
       tags:
-        - category
+        - Categories
       summary: Updates a category by ID
       operationId: updateCategory
       parameters:
@@ -1585,7 +1521,7 @@ paths:
 
     delete:
       tags:
-        - category
+        - Categories
       summary: Deletes a category by ID
       operationId: deleteCategory
       parameters:
@@ -1614,16 +1550,105 @@ paths:
       security:
         - BearerAuth: []
 
-  /categories/{categoryId}/restore:
+  /carts:
+    get:
+      tags:
+        - Carts
+      summary: Gets the customer cart
+      operationId: findCart
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CartResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
+  /carts/items:
+    post:
+      tags:
+        - Carts
+      summary: Adds a new item to the cart
+      operationId: addCartItem
+      requestBody:
+        description: Cart item object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/AddCartItemRequest"
+        required: true
+      responses:
+        "201":
+          $ref: "#/components/responses/Created"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
     put:
       tags:
-        - category
-      summary: Restores a category by ID
-      operationId: restoreCategory
+        - Carts
+      summary: Updates a cart item
+      operationId: updateCartItem
+      requestBody:
+        description: Cart item object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateCartItemRequest"
+        required: true
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
+  /carts/items/{cartItemId}:
+    delete:
+      tags:
+        - Carts
+      summary: Deletes a cart item
+      operationId: deleteCartItem
       parameters:
-        - name: categoryId
+        - name: cartItemId
           in: path
-          description: ID of category to restore
+          description: ID of cart item to delete
           required: true
           schema:
             type: integer
@@ -1649,7 +1674,7 @@ paths:
   /orders:
     get:
       tags:
-        - order
+        - Orders
       summary: Lists all orders
       operationId: findAllOrders
       parameters:
@@ -1680,7 +1705,7 @@ paths:
 
     post:
       tags:
-        - order
+        - Orders
       summary: Creates a new order
       operationId: createOrder
       requestBody:
@@ -1708,10 +1733,44 @@ paths:
       security:
         - BearerAuth: []
 
+  /orders/{orderId}:
+    get:
+      tags:
+        - Orders
+      summary: Gets an order by ID
+      operationId: findOrderById
+      parameters:
+        - name: orderId
+          in: path
+          description: ID of order to query
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OrderResponse"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
   /orders/track/{orderNumber}:
     get:
       tags:
-        - order
+        - Orders
       summary: Tracks an order by its order number
       operationId: trackOrder
       parameters:
@@ -1743,240 +1802,31 @@ paths:
       security:
         - BearerAuth: []
 
-  /orders/{orderId}:
-    get:
-      tags:
-        - order
-      summary: Gets an order by ID
-      operationId: findOrderById
-      parameters:
-        - name: orderId
-          in: path
-          description: ID of order to query
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrderResponse"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-  /orders/{orderId}/status:
+  /orders/{orderId}/cancel:
     patch:
       tags:
-        - order
-      summary: Updates an order status
-      operationId: updateOrderStatus
+        - Orders
+      summary: Cancels an order by ID
+      operationId: cancelOrder
       parameters:
         - name: orderId
           in: path
-          description: ID of order to update
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        description: Order status update object
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateOrderStatusRequest"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrderResponse"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-  /orders/{orderId}/payment-status:
-    patch:
-      tags:
-        - order
-      summary: Updates an order payment status
-      operationId: updateOrderPaymentStatus
-      parameters:
-        - name: orderId
-          in: path
-          description: ID of order to update
-          required: true
-          schema:
-            type: integer
-            format: int64
-      requestBody:
-        description: Order payment status update object
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateOrderPaymentStatusRequest"
-        required: true
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/OrderResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-  /carts:
-    get:
-      tags:
-        - cart
-      summary: Gets the customer cart
-      operationId: findCart
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CartResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-  /carts/items:
-    post:
-      tags:
-        - cart
-      summary: Adds a new item to the cart
-      operationId: addCartItem
-      requestBody:
-        description: Cart item object that needs to be added
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AddCartItemRequest"
-        required: true
-      responses:
-        "201":
-          $ref: "#/components/responses/Created"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-    put:
-      tags:
-        - cart
-      summary: Updates a cart item
-      operationId: updateCartItem
-      requestBody:
-        description: Cart item object that needs to be updated
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateCartItemRequest"
-        required: true
-      responses:
-        "204":
-          $ref: "#/components/responses/NoContent"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-  /carts/items/{cartItemId}:
-    delete:
-      tags:
-        - cart
-      summary: Deletes a cart item
-      operationId: deleteCartItem
-      parameters:
-        - name: cartItemId
-          in: path
-          description: ID of cart item to delete
+          description: ID of order to calcel
           required: true
           schema:
             type: integer
             format: int64
       responses:
         "204":
-          $ref: "#/components/responses/NoContent"
-        "400":
-          $ref: "#/components/responses/BadRequest"
+          $ref: '#/components/responses/NoContent'
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
       security:
@@ -1985,7 +1835,7 @@ paths:
   /payments:
     get:
       tags:
-        - payment
+        - Payments
       summary: Lists all payments
       operationId: findAllPayments
       parameters:
@@ -2016,7 +1866,7 @@ paths:
 
     post:
       tags:
-        - payment
+        - Payments
       summary: Creates a new payment
       operationId: createPayment
       requestBody:
@@ -2047,7 +1897,7 @@ paths:
   /payments/{paymentId}:
     get:
       tags:
-        - payment
+        - Payments
       summary: Gets a payment by ID
       operationId: findPaymentById
       parameters:
@@ -2082,7 +1932,7 @@ paths:
 
     put:
       tags:
-        - payment
+        - Payments
       summary: Updates a payment by ID
       operationId: updatePayment
       parameters:
@@ -2119,7 +1969,7 @@ paths:
   /payments/{paymentId}/status:
     patch:
       tags:
-        - payment
+        - Payments
       summary: Updates a payment status
       operationId: updatePaymentStatus
       parameters:
@@ -2160,7 +2010,7 @@ paths:
   /shipments:
     get:
       tags:
-        - shipment
+        - Shipments
       summary: Lists all shipments
       operationId: findAllShipments
       parameters:
@@ -2192,7 +2042,7 @@ paths:
   /shipments/carriers:
     get:
       tags:
-        - shipment
+        - Shipments
       summary: Lists all active carriers
       operationId: findAllCarriers
       responses:
@@ -2222,7 +2072,7 @@ paths:
   /shipments/{shipmentId}:
     get:
       tags:
-        - shipment
+        - Shipments
       summary: Gets a shipment by ID
       operationId: findShipmentById
       parameters:
@@ -2258,7 +2108,7 @@ paths:
   /shipments/order/{orderId}:
     get:
       tags:
-        - shipment
+        - Shipments
       summary: Gets the shipment for an order
       operationId: findShipmentByOrderId
       parameters:
@@ -2291,7 +2141,7 @@ paths:
 
     post:
       tags:
-        - shipment
+        - Shipments
       summary: Creates a shipment for an order
       operationId: createShipment
       parameters:
@@ -2330,7 +2180,7 @@ paths:
   /shipments/{shipmentId}/delivered:
     patch:
       tags:
-        - shipment
+        - Shipments
       summary: Marks a shipment as delivered
       operationId: markShipmentDelivered
       parameters:
@@ -2362,7 +2212,7 @@ paths:
   /refunds:
     get:
       tags:
-        - refund
+        - Refunds
       summary: Lists all refunds
       operationId: findAllRefunds
       parameters:
@@ -2399,7 +2249,7 @@ paths:
   /refunds/{refundId}:
     get:
       tags:
-        - refund
+        - Refunds
       summary: Gets a refund by ID
       operationId: findRefundById
       parameters:
@@ -2435,7 +2285,7 @@ paths:
   /refunds/order/{orderId}:
     get:
       tags:
-        - refund
+        - Refunds
       summary: Gets the refund for an order
       operationId: findRefundByOrderId
       parameters:
@@ -2468,7 +2318,7 @@ paths:
 
     post:
       tags:
-        - refund
+        - Refunds
       summary: Creates a refund for an order
       operationId: createRefund
       parameters:
@@ -2798,7 +2648,7 @@ components:
           type: integer
           description: Quantity to add
       required:
-        - productId
+        - ProductsId
         - quantity
 
     UpdateCartItemRequest:
@@ -2812,7 +2662,7 @@ components:
           type: integer
           description: Updated quantity
       required:
-        - cartItemId
+        - CartsItemId
         - quantity
 
     CartResponse:
@@ -2877,7 +2727,7 @@ components:
             - BANK_TRANSFER
             - CASH_ON_DELIVERY
       required:
-        - orderId
+        - OrdersId
         - method
 
     UpdatePaymentRequest:
@@ -2906,7 +2756,7 @@ components:
             - COMPLETED
             - FAILED
             - CANCELLED
-            - REFUNDED
+            - RefundsED
       required:
         - status
 
@@ -3047,7 +2897,7 @@ components:
           items:
             $ref: "#/components/schemas/OrderItemRequest"
       required:
-        - customerId
+        - CustomersId
         - shipping_address_id
         - subtotal
         - total
@@ -3056,10 +2906,10 @@ components:
     UpdateOrderStatusRequest:
       type: object
       properties:
-        status_id:
-          type: integer
         notes:
           type: string
+        status_id:
+          type: integer
       required:
         - status_id
 
@@ -3069,7 +2919,7 @@ components:
         payment_status_id:
           type: integer
       required:
-        - payment_status_id
+        - Payments_status_id
 
     OrderItemRequest:
       type: object
@@ -3083,7 +2933,7 @@ components:
         unit_price:
           type: number
       required:
-        - productId
+        - ProductsId
         - variantId
         - quantity
         - unit_price
@@ -3121,7 +2971,7 @@ components:
         amount:
           type: number
       required:
-        - order_item_id
+        - Orders_item_id
         - quantity
         - amount
 
@@ -3187,10 +3037,9 @@ components:
           format: date-time
           description: Timestamp when the user was last updated
         deleted_at:
-          type: string
+          type: ["string", "null"]
           format: date-time
           description: Timestamp when the user was deleted (soft delete)
-          nullable: true
 
     AdminResponse:
       type: object
@@ -3223,10 +3072,9 @@ components:
           format: date-time
           description: Timestamp when the admin was last updated
         deleted_at:
-          type: string
+          type: ["string", "null"]
           format: date-time
           description: Timestamp when the admin was deleted (soft delete)
-          nullable: true
 
     CustomerResponse:
       type: object
@@ -3261,10 +3109,9 @@ components:
           format: date-time
           description: Timestamp when the customer was last updated
         deleted_at:
-          type: string
+          type: ["string", "null"]
           format: date-time
           description: Timestamp when the customer was deleted (soft delete)
-          nullable: true
 
     CustomerAddressResponse:
       type: object
@@ -3280,9 +3127,8 @@ components:
           type: string
           description: Street number
         apartament_number:
-          type: string
+          type: ["string", "null"]
           description: Apartment or suite number
-          nullable: true
         sublocality:
           type: string
           description: Sublocality or neighborhood
@@ -3351,7 +3197,7 @@ components:
         properties:
           type: array
           items:
-          $ref: "#/components/schemas/ProductPropertyValueResponse"
+            $ref: "#/components/schemas/ProductPropertyValueResponse"
         variants:
           type: array
           items:
@@ -3365,10 +3211,9 @@ components:
           format: date-time
           description: Timestamp when the product was last updated
         deleted_at:
-          type: string
+          type: ["string", "null"]
           format: date-time
           description: Timestamp when the product was deleted (soft delete)
-          nullable: true
 
     PropertyResponse:
       type: object
@@ -3597,13 +3442,11 @@ components:
         tracking_number:
           type: string
         shippedAt:
-          type: string
+          type: ["string", "null"]
           format: date-time
-          nullable: true
         deliveredAt:
-          type: string
+          type: ["string", "null"]
           format: date-time
-          nullable: true
 
     RefundResponse:
       type: object
@@ -3648,20 +3491,25 @@ components:
 
     PaginationResponse:
       type: object
-      description: Pagination information for list endpoints
+      description: Metadata describing pagination information for a paginated response.
+      required:
+        - page
+        - size
+        - total_items
+        - total_pages
       properties:
         page:
           type: integer
-          description: Current page number (0-based)
+          description: Current page index (0-based).
         size:
           type: integer
-          description: Number of items per page
+          description: Number of items returned per page.
         total_items:
           type: integer
-          description: Total number of items
+          description: Total number of available items.
         total_pages:
           type: integer
-          description: Total number of pages
+          description: Total number of pages available.
 
     AppExceptionResponse:
       type: object
