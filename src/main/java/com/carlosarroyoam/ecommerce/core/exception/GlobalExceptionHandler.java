@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -30,16 +31,10 @@ public class GlobalExceptionHandler {
         request);
   }
 
-  @ExceptionHandler({ MethodArgumentNotValidException.class })
-  public ResponseEntity<AppExceptionDto> handleValidation(MethodArgumentNotValidException ex,
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<AppExceptionDto> handleMalformedJson(HttpMessageNotReadableException ex,
       WebRequest request) {
-    Map<String, String> details = ex.getBindingResult()
-        .getFieldErrors()
-        .stream()
-        .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage,
-            (first, second) -> second));
-
-    return buildResponseEntity(HttpStatus.BAD_REQUEST, "Invalid request data", request, details);
+    return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
   }
 
   @ExceptionHandler({ NoHandlerFoundException.class })
@@ -58,6 +53,19 @@ public class GlobalExceptionHandler {
   public ResponseEntity<AppExceptionDto> handleMethodNotSupported(
       HttpRequestMethodNotSupportedException ex, WebRequest request) {
     return buildResponseEntity(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler({ MethodArgumentNotValidException.class })
+  public ResponseEntity<AppExceptionDto> handleValidation(MethodArgumentNotValidException ex,
+      WebRequest request) {
+    Map<String, String> details = ex.getBindingResult()
+        .getFieldErrors()
+        .stream()
+        .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage,
+            (first, second) -> second));
+
+    return buildResponseEntity(HttpStatus.UNPROCESSABLE_ENTITY, "Invalid request data", request,
+        details);
   }
 
   @ExceptionHandler({ Exception.class })
