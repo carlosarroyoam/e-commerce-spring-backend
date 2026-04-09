@@ -202,48 +202,48 @@ paths:
         - name: firstName
           in: query
           required: false
-          description: User's first name.
+          description: User's first name
           schema:
             type: string
             maxLength: 64
         - name: lastName
           in: query
           required: false
-          description: User's last name.
+          description: User's last name
           schema:
             type: string
             maxLength: 64
         - name: email
           in: query
           required: false
-          description: User's email address.
+          description: User's email address
           schema:
             type: string
             maxLength: 64
         - name: isActive
           in: query
           required: false
-          description: Whether the user is active or not.
+          description: Whether the user is active or not
           schema:
             type: boolean
         - name: startDate
           in: query
           required: false
-          description: Start date for date range filter in the ISO format YYYY-MM-DD.
+          description: Start date for date range filter in the ISO format YYYY-MM-DD
           schema:
             type: string
             format: date
         - name: endDate
           in: query
           required: false
-          description: End date for date range filter in the ISO format YYYY-MM-DD.
+          description: End date for date range filter in the ISO format YYYY-MM-DD
           schema:
             type: string
             format: date
         - name: userRoleId
           in: query
           required: false
-          description: User role identifier.
+          description: User role identifier
           schema:
             type: integer
             format: int64
@@ -900,47 +900,47 @@ paths:
         - name: title
           in: query
           required: false
-          description: Product's title.
+          description: Product's title
           schema:
             type: string
             maxLength: 64
         - name: slug
           in: query
           required: false
-          description: Product's slug.
+          description: Product's slug
           schema:
             type: string
             maxLength: 64
         - name: isFeatured
           in: query
           required: false
-          description: Whether the product is featured or not.
+          description: Whether the product is featured or not
           schema:
             type: boolean
         - name: isActive
           in: query
           required: false
-          description: Whether the product is active or not.
+          description: Whether the product is active or not
           schema:
             type: boolean
         - name: startDate
           in: query
           required: false
-          description: Start date for date range filter in the ISO format YYYY-MM-DD.
+          description: Start date for date range filter in the ISO format YYYY-MM-DD
           schema:
             type: string
             format: date
         - name: endDate
           in: query
           required: false
-          description: End date for date range filter in the ISO format YYYY-MM-DD.
+          description: End date for date range filter in the ISO format YYYY-MM-DD
           schema:
             type: string
             format: date
         - name: categoryId
           in: query
           required: false
-          description: Category identifier.
+          description: Category identifier
           schema:
             type: integer
             format: int64
@@ -3762,7 +3762,7 @@ components:
 
     PaginationResponse:
       type: object
-      description: Metadata describing pagination information for a paginated response.
+      description: Metadata describing pagination information for a paginated response
       required:
         - page
         - size
@@ -3771,42 +3771,42 @@ components:
       properties:
         page:
           type: integer
-          description: Current page index (0-based).
+          description: Current page index (0-based)
         size:
           type: integer
-          description: Number of items returned per page.
+          description: Number of items returned per page
         total_items:
           type: integer
-          description: Total number of available items.
+          description: Total number of available items
         total_pages:
           type: integer
-          description: Total number of pages available.
+          description: Total number of pages available
 
     AppExceptionResponse:
       type: object
-      description: Standard error response returned when an application exception occurs.
+      description: Standard error response returned when an application exception occurs
       properties:
         message:
           type: string
-          description: Human-readable error message.
+          description: Human-readable error message
         error:
           type: string
-          description: Short error identifier or error type.
+          description: Short error identifier or error type
         status:
           type: integer
-          description: HTTP status code associated with the error.
+          description: HTTP status code associated with the error
         details:
           type: object
-          description: Additional validation or error details.
+          description: Additional validation or error details
           additionalProperties:
             type: string
         path:
           type: string
-          description: API endpoint path where the error occurred.
+          description: API endpoint path where the error occurred
         timestamp:
           type: string
           format: date-time
-          description: Timestamp when the error was generated.
+          description: Timestamp when the error was generated
 
   parameters:
     SizeParam:
@@ -3829,7 +3829,7 @@ components:
       name: sort
       in: query
       required: false
-      description: Sorting criteria in the format field,asc or field,desc.
+      description: Sorting criteria in the format field,asc or field,desc
       schema:
         type: string
         default: id,asc
