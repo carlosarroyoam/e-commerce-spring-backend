@@ -964,6 +964,36 @@ paths:
         "500":
           $ref: "#/components/responses/InternalServerError"
 
+    post:
+      tags:
+        - Products
+      summary: Adds a new product
+      operationId: createProduct
+      requestBody:
+        description: Product object that needs to be added
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductRequest"
+        required: true
+      responses:
+        "201":
+          $ref: "#/components/responses/Created"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
   /products/{productId}:
     get:
       tags:
@@ -997,6 +1027,75 @@ paths:
           $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
+
+    put:
+      tags:
+        - Products
+      summary: Updates a product by ID
+      operationId: updateProduct
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to update
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: Product object that needs to be updated
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateProductRequest"
+        required: true
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
+    delete:
+      tags:
+        - Products
+      summary: Deletes a product by ID
+      operationId: deleteProduct
+      parameters:
+        - name: productId
+          in: path
+          description: ID of product to delete
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
 
   /products/{productId}/variants:
     get:
@@ -2360,15 +2459,668 @@ components:
       type: object
       properties:
         email:
+          description: User's email address
           type: string
         password:
+          description: User's password
           type: string
         device_fingerprint:
+          description: Device fingerprint used to identify the client device
           type: string
       required:
         - email
         - password
         - device_fingerprint
+
+    RefreshTokenRequest:
+      type: object
+      properties:
+        device_fingerprint:
+          description: Device fingerprint used to identify the client device
+          type: string
+      required:
+        - device_fingerprint
+
+    ForgotPasswordRequest:
+      type: object
+      properties:
+        email:
+          description: User's email address
+          type: string
+      required:
+        - email
+
+    ResetPasswordRequest:
+      type: object
+      properties:
+        password:
+          description: New password for the user account
+          type: string
+        confirm_password:
+          description: Confirmation of the new password
+          type: string
+      required:
+        - password
+        - confirm_password
+
+    ChangePasswordRequest:
+      type: object
+      properties:
+        current_password:
+          description: User's current password
+          type: string
+        new_password:
+          description: New password for the user account
+          type: string
+        confirm_password:
+          description: Confirmation of the new password
+          type: string
+      required:
+        - current_password
+        - new_password
+        - confirm_password
+
+    ChangeUserStatusRequest:
+      type: object
+      properties:
+        status:
+          description: New status for the user account
+          type: string
+          enum: [ACTIVE, SUSPEND, DELETED]
+      required:
+        - status
+
+    PagedUsersResponse:
+      type: object
+      description: Paginated list of users response
+      properties:
+        items:
+          type: array
+          description: List of users
+          items:
+            $ref: "#/components/schemas/UserResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    PagedAdminsResponse:
+      type: object
+      description: Paginated list of admins response
+      properties:
+        items:
+          type: array
+          description: List of admins
+          items:
+            $ref: "#/components/schemas/AdminResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    CreateAdminRequest:
+      type: object
+      properties:
+        first_name:
+          description: Admin's first name
+          type: string
+        last_name:
+          description: Admin's last name
+          type: string
+        email:
+          description: Admin's email address
+          type: string
+        password:
+          description: Admin's password
+          type: string
+        password_confirm:
+          description: Confirmation of the admin's password
+          type: string
+        is_super:
+          description: Indicates if the admin has super privileges
+          type: boolean
+          default: false
+      required:
+        - first_name
+        - last_name
+        - email
+        - password
+        - password_confirm
+
+    UpdateAdminRequest:
+      type: object
+      properties:
+        first_name:
+          description: Admin's first name
+          type: string
+        last_name:
+          description: Admin's last name
+          type: string
+        is_super:
+          description: Indicates if the admin has super privileges
+          type: boolean
+          default: false
+      required:
+        - first_name
+        - last_name
+
+    PagedCustomersResponse:
+      type: object
+      description: Paginated list of customers response
+      properties:
+        items:
+          type: array
+          description: List of customers
+          items:
+            $ref: "#/components/schemas/CustomerResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    CreateCustomerRequest:
+      type: object
+      properties:
+        first_name:
+          description: Customer's first name
+          type: string
+        last_name:
+          description: Customer's last name
+          type: string
+        email:
+          description: Customer's email address
+          type: string
+        password:
+          description: Customer's password
+          type: string
+        password_confirm:
+          description: Confirmation of the customer's password
+          type: string
+      required:
+        - first_name
+        - last_name
+        - email
+        - password
+        - password_confirm
+
+    UpdateCustomerRequest:
+      type: object
+      properties:
+        first_name:
+          description: Customer's first name
+          type: string
+        last_name:
+          description: Customer's last name
+          type: string
+      required:
+        - first_name
+        - last_name
+        - password
+
+    CreateCustomerAddressRequest:
+      type: object
+      properties:
+        street_name:
+          description: Street name of the address
+          type: string
+        street_number:
+          description: Street number of the address
+          type: string
+        sublocality:
+          description: Neighborhood or sublocality of the address
+          type: string
+        locality:
+          description: City or locality of the address
+          type: string
+        state:
+          description: State or province of the address
+          type: string
+        postal_code:
+          description: Postal code of the address
+          type: string
+      required:
+        - street_name
+        - street_number
+        - sublocality
+        - locality
+        - state
+        - postal_code
+
+    UpdateCustomerAddressRequest:
+      type: object
+      properties:
+        street_name:
+          description: Street name of the address
+          type: string
+        street_number:
+          description: Street number of the address
+          type: string
+        sublocality:
+          description: Neighborhood or sublocality of the address
+          type: string
+        locality:
+          description: City or locality of the address
+          type: string
+        state:
+          description: State or province of the address
+          type: string
+        postal_code:
+          description: Postal code of the address
+          type: string
+      required:
+        - street_name
+        - street_number
+        - sublocality
+        - locality
+        - state
+        - postal_code
+
+    PagedProductsResponse:
+      type: object
+      description: Paginated list of products response
+      properties:
+        items:
+          type: array
+          description: List of products
+          items:
+            $ref: "#/components/schemas/ProductResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    CreateProductRequest:
+      type: object
+      properties:
+        title:
+          description: Product title
+          type: string
+        slug:
+          description: URL-friendly product identifier
+          type: string
+        description:
+          description: Product description
+          type: string
+        is_featured:
+          description: Indicates if the product is featured
+          type: boolean
+          default: false
+        is_active:
+          description: Indicates if the product is active
+          type: boolean
+          default: true
+        category_id:
+          description: Identifier of the category assigned to the product
+          type: integer
+          format: int64
+      required:
+        - title
+
+    UpdateProductRequest:
+      type: object
+      properties:
+        title:
+          description: Product title
+          type: string
+        slug:
+          description: URL-friendly product identifier
+          type: string
+        description:
+          description: Product description
+          type: string
+        is_featured:
+          description: Indicates if the product is featured
+          type: boolean
+        is_active:
+          description: Indicates if the product is active
+          type: boolean
+        category_id:
+          description: Identifier of the category assigned to the product
+          type: integer
+          format: int64
+
+    PagedCategoriesResponse:
+      type: object
+      description: Paginated list of categories response
+      properties:
+        items:
+          type: array
+          description: List of categories
+          items:
+            $ref: "#/components/schemas/CategoryResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    PagedPaymentsResponse:
+      type: object
+      description: Paginated list of payments response
+      properties:
+        items:
+          type: array
+          description: List of payments
+          items:
+            $ref: "#/components/schemas/PaymentResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    AddCartItemRequest:
+      type: object
+      description: Request to add an item to cart
+      properties:
+        productId:
+          type: integer
+          description: Identifier of the product to add to the cart
+        variantId:
+          type: integer
+          description: Identifier of the product variant to add to the cart
+        quantity:
+          type: integer
+          description: Quantity of items to add to the cart
+      required:
+        - ProductsId
+        - quantity
+
+    UpdateCartItemRequest:
+      type: object
+      description: Request to update cart item
+      properties:
+        cartItemId:
+          type: integer
+          description: Unique identifier for the cart item
+        quantity:
+          type: integer
+          description: Updated quantity for the cart item
+      required:
+        - CartsItemId
+        - quantity
+
+    CreatePaymentRequest:
+      type: object
+      description: Request to create a payment
+      properties:
+        orderId:
+          type: integer
+          description: Identifier of the order associated with the payment
+        method:
+          type: string
+          description: Payment method for the order
+          enum:
+            - CREDIT_CARD
+            - DEBIT_CARD
+            - PAYPAL
+            - BANK_TRANSFER
+            - CASH_ON_DELIVERY
+      required:
+        - OrdersId
+        - method
+
+    UpdatePaymentRequest:
+      type: object
+      description: Request to update a payment
+      properties:
+        method:
+          type: string
+          description: Updated payment method for the order
+          enum:
+            - CREDIT_CARD
+            - DEBIT_CARD
+            - PAYPAL
+            - BANK_TRANSFER
+            - CASH_ON_DELIVERY
+
+    UpdatePaymentStatusRequest:
+      type: object
+      description: Request to update payment status
+      properties:
+        status:
+          type: string
+          description: Updated status for the payment
+          enum:
+            - PENDING
+            - COMPLETED
+            - FAILED
+            - CANCELLED
+            - RefundsED
+      required:
+        - status
+
+    CreateCategoryRequest:
+      type: object
+      properties:
+        title:
+          description: Title of the category
+          type: string
+      required:
+        - title
+
+    UpdateCategoryRequest:
+      type: object
+      properties:
+        title:
+          description: Title of the category
+          type: string
+      required:
+        - title
+
+    PagedAttributesResponse:
+      type: object
+      description: Paginated list of attributes response
+      properties:
+        items:
+          type: array
+          description: List of attributes
+          items:
+            $ref: "#/components/schemas/AttributeResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    CreateAttributeRequest:
+      type: object
+      properties:
+        title:
+          description: Title of the product attribute
+          type: string
+      required:
+        - title
+
+    UpdateAttributeRequest:
+      type: object
+      properties:
+        title:
+          description: Title of the product attribute
+          type: string
+      required:
+        - title
+
+    PagedPropertiesResponse:
+      type: object
+      description: Paginated list of properties response
+      properties:
+        items:
+          type: array
+          description: List of properties
+          items:
+            $ref: "#/components/schemas/PropertyResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    CreatePropertyRequest:
+      type: object
+      properties:
+        title:
+          description: Title of the product property
+          type: string
+      required:
+        - title
+
+    UpdatePropertyRequest:
+      type: object
+      properties:
+        title:
+          description: Title of the product property
+          type: string
+      required:
+        - title
+
+    PagedOrdersResponse:
+      type: object
+      description: Paginated list of orders response
+      properties:
+        items:
+          type: array
+          description: List of orders
+          items:
+            $ref: "#/components/schemas/OrderResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    CreateOrderRequest:
+      type: object
+      properties:
+        customerId:
+          description: Identifier of the customer placing the order
+          type: integer
+        shipping_address_id:
+          description: Identifier of the shipping address for the order
+          type: integer
+        subtotal:
+          description: Subtotal amount for the order
+          type: number
+        tax_total:
+          description: Total tax amount for the order
+          type: number
+        shipping_total:
+          description: Total shipping cost for the order
+          type: number
+        total:
+          description: Total amount for the order
+          type: number
+        notes:
+          description: Additional notes for the order
+          type: string
+        items:
+          description: List of items included in the order
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItemRequest"
+      required:
+        - CustomersId
+        - shipping_address_id
+        - subtotal
+        - total
+        - items
+
+    UpdateOrderStatusRequest:
+      type: object
+      properties:
+        notes:
+          description: Additional notes about the order status update
+          type: string
+        status_id:
+          description: Identifier of the new order status
+          type: integer
+      required:
+        - status_id
+
+    UpdateOrderPaymentStatusRequest:
+      type: object
+      properties:
+        payment_status_id:
+          description: Identifier of the new payment status for the order
+          type: integer
+      required:
+        - Payments_status_id
+
+    OrderItemRequest:
+      type: object
+      properties:
+        productId:
+          description: Identifier of the product included in the order
+          type: integer
+        variantId:
+          description: Identifier of the product variant included in the order
+          type: integer
+        quantity:
+          description: Quantity of the order item
+          type: integer
+        unit_price:
+          description: Unit price of the order item
+          type: number
+      required:
+        - ProductsId
+        - variantId
+        - quantity
+        - unit_price
+
+    PagedRefundsResponse:
+      type: object
+      description: Paginated list of refunds response
+      properties:
+        items:
+          description: List of refunds
+          type: array
+          items:
+            $ref: "#/components/schemas/RefundResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    CreateRefundRequest:
+      type: object
+      properties:
+        reason:
+          description: Reason for the refund request
+          type: string
+        items:
+          description: List of items included in the refund request
+          type: array
+          items:
+            $ref: "#/components/schemas/RefundItemRequest"
+      required:
+        - items
+
+    RefundItemRequest:
+      type: object
+      properties:
+        order_item_id:
+          description: Identifier of the order item to refund
+          type: integer
+        quantity:
+          description: Quantity of items to refund
+          type: integer
+        amount:
+          description: Refund amount for the item
+          type: number
+      required:
+        - Orders_item_id
+        - quantity
+        - amount
+
+    PagedShipmentsResponse:
+      type: object
+      description: Paginated list of shipments response
+      properties:
+        items:
+          description: List of shipments
+          type: array
+          items:
+            $ref: "#/components/schemas/ShipmentResponse"
+        pagination:
+          description: Pagination metadata
+          $ref: "#/components/schemas/PaginationResponse"
+
+    CreateShipmentRequest:
+      type: object
+      properties:
+        carrier_id:
+          description: Identifier of the carrier assigned to the shipment
+          type: integer
+        tracking_number:
+          description: Tracking number assigned to the shipment
+          type: string
+      required:
+        - carrier_id
 
     LoginResponse:
       type: object
@@ -2395,606 +3147,6 @@ components:
         refresh_token:
           type: string
           description: Refresh token
-
-    RefreshTokenRequest:
-      type: object
-      properties:
-        device_fingerprint:
-          type: string
-      required:
-        - device_fingerprint
-
-    ForgotPasswordRequest:
-      type: object
-      properties:
-        email:
-          type: string
-      required:
-        - email
-
-    ResetPasswordRequest:
-      type: object
-      properties:
-        password:
-          type: string
-        confirm_password:
-          type: string
-      required:
-        - password
-        - confirm_password
-
-    ChangePasswordRequest:
-      type: object
-      properties:
-        current_password:
-          type: string
-        new_password:
-          type: string
-        confirm_password:
-          type: string
-      required:
-        - current_password
-        - new_password
-        - confirm_password
-
-    ChangeUserStatusRequest:
-      type: object
-      properties:
-        status:
-          description: User's status
-          type: string
-          enum: [ACTIVE, SUSPEND, DELETED]
-      required:
-        - status
-
-    PagedUsersResponse:
-      type: object
-      description: Paginated list of users response
-      properties:
-        items:
-          type: array
-          description: List of users
-          items:
-            $ref: "#/components/schemas/UserResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    PagedAdminsResponse:
-      type: object
-      description: Paginated list of admins response
-      properties:
-        items:
-          type: array
-          description: List of admins
-          items:
-            $ref: "#/components/schemas/AdminResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    CreateAdminRequest:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-        password_confirm:
-          type: string
-        is_super:
-          type: boolean
-          default: false
-      required:
-        - first_name
-        - last_name
-        - email
-        - password
-        - password_confirm
-
-    UpdateAdminRequest:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        is_super:
-          type: boolean
-          default: false
-      required:
-        - first_name
-        - last_name
-
-    PagedCustomersResponse:
-      type: object
-      description: Paginated list of customers response
-      properties:
-        items:
-          type: array
-          description: List of customers
-          items:
-            $ref: "#/components/schemas/CustomerResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    CreateCustomerRequest:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-        email:
-          type: string
-        password:
-          type: string
-        password_confirm:
-          type: string
-      required:
-        - first_name
-        - last_name
-        - email
-        - password
-        - password_confirm
-
-    UpdateCustomerRequest:
-      type: object
-      properties:
-        first_name:
-          type: string
-        last_name:
-          type: string
-      required:
-        - first_name
-        - last_name
-        - password
-
-    CreateCustomerAddressRequest:
-      type: object
-      properties:
-        street_name:
-          type: string
-        street_number:
-          type: string
-        sublocality:
-          type: string
-        locality:
-          type: string
-        state:
-          type: string
-        postal_code:
-          type: string
-      required:
-        - street_name
-        - street_number
-        - sublocality
-        - locality
-        - state
-        - postal_code
-
-    UpdateCustomerAddressRequest:
-      type: object
-      properties:
-        street_name:
-          type: string
-        street_number:
-          type: string
-        sublocality:
-          type: string
-        locality:
-          type: string
-        state:
-          type: string
-        postal_code:
-          type: string
-      required:
-        - street_name
-        - street_number
-        - sublocality
-        - locality
-        - state
-        - postal_code
-
-    PagedProductsResponse:
-      type: object
-      description: Paginated list of products response
-      properties:
-        items:
-          type: array
-          description: List of products
-          items:
-            $ref: "#/components/schemas/ProductResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    PagedCategoriesResponse:
-      type: object
-      description: Paginated list of categories response
-      properties:
-        items:
-          type: array
-          description: List of categories
-          items:
-            $ref: "#/components/schemas/CategoryResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    PagedPaymentsResponse:
-      type: object
-      description: Paginated list of payments response
-      properties:
-        items:
-          type: array
-          description: List of payments
-          items:
-            $ref: "#/components/schemas/PaymentResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    AddCartItemRequest:
-      type: object
-      description: Request to add an item to cart
-      properties:
-        productId:
-          type: integer
-          description: Product identifier
-        variantId:
-          type: integer
-          description: Product variant identifier
-        quantity:
-          type: integer
-          description: Quantity to add
-      required:
-        - ProductsId
-        - quantity
-
-    UpdateCartItemRequest:
-      type: object
-      description: Request to update cart item
-      properties:
-        cartItemId:
-          type: integer
-          description: Cart item identifier
-        quantity:
-          type: integer
-          description: Updated quantity
-      required:
-        - CartsItemId
-        - quantity
-
-    CartResponse:
-      type: object
-      description: Shopping cart information
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the cart
-        customerId:
-          type: integer
-          description: Customer identifier
-        items:
-          type: array
-          description: List of items in cart
-          items:
-            $ref: "#/components/schemas/CartItemResponse"
-        totalItems:
-          type: integer
-          description: Total number of items
-        totalPrice:
-          type: number
-          description: Total price of cart
-
-    CartItemResponse:
-      type: object
-      description: Cart item information
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the cart item
-        productId:
-          type: integer
-          description: Product identifier
-        variantId:
-          type: integer
-          description: Product variant identifier
-        quantity:
-          type: integer
-          description: Quantity in cart
-        unitPrice:
-          type: number
-          description: Unit price
-        totalPrice:
-          type: number
-          description: Total price
-
-    CreatePaymentRequest:
-      type: object
-      description: Request to create a payment
-      properties:
-        orderId:
-          type: integer
-          description: Order identifier
-        method:
-          type: string
-          description: Payment method
-          enum:
-            - CREDIT_CARD
-            - DEBIT_CARD
-            - PAYPAL
-            - BANK_TRANSFER
-            - CASH_ON_DELIVERY
-      required:
-        - OrdersId
-        - method
-
-    UpdatePaymentRequest:
-      type: object
-      description: Request to update a payment
-      properties:
-        method:
-          type: string
-          description: Payment method
-          enum:
-            - CREDIT_CARD
-            - DEBIT_CARD
-            - PAYPAL
-            - BANK_TRANSFER
-            - CASH_ON_DELIVERY
-
-    UpdatePaymentStatusRequest:
-      type: object
-      description: Request to update payment status
-      properties:
-        status:
-          type: string
-          description: Payment status
-          enum:
-            - PENDING
-            - COMPLETED
-            - FAILED
-            - CANCELLED
-            - RefundsED
-      required:
-        - status
-
-    PaymentResponse:
-      type: object
-      description: Payment information
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the payment
-        orderId:
-          type: integer
-          description: Order identifier
-        amount:
-          type: number
-          description: Payment amount
-        method:
-          type: string
-          description: Payment method
-        status:
-          type: string
-          description: Payment status
-        transactionId:
-          type: string
-          description: Transaction identifier
-        createdAt:
-          type: string
-          format: date-time
-          description: Timestamp when payment was created
-        updatedAt:
-          type: string
-          format: date-time
-          description: Timestamp when payment was last updated
-
-    CreateCategoryRequest:
-      type: object
-      properties:
-        title:
-          type: string
-      required:
-        - title
-
-    UpdateCategoryRequest:
-      type: object
-      properties:
-        title:
-          type: string
-      required:
-        - title
-
-    PagedAttributesResponse:
-      type: object
-      description: Paginated list of attributes response
-      properties:
-        items:
-          type: array
-          description: List of attributes
-          items:
-            $ref: "#/components/schemas/AttributeResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    CreateAttributeRequest:
-      type: object
-      properties:
-        title:
-          type: string
-      required:
-        - title
-
-    UpdateAttributeRequest:
-      type: object
-      properties:
-        title:
-          type: string
-      required:
-        - title
-
-    PagedPropertiesResponse:
-      type: object
-      description: Paginated list of properties response
-      properties:
-        items:
-          type: array
-          description: List of properties
-          items:
-            $ref: "#/components/schemas/PropertyResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    CreatePropertyRequest:
-      type: object
-      properties:
-        title:
-          type: string
-      required:
-        - title
-
-    UpdatePropertyRequest:
-      type: object
-      properties:
-        title:
-          type: string
-      required:
-        - title
-
-    PagedOrdersResponse:
-      type: object
-      description: Paginated list of orders response
-      properties:
-        items:
-          type: array
-          description: List of orders
-          items:
-            $ref: "#/components/schemas/OrderResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    CreateOrderRequest:
-      type: object
-      properties:
-        customerId:
-          type: integer
-        shipping_address_id:
-          type: integer
-        subtotal:
-          type: number
-        tax_total:
-          type: number
-        shipping_total:
-          type: number
-        total:
-          type: number
-        notes:
-          type: string
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/OrderItemRequest"
-      required:
-        - CustomersId
-        - shipping_address_id
-        - subtotal
-        - total
-        - items
-
-    UpdateOrderStatusRequest:
-      type: object
-      properties:
-        notes:
-          type: string
-        status_id:
-          type: integer
-      required:
-        - status_id
-
-    UpdateOrderPaymentStatusRequest:
-      type: object
-      properties:
-        payment_status_id:
-          type: integer
-      required:
-        - Payments_status_id
-
-    OrderItemRequest:
-      type: object
-      properties:
-        productId:
-          type: integer
-        variantId:
-          type: integer
-        quantity:
-          type: integer
-        unit_price:
-          type: number
-      required:
-        - ProductsId
-        - variantId
-        - quantity
-        - unit_price
-
-    PagedRefundsResponse:
-      type: object
-      description: Paginated list of refunds response
-      properties:
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/RefundResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    CreateRefundRequest:
-      type: object
-      properties:
-        reason:
-          type: string
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/RefundItemRequest"
-      required:
-        - items
-
-    RefundItemRequest:
-      type: object
-      properties:
-        order_item_id:
-          type: integer
-        quantity:
-          type: integer
-        amount:
-          type: number
-      required:
-        - Orders_item_id
-        - quantity
-        - amount
-
-    PagedShipmentsResponse:
-      type: object
-      description: Paginated list of shipments response
-      properties:
-        items:
-          type: array
-          items:
-            $ref: "#/components/schemas/ShipmentResponse"
-        pagination:
-          $ref: "#/components/schemas/PaginationResponse"
-
-    CreateShipmentRequest:
-      type: object
-      properties:
-        carrier_id:
-          type: integer
-        tracking_number:
-          type: string
-      required:
-        - carrier_id
 
     UserRoleResponse:
       type: object
@@ -3027,6 +3179,7 @@ components:
           type: boolean
           description: Indicates if user is active
         user_role:
+          description: Role assigned to the user
           $ref: "#/components/schemas/UserRoleResponse"
         created_at:
           type: string
@@ -3193,12 +3346,15 @@ components:
           type: boolean
           description: Indicates if product is active
         category:
+          description: Category assigned to the product
           $ref: "#/components/schemas/CategoryResponse"
         properties:
+          description: List of property values assigned to the product
           type: array
           items:
             $ref: "#/components/schemas/ProductPropertyValueResponse"
         variants:
+          description: List of variants available for the product
           type: array
           items:
             $ref: "#/components/schemas/VariantResponse"
@@ -3237,6 +3393,7 @@ components:
           type: string
           description: Product property value
         property:
+          description: Property associated with the value
           $ref: "#/components/schemas/PropertyResponse"
 
     VariantResponse:
@@ -3262,8 +3419,10 @@ components:
           type: integer
           description: Available stock quantity
         attributes:
+          description: Attribute values assigned to the variant
           $ref: "#/components/schemas/VariantAttributeValueResponse"
         images:
+          description: Images associated with the variant
           $ref: "#/components/schemas/VariantImageResponse"
 
     AttributeResponse:
@@ -3288,6 +3447,7 @@ components:
           type: string
           description: Variant attribute value
         attribute:
+          description: Attribute associated with the value
           $ref: "#/components/schemas/AttributeResponse"
 
     VariantImageResponse:
@@ -3304,22 +3464,74 @@ components:
           type: integer
           description: Foreign key to variants table
 
+    CartResponse:
+      type: object
+      description: Shopping cart information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the cart
+        customerId:
+          type: integer
+          description: Customer identifier
+        items:
+          type: array
+          description: List of items in cart
+          items:
+            $ref: "#/components/schemas/CartItemResponse"
+        totalItems:
+          type: integer
+          description: Total number of items
+        totalPrice:
+          type: number
+          description: Total price of cart
+
+    CartItemResponse:
+      type: object
+      description: Cart item information
+      properties:
+        id:
+          type: integer
+          description: Unique identifier for the cart item
+        productId:
+          type: integer
+          description: Product identifier
+        variantId:
+          type: integer
+          description: Product variant identifier
+        quantity:
+          type: integer
+          description: Quantity in cart
+        unitPrice:
+          type: number
+          description: Unit price
+        totalPrice:
+          type: number
+          description: Total price
+
     OrderResponse:
       type: object
       properties:
         id:
+          description: Unique identifier for the order
           type: integer
         orderNumber:
+          description: Order number assigned to the order
           type: string
         customerId:
+          description: Identifier of the customer that placed the order
           type: integer
         status:
+          description: Current status of the order
           type: string
         paymentStatus:
+          description: Current payment status of the order
           type: string
         total:
+          description: Total amount of the order
           type: number
         createdAt:
+          description: Timestamp when the order was created
           type: string
           format: date-time
 
@@ -3327,36 +3539,50 @@ components:
       type: object
       properties:
         id:
+          description: Unique identifier for the order item
           type: integer
         productId:
+          description: Identifier of the product in the order item
           type: integer
         productTitle:
+          description: Title of the product in the order item
           type: string
         variantId:
+          description: Identifier of the product variant in the order item
           type: integer
         variantSku:
+          description: SKU of the product variant in the order item
           type: string
         variantName:
+          description: Name of the product variant in the order item
           type: string
         quantity:
+          description: Quantity of the order item
           type: integer
         unit_price:
+          description: Unit price of the order item
           type: number
         total:
+          description: Total amount of the order item
           type: number
 
     OrderStatusHistoryResponse:
       type: object
       properties:
         id:
+          description: Unique identifier for the order status history entry
           type: integer
         status_id:
+          description: Identifier of the order status
           type: integer
         status:
+          description: Name of the order status
           type: string
         notes:
+          description: Notes associated with the order status change
           type: string
         changedAt:
+          description: Timestamp when the order status was changed
           type: string
           format: date-time
 
@@ -3364,15 +3590,20 @@ components:
       type: object
       properties:
         id:
+          description: Unique identifier for the refund
           type: integer
         amount:
+          description: Refund amount
           type: number
         reason:
+          description: Reason for the refund
           type: string
         createdAt:
+          description: Timestamp when the refund was created
           type: string
           format: date-time
         items:
+          description: List of refunded items
           type: array
           items:
             $ref: "#/components/schemas/RefundItemResponse"
@@ -3381,70 +3612,95 @@ components:
       type: object
       properties:
         orderNumber:
+          description: Order number assigned to the order
           type: string
         status:
+          description: Current status of the order
           type: string
         total:
+          description: Total amount of the order
           type: number
         createdAt:
+          description: Timestamp when the order was created
           type: string
           format: date-time
         statusHistory:
+          description: List of status changes for the order
           type: array
           items:
             $ref: "#/components/schemas/OrderStatusHistoryResponse"
         shipment:
+          description: Shipment associated with the order
           $ref: "#/components/schemas/ShipmentResponse"
 
-    ShippingAddressResponse:
+    PaymentResponse:
       type: object
+      description: Payment information
       properties:
-        streetName:
+        id:
+          type: integer
+          description: Unique identifier for the payment
+        orderId:
+          type: integer
+          description: Order identifier
+        amount:
+          type: number
+          description: Payment amount
+        method:
           type: string
-        streetNumber:
+          description: Payment method
+        status:
           type: string
-        apartamentNumber:
+          description: Payment status
+        transactionId:
           type: string
-        sublocality:
+          description: Transaction identifier
+        createdAt:
           type: string
-        locality:
+          format: date-time
+          description: Timestamp when payment was created
+        updatedAt:
           type: string
-        state:
-          type: string
-        postalCode:
-          type: string
-        country:
-          type: string
-        phoneNumber:
-          type: string
+          format: date-time
+          description: Timestamp when payment was last updated
 
     CarrierResponse:
       type: object
       properties:
         id:
+          description: Unique identifier for the carrier
           type: integer
         name:
+          description: Name of the carrier
           type: string
 
     ShipmentResponse:
       type: object
       properties:
         id:
+          description: Unique identifier for the shipment
           type: integer
         orderId:
+          description: Identifier of the order associated with the shipment
           type: integer
         orderNumber:
+          description: Order number associated with the shipment
           type: string
         carrier_id:
+          description: Identifier of the carrier assigned to the shipment
           type: integer
         carrier:
+          description: Name of the carrier assigned to the shipment
           type: string
         tracking_number:
+          description: Tracking number assigned to the shipment
           type: string
         shippedAt:
+          description: Timestamp when the shipment was shipped
           type: ["string", "null"]
           format: date-time
         deliveredAt:
+          description: Timestamp when the shipment was delivered
           type: ["string", "null"]
           format: date-time
 
@@ -3452,20 +3708,27 @@ components:
       type: object
       properties:
         id:
+          description: Unique identifier for the refund
           type: integer
         orderId:
+          description: Identifier of the order associated with the refund
           type: integer
         orderNumber:
+          description: Order number associated with the refund
           type: string
         amount:
+          description: Refund amount
           type: number
         reason:
+          description: Reason for the refund
           type: string
         items:
+          description: List of refunded items
           type: array
           items:
             $ref: "#/components/schemas/RefundItemResponse"
         createdAt:
+          description: Timestamp when the refund was created
           type: string
           format: date-time
 
@@ -3473,20 +3736,28 @@ components:
       type: object
       properties:
         id:
+          description: Unique identifier for the refunded item
           type: integer
         order_item_id:
+          description: Identifier of the refunded order item
           type: integer
         productId:
+          description: Identifier of the product in the refunded item
           type: integer
         productTitle:
+          description: Title of the product in the refunded item
           type: string
         variantId:
+          description: Identifier of the product variant in the refunded item
           type: integer
         variantSku:
+          description: SKU of the product variant in the refunded item
           type: string
         quantity:
+          description: Quantity refunded for the item
           type: integer
         amount:
+          description: Refunded amount for the item
           type: number
 
     PaginationResponse:
