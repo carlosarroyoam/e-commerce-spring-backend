@@ -2,6 +2,7 @@ package com.carlosarroyoam.ecommerce.product.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,11 +28,11 @@ public class ProductPropertyValue {
   @Column(length = 45, nullable = false)
   private String value;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
   private Product product;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "property_id", referencedColumnName = "id", nullable = false)
   private Property property;
 }

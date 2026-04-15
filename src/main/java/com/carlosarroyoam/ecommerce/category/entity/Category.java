@@ -3,6 +3,7 @@ package com.carlosarroyoam.ecommerce.category.entity;
 import com.carlosarroyoam.ecommerce.product.entity.Product;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,7 +30,7 @@ public class Category {
   @Column(name = "title", length = 45, unique = true, nullable = false)
   private String title;
 
-  @OneToMany(mappedBy = "category")
+  @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
   private List<Product> products;
 
   @Column(name = "deleted_at")

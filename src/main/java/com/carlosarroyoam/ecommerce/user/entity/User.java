@@ -2,6 +2,7 @@ package com.carlosarroyoam.ecommerce.user.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -40,7 +41,7 @@ public class User {
   @Column(name = "is_active", columnDefinition = "TINYINT", nullable = false)
   private Boolean isActive;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_role_id", referencedColumnName = "id", nullable = false)
   private UserRole userRole;
 

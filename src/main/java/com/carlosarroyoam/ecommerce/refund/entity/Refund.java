@@ -3,6 +3,7 @@ package com.carlosarroyoam.ecommerce.refund.entity;
 import com.carlosarroyoam.ecommerce.order.entity.Order;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -29,7 +30,7 @@ public class Refund {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
   private Order order;
 
@@ -39,7 +40,7 @@ public class Refund {
   @Column(name = "reason", columnDefinition = "TEXT")
   private String reason;
 
-  @OneToMany(mappedBy = "refund")
+  @OneToMany(mappedBy = "refund", fetch = FetchType.LAZY)
   private List<RefundItem> items;
 
   @Column(name = "created_at", nullable = false)

@@ -6,6 +6,7 @@ import com.carlosarroyoam.ecommerce.refund.entity.Refund;
 import com.carlosarroyoam.ecommerce.shipment.entity.Shipment;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -35,19 +36,19 @@ public class Order {
   @Column(name = "order_number", length = 36, nullable = false)
   private String orderNumber;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
   private Customer customer;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "shipping_address_id", referencedColumnName = "id", nullable = false)
   private CustomerAddress shippingAddress;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
   private OrderStatus status;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "payment_status_id", referencedColumnName = "id", nullable = false)
   private OrderPaymentStatus paymentStatus;
 
@@ -66,16 +67,16 @@ public class Order {
   @Column(name = "notes", columnDefinition = "TEXT")
   private String notes;
 
-  @OneToMany(mappedBy = "order")
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
   private List<OrderItem> items;
 
-  @OneToMany(mappedBy = "order")
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
   private List<OrderStatusHistory> statusHistory;
 
-  @OneToMany(mappedBy = "order")
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
   private List<Shipment> shipments;
 
-  @OneToMany(mappedBy = "order")
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
   private List<Refund> refunds;
 
   @Column(name = "created_at", nullable = false)

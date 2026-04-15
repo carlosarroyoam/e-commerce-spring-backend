@@ -3,6 +3,7 @@ package com.carlosarroyoam.ecommerce.admin.entity;
 import com.carlosarroyoam.ecommerce.user.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,7 +29,7 @@ public class Admin {
   @Column(name = "is_super", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
   private Boolean isSuper;
 
-  @OneToOne
+  @OneToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
   private User user;
 }

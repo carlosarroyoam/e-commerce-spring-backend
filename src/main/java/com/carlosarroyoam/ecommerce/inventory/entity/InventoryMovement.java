@@ -3,6 +3,7 @@ package com.carlosarroyoam.ecommerce.inventory.entity;
 import com.carlosarroyoam.ecommerce.product.entity.Variant;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -28,11 +29,11 @@ public class InventoryMovement {
   @Column(name = "quantity", nullable = false)
   private Integer quantity;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "variant_id", referencedColumnName = "id", nullable = false)
   private Variant variant;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "movement_id", referencedColumnName = "id", nullable = false)
   private Movement movement;
 }

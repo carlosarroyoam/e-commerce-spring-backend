@@ -2,6 +2,7 @@ package com.carlosarroyoam.ecommerce.inventory.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -27,7 +28,7 @@ public class Movement {
   @Column(name = "title", length = 45, nullable = false)
   private String title;
 
-  @ManyToOne
+  @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "movement_type_id", referencedColumnName = "id", nullable = false)
   private MovementType movementType;
 }
