@@ -7,6 +7,8 @@ public class AppMessages {
 
   public static final String CUSTOMER_NOT_FOUND_EXCEPTION = "Customer not found";
 
+  public static final String CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION = "Customer address not found";
+
   public static final String PRODUCT_NOT_FOUND_EXCEPTION = "Product not found";
 
   public static final String CATEGORY_NOT_FOUND_EXCEPTION = "Category not found";
