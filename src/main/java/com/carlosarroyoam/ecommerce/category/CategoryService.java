@@ -31,11 +31,11 @@ public class CategoryService {
   }
 
   public CategoryResponse findById(Byte categoryId) {
-    Category categoryById = findCategoryEntityById(categoryId);
+    Category categoryById = findCategoryByIdOrFail(categoryId);
     return CategoryResponseMapper.INSTANCE.toDto(categoryById);
   }
 
-  private Category findCategoryEntityById(Byte categoryId) {
+  private Category findCategoryByIdOrFail(Byte categoryId) {
     return categoryRepository.findById(categoryId).orElseThrow(() -> {
       log.warn(AppMessages.CATEGORY_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,

@@ -48,11 +48,11 @@ public class ProductService {
   }
 
   public ProductResponse findById(Long productId) {
-    Product productById = findProductEntityById(productId);
+    Product productById = findProductByIdOrFail(productId);
     return ProductResponseMapper.INSTANCE.toDto(productById);
   }
 
-  private Product findProductEntityById(Long productId) {
+  private Product findProductByIdOrFail(Long productId) {
     return productRepository.findById(productId).orElseThrow(() -> {
       log.warn(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,
