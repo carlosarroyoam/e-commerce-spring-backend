@@ -15,6 +15,10 @@ public class AppMessages {
 
   public static final String PAYMENT_NOT_FOUND_EXCEPTION = "Payment not found";
 
+  public static final String SHIPMENT_NOT_FOUND_EXCEPTION = "Shipment not found";
+
+  public static final String REFUND_NOT_FOUND_EXCEPTION = "Refund not found";
+
   private AppMessages() {
     throw new IllegalAccessError(ILLEGAL_ACCESS_EXCEPTION);
   }

@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -23,6 +24,7 @@ public class CategoryService {
     this.categoryRepository = categoryRepository;
   }
 
+  @Transactional(readOnly = true)
   public PagedResponse<CategoryResponse> findAll(Pageable pageable) {
     Page<Category> categories = categoryRepository.findAll(pageable);
 
@@ -30,6 +32,7 @@ public class CategoryService {
         .toPagedResponse(categories.map(CategoryResponseMapper.INSTANCE::toDto));
   }
 
+  @Transactional(readOnly = true)
   public CategoryResponse findById(Byte categoryId) {
     Category categoryById = findCategoryByIdOrFail(categoryId);
     return CategoryResponseMapper.INSTANCE.toDto(categoryById);

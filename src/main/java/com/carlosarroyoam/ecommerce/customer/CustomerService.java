@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -27,6 +28,7 @@ public class CustomerService {
     this.customerRepository = customerRepository;
   }
 
+  @Transactional(readOnly = true)
   public PagedResponse<CustomerResponse> findAll(CustomerSpecs customerSpecs, Pageable pageable) {
     Specification<Customer> spec = SpecificationBuilder.<Customer>builder()
         .likeIfPresent(root -> root.get(Customer_.firstName), customerSpecs.getFirstName())
@@ -43,6 +45,7 @@ public class CustomerService {
         .toPagedResponse(customers.map(CustomerResponseMapper.INSTANCE::toDto));
   }
 
+  @Transactional(readOnly = true)
   public CustomerResponse findById(Long customerId) {
     Customer customerById = findCustomerByIdOrFail(customerId);
     return CustomerResponseMapper.INSTANCE.toDto(customerById);

@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -26,6 +27,7 @@ public class PaymentService {
     this.paymentRepository = paymentRepository;
   }
 
+  @Transactional(readOnly = true)
   public PagedResponse<PaymentResponse> findAll(PaymentSpecs paymentSpecs, Pageable pageable) {
     Specification<Payment> spec = SpecificationBuilder.<Payment>builder()
         .equalsIfPresent(root -> root.join("order").get("id"), paymentSpecs.getOrderId())
@@ -42,12 +44,13 @@ public class PaymentService {
         .toPagedResponse(payments.map(PaymentResponseMapper.INSTANCE::toDto));
   }
 
+  @Transactional(readOnly = true)
   public PaymentResponse findById(Long paymentId) {
-    Payment paymentById = findPaymentEntityById(paymentId);
+    Payment paymentById = findPaymentByIdOrFail(paymentId);
     return PaymentResponseMapper.INSTANCE.toDto(paymentById);
   }
 
-  private Payment findPaymentEntityById(Long paymentId) {
+  private Payment findPaymentByIdOrFail(Long paymentId) {
     return paymentRepository.findById(paymentId).orElseThrow(() -> {
       log.warn(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Service
@@ -23,6 +24,7 @@ public class CustomerAddressService {
     this.customerAddressRepository = customerAddressRepository;
   }
 
+  @Transactional(readOnly = true)
   public List<CustomerAddressResponse> findAllByCustomerId(Long customerId) {
     validateCustomerExists(customerId);
 
@@ -31,6 +33,7 @@ public class CustomerAddressService {
     return CustomerAddressResponseMapper.INSTANCE.toDtos(addresses);
   }
 
+  @Transactional(readOnly = true)
   public CustomerAddressResponse findById(Long customerId, Long addressId) {
     validateCustomerExists(customerId);
 
