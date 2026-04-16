@@ -336,20 +336,6 @@ INSERT INTO movements (id, title, movement_type_id) VALUES
 (7, 'Theft/Loss', 2),
 (8, 'Inventory adjustment', 2);
 
-INSERT INTO order_payment_statuses (id, title) VALUES
-(1, 'pending'),
-(2, 'paid'),
-(3, 'failed'),
-(4, 'refunded'),
-(5, 'partially_refunded');
-
-INSERT INTO order_statuses (id, title) VALUES
-(1, 'pending'),
-(2, 'processing'),
-(3, 'shipped'),
-(4, 'delivered'),
-(5, 'cancelled');
-
 INSERT INTO carriers (id, name, is_active) VALUES
 (1, 'FedEx', 1),
 (2, 'UPS', 1),
@@ -357,12 +343,12 @@ INSERT INTO carriers (id, name, is_active) VALUES
 (4, 'Estafeta', 1),
 (5, 'Paquetexpress', 1);
 
-INSERT INTO orders (id, order_number, customer_id, shipping_address_id, status_id, payment_status_id, subtotal, tax_total, shipping_total, total, notes, created_at, updated_at) VALUES
-(1, 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 1, 1, 4, 2, 8999.00, 800.00, 150.00, 9949.00, 'Please handle with care', '2025-01-15 10:30:00', '2025-01-18 14:20:00'),
-(2, 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 1, 1, 3, 2, 27999.00, 2500.00, 200.00, 30699.00, NULL, '2025-01-20 09:15:00', '2025-01-22 16:45:00'),
-(3, 'c3d4e5f6-a7b8-9012-cdef-123456789012', 2, 2, 2, 2, 5999.00, 500.00, 100.00, 6599.00, 'Leave at door', '2025-01-25 14:00:00', '2025-01-26 11:30:00'),
-(4, 'd4e5f6a7-b8c9-0123-defa-234567890123', 3, 3, 1, 1, 4999.00, 400.00, 120.00, 5519.00, NULL, '2025-01-28 16:45:00', '2025-01-28 16:45:00'),
-(5, 'e5f6a7b8-c9d0-1234-efab-345678901234', 4, 4, 5, 4, 15999.00, 1400.00, 180.00, 17579.00, 'Cancelled by customer', '2025-01-10 08:00:00', '2025-01-12 10:00:00');
+INSERT INTO orders (id, order_number, customer_id, shipping_address_id, status, subtotal, tax_total, shipping_total, total, notes, created_at, updated_at) VALUES
+(1, 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 1, 1, 'CONFIRMED', 8999.00, 800.00, 150.00, 9949.00, 'Please handle with care', '2025-01-15 10:30:00', '2025-01-18 14:20:00'),
+(2, 'b2c3d4e5-f6a7-8901-bcde-f12345678901', 1, 1, 'SHIPPED', 27999.00, 2500.00, 200.00, 30699.00, NULL, '2025-01-20 09:15:00', '2025-01-22 16:45:00'),
+(3, 'c3d4e5f6-a7b8-9012-cdef-123456789012', 2, 2, 'PROCESSING', 5999.00, 500.00, 100.00, 6599.00, 'Leave at door', '2025-01-25 14:00:00', '2025-01-26 11:30:00'),
+(4, 'd4e5f6a7-b8c9-0123-defa-234567890123', 3, 3, 'PENDING', 4999.00, 400.00, 120.00, 5519.00, NULL, '2025-01-28 16:45:00', '2025-01-28 16:45:00'),
+(5, 'e5f6a7b8-c9d0-1234-efab-345678901234', 4, 4, 'CANCELLED', 15999.00, 1400.00, 180.00, 17579.00, 'Cancelled by customer', '2025-01-10 08:00:00', '2025-01-12 10:00:00');
 
 INSERT INTO order_items (id, order_id, product_id, variant_id, quantity, unit_price, total) VALUES
 (1, 1, 1, 1, 1, 8999.00, 8999.00),
@@ -371,21 +357,27 @@ INSERT INTO order_items (id, order_id, product_id, variant_id, quantity, unit_pr
 (4, 4, 7, 15, 1, 4999.00, 4999.00),
 (5, 5, 10, 20, 1, 15999.00, 15999.00);
 
-INSERT INTO order_status_history (id, order_id, status_id, notes, changed_at) VALUES
-(1, 1, 1, 'Order created', '2025-01-15 10:30:00'),
-(2, 1, 2, 'Payment received', '2025-01-15 11:00:00'),
-(3, 1, 3, 'Order shipped', '2025-01-16 09:00:00'),
-(4, 1, 4, 'Order delivered', '2025-01-18 14:20:00'),
-(5, 2, 1, 'Order created', '2025-01-20 09:15:00'),
-(6, 2, 2, 'Payment received', '2025-01-20 10:00:00'),
-(7, 2, 3, 'Order shipped via FedEx', '2025-01-22 16:45:00'),
-(8, 3, 1, 'Order created', '2025-01-25 14:00:00'),
-(9, 3, 2, 'Payment received', '2025-01-25 15:00:00'),
-(10, 3, 2, 'Processing order', '2025-01-26 11:30:00'),
-(11, 4, 1, 'Order created', '2025-01-28 16:45:00'),
-(12, 5, 1, 'Order created', '2025-01-10 08:00:00'),
-(13, 5, 2, 'Payment received', '2025-01-10 09:00:00'),
-(14, 5, 5, 'Cancelled by customer', '2025-01-12 10:00:00');
+INSERT INTO order_status_history (id, order_id, notes, changed_at) VALUES
+(1, 1, 'Order created', '2025-01-15 10:30:00'),
+(2, 1, 'Payment received', '2025-01-15 11:00:00'),
+(3, 1, 'Order shipped', '2025-01-16 09:00:00'),
+(4, 1, 'Order delivered', '2025-01-18 14:20:00'),
+(5, 2, 'Order created', '2025-01-20 09:15:00'),
+(6, 2, 'Payment received', '2025-01-20 10:00:00'),
+(7, 2, 'Order shipped via FedEx', '2025-01-22 16:45:00'),
+(8, 3, 'Order created', '2025-01-25 14:00:00'),
+(9, 3, 'Payment received', '2025-01-25 15:00:00'),
+(10, 3, 'Processing order', '2025-01-26 11:30:00'),
+(11, 4, 'Order created', '2025-01-28 16:45:00'),
+(12, 5, 'Order created', '2025-01-10 08:00:00'),
+(13, 5, 'Payment received', '2025-01-10 09:00:00'),
+(14, 5, 'Cancelled by customer', '2025-01-12 10:00:00');
+
+INSERT INTO payments (id, amount, reference, description, method, status, order_id, created_at, updated_at)  VALUES
+(1, 8999.00, '123456789012', 'Order payed', 'DEBIT_CARD', 'COMPLETED', 1, '2025-01-15 10:30:00', '2025-01-15 10:30:00'),
+(2, 27999.00, '123456789012', 'Order payed', 'CREDIT_CARD', 'COMPLETED', 2, '2025-01-15 10:30:00', '2025-01-15 10:30:00'),
+(3, 5999.00, '123456789014', 'Order payed', 'BANK_TRANSFER', 'COMPLETED', 3, '2025-01-15 10:30:00', '2025-01-15 10:30:00'),
+(5, 15999.00, '345678901232', 'Order payed', 'DEBIT_CARD', 'COMPLETED', 5, '2025-01-15 10:30:00', '2025-01-15 10:30:00');
 
 INSERT INTO shipments (id, order_id, carrier_id, tracking_number, shipped_at, delivered_at) VALUES
 (1, 1, 1, 'FX123456789012', '2025-01-16 09:00:00', '2025-01-18 14:20:00'),

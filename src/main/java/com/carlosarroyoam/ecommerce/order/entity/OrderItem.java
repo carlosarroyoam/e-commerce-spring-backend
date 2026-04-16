@@ -28,6 +28,15 @@ public class OrderItem {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "quantity", nullable = false)
+  private Integer quantity;
+
+  @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
+  private BigDecimal unitPrice;
+
+  @Column(name = "total", nullable = false, precision = 10, scale = 2)
+  private BigDecimal total;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
   private Order order;
@@ -39,13 +48,4 @@ public class OrderItem {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "variant_id", referencedColumnName = "id", nullable = false)
   private Variant variant;
-
-  @Column(name = "quantity", nullable = false)
-  private Integer quantity;
-
-  @Column(name = "unit_price", nullable = false, precision = 10, scale = 2)
-  private BigDecimal unitPrice;
-
-  @Column(name = "total", nullable = false, precision = 10, scale = 2)
-  private BigDecimal total;
 }

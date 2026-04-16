@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.user.dto;
 
-import com.carlosarroyoam.ecommerce.core.constant.UserStatus;
+import com.carlosarroyoam.ecommerce.user.entity.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
@@ -12,9 +12,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Data
 @Builder
 public class UserSpecs {
-  @Size(max = 128, message = "Search should be max 128")
-  private String search;
-
   @Size(max = 64, message = "First name should be max 64")
   private String firstName;
 

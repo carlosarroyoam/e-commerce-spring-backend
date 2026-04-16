@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -47,9 +48,11 @@ public class Variant {
   @JoinColumn(name = "product_id", referencedColumnName = "id", nullable = false)
   private Product product;
 
+  @Builder.Default
   @OneToMany(mappedBy = "variant", fetch = FetchType.LAZY)
-  private List<VariantAttributeValue> attributes;
+  private List<VariantAttributeValue> attributes = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "variant", fetch = FetchType.LAZY)
-  private List<VariantImage> images;
+  private List<VariantImage> images = new ArrayList<>();
 }

@@ -16,12 +16,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "refresh_tokens")
+@Table(name = "user_refresh_tokens")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RefreshToken {
+public class UserRefreshToken {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
@@ -29,18 +29,15 @@ public class RefreshToken {
   @Column(name = "token", length = 254, nullable = false)
   private String token;
 
-  @Column(name = "last_used_at")
-  private LocalDateTime lastUsedAt;
-
   @Column(name = "fingerprint", length = 36, nullable = false)
   private String fingerprint;
-
-  @Column(name = "user_agent", length = 254)
-  private String userAgent;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
   private User user;
+
+  @Column(name = "last_used_at")
+  private LocalDateTime lastUsedAt;
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;

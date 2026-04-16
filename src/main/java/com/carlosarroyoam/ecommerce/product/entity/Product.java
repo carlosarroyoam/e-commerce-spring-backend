@@ -12,6 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -48,11 +49,13 @@ public class Product {
   @JoinColumn(name = "category_id", referencedColumnName = "id", nullable = false)
   private Category category;
 
+  @Builder.Default
   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-  private List<ProductPropertyValue> properties;
+  private List<ProductPropertyValue> properties = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
-  private List<Variant> variants;
+  private List<Variant> variants = new ArrayList<>();
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;

@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.user.entity;
 
-import com.carlosarroyoam.ecommerce.core.constant.UserStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

@@ -23,7 +23,6 @@ public class RefundItemResponse {
   private Long id;
   private Integer quantity;
   private BigDecimal amount;
-  private RefundResponse refund;
   private OrderItemResponse orderItem;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {

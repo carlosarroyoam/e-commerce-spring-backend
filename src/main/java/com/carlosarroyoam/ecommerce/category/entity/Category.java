@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,8 +31,9 @@ public class Category {
   @Column(name = "title", length = 45, unique = true, nullable = false)
   private String title;
 
+  @Builder.Default
   @OneToMany(mappedBy = "category", fetch = FetchType.LAZY)
-  private List<Product> products;
+  private List<Product> products = new ArrayList<>();
 
   @Column(name = "deleted_at")
   private LocalDateTime deletedAt;

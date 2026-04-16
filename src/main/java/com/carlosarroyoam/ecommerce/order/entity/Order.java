@@ -2,10 +2,13 @@ package com.carlosarroyoam.ecommerce.order.entity;
 
 import com.carlosarroyoam.ecommerce.customer.entity.Customer;
 import com.carlosarroyoam.ecommerce.customer.entity.CustomerAddress;
+import com.carlosarroyoam.ecommerce.payment.entity.Payment;
 import com.carlosarroyoam.ecommerce.refund.entity.Refund;
 import com.carlosarroyoam.ecommerce.shipment.entity.Shipment;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -16,6 +19,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,14 +48,6 @@ public class Order {
   @JoinColumn(name = "shipping_address_id", referencedColumnName = "id", nullable = false)
   private CustomerAddress shippingAddress;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "status_id", referencedColumnName = "id", nullable = false)
-  private OrderStatus status;
-
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "payment_status_id", referencedColumnName = "id", nullable = false)
-  private OrderPaymentStatus paymentStatus;
-
   @Column(name = "subtotal", nullable = false, precision = 10, scale = 2)
   private BigDecimal subtotal;
 
@@ -67,17 +63,29 @@ public class Order {
   @Column(name = "notes", columnDefinition = "TEXT")
   private String notes;
 
-  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-  private List<OrderItem> items;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", length = 32, nullable = false)
+  private OrderStatus status;
 
+  @Builder.Default
   @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-  private List<OrderStatusHistory> statusHistory;
+  private List<OrderItem> items = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-  private List<Shipment> shipments;
+  private List<Payment> payments = new ArrayList<>();
 
+  @Builder.Default
   @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-  private List<Refund> refunds;
+  private List<Shipment> shipments = new ArrayList<>();
+
+  @Builder.Default
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+  private List<Refund> refunds = new ArrayList<>();
+
+  @Builder.Default
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+  private List<OrderStatusHistory> statusHistory = new ArrayList<>();
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;

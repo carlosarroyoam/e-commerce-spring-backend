@@ -1,7 +1,7 @@
 package com.carlosarroyoam.ecommerce.user.dto;
 
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse.UserResponseMapper;
-import com.carlosarroyoam.ecommerce.user.entity.RefreshToken;
+import com.carlosarroyoam.ecommerce.user.entity.UserRefreshToken;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -17,13 +17,12 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RefreshTokenResponse {
+public class UserRefreshTokenResponse {
   private Long id;
   private String token;
-  private LocalDateTime lastUsedAt;
   private String fingerprint;
-  private String userAgent;
   private UserResponse user;
+  private LocalDateTime lastUsedAt;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
@@ -32,8 +31,8 @@ public class RefreshTokenResponse {
   public interface RefreshTokenResponseMapper {
     RefreshTokenResponseMapper INSTANCE = Mappers.getMapper(RefreshTokenResponseMapper.class);
 
-    RefreshTokenResponse toDto(RefreshToken entity);
+    UserRefreshTokenResponse toDto(UserRefreshToken entity);
 
-    List<RefreshTokenResponse> toDtos(List<RefreshToken> entities);
+    List<UserRefreshTokenResponse> toDtos(List<UserRefreshToken> entities);
   }
 }

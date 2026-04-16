@@ -5,6 +5,8 @@ public class AppMessages {
 
   public static final String PRODUCT_NOT_FOUND_EXCEPTION = "Product not found";
 
+  public static final String PAYMENT_NOT_FOUND_EXCEPTION = "Payment not found";
+
   public static final String USER_NOT_FOUND_EXCEPTION = "User not found";
 
   private AppMessages() {

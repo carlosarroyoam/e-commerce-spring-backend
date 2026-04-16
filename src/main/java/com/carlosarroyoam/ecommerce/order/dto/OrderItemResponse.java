@@ -23,12 +23,11 @@ import org.mapstruct.factory.Mappers;
 @Builder
 public class OrderItemResponse {
   private Long id;
-  private OrderResponse order;
-  private ProductResponse product;
-  private VariantResponse variant;
   private Integer quantity;
   private BigDecimal unitPrice;
   private BigDecimal total;
+  private ProductResponse product;
+  private VariantResponse variant;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
       OrderResponseMapper.class, ProductResponseMapper.class, VariantResponseMapper.class })

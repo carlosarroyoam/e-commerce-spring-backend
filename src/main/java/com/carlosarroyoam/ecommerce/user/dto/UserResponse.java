@@ -1,7 +1,8 @@
 package com.carlosarroyoam.ecommerce.user.dto;
 
-import com.carlosarroyoam.ecommerce.user.dto.UserRoleResponse.UserRoleResponseMapper;
+import com.carlosarroyoam.ecommerce.user.dto.RoleResponse.RoleResponseMapper;
 import com.carlosarroyoam.ecommerce.user.entity.User;
+import com.carlosarroyoam.ecommerce.user.entity.UserStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -22,14 +23,14 @@ public class UserResponse {
   private String firstName;
   private String lastName;
   private String email;
-  private String status;
-  private List<UserRoleResponse> roles;
+  private UserStatus status;
+  private List<RoleResponse> roles;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      UserRoleResponseMapper.class })
+      RoleResponseMapper.class })
   public interface UserResponseMapper {
     UserResponseMapper INSTANCE = Mappers.getMapper(UserResponseMapper.class);
 

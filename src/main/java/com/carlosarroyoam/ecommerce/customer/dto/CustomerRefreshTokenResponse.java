@@ -1,8 +1,7 @@
 package com.carlosarroyoam.ecommerce.customer.dto;
 
-import com.carlosarroyoam.ecommerce.customer.entity.Customer;
-import com.carlosarroyoam.ecommerce.customer.entity.CustomerStatus;
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse.UserResponseMapper;
+import com.carlosarroyoam.ecommerce.user.entity.UserRefreshToken;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -18,25 +17,23 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CustomerResponse {
+public class CustomerRefreshTokenResponse {
   private Long id;
-  private String firstName;
-  private String lastName;
-  private String phoneNumber;
-  private String email;
-  private CustomerStatus status;
-  private List<CustomerAddressResponse> addresses;
+  private String token;
+  private String fingerprint;
+  private CustomerResponse customer;
+  private LocalDateTime lastUsedAt;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
-  private LocalDateTime deletedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
       UserResponseMapper.class })
-  public interface CustomerResponseMapper {
-    CustomerResponseMapper INSTANCE = Mappers.getMapper(CustomerResponseMapper.class);
+  public interface CustomerRefreshTokenResponseMapper {
+    CustomerRefreshTokenResponseMapper INSTANCE = Mappers
+        .getMapper(CustomerRefreshTokenResponseMapper.class);
 
-    CustomerResponse toDto(Customer entity);
+    CustomerRefreshTokenResponse toDto(UserRefreshToken entity);
 
-    List<CustomerResponse> toDtos(List<Customer> entities);
+    List<CustomerRefreshTokenResponse> toDtos(List<UserRefreshToken> entities);
   }
 }

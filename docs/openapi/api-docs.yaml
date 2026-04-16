@@ -1922,6 +1922,48 @@ paths:
         - $ref: "#/components/parameters/PageParam"
         - $ref: "#/components/parameters/SizeParam"
         - $ref: "#/components/parameters/SortParam"
+        - name: orderId
+          in: query
+          required: false
+          description: Order identifier associated with the payment
+          schema:
+            type: integer
+            format: int64
+        - name: reference
+          in: query
+          required: false
+          description: Payment reference value
+          schema:
+            type: string
+            maxLength: 255
+        - name: method
+          in: query
+          required: false
+          description: Payment method
+          schema:
+            type: string
+            enum: [CASH_ON_DELIVERY, CREDIT_CARD, DEBIT_CARD, BANK_TRANSFER]
+        - name: status
+          in: query
+          required: false
+          description: Payment status
+          schema:
+            type: string
+            enum: [PENDING, COMPLETED, FAILED, CANCELLED, REFUNDED]
+        - name: startDate
+          in: query
+          required: false
+          description: Start date for payment creation date range in the ISO format YYYY-MM-DD
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          description: End date for payment creation date range in the ISO format YYYY-MM-DD
+          schema:
+            type: string
+            format: date
       responses:
         "200":
           description: OK
@@ -3110,13 +3152,28 @@ components:
           type: array
           description: Roles assigned to the user
           items:
-            $ref: "#/components/schemas/UserRoleResponse"
+            $ref: "#/components/schemas/RoleResponse"
         access_token:
           type: string
           description: Access token
         refresh_token:
           type: string
           description: Refresh token
+
+    RoleResponse:
+      type: object
+      description: User role information
+      properties:
+        id:
+          type: integer
+          format: int8
+          description: Unique identifier for the role
+        type:
+          type: string
+          description: Type of user role
+        description:
+          type: string
+          description: Description of the role
 
     UserResponse:
       type: object
@@ -3136,14 +3193,14 @@ components:
           description: User's email address
         status:
           type: string
-          enum: [PENDING, ACTIVE, SUSPENDED, DELETED]
+          enum: [ACTIVE, INACTIVE, DELETED]
           description: User status
         roles:
           type: array
           description: Roles assigned to the user
           items:
-            $ref: "#/components/schemas/UserRoleResponse"
-        createdAt:
+            $ref: "#/components/schemas/RoleResponse"
+        created_at:
           type: string
           format: date-time
           description: Timestamp when the user was created
@@ -3156,21 +3213,6 @@ components:
           format: date-time
           description: Timestamp when the user was deleted (soft delete)
 
-    UserRoleResponse:
-      type: object
-      description: User role information
-      properties:
-        id:
-          type: integer
-          format: int8
-          description: Unique identifier for the role
-        type:
-          type: string
-          description: Type of user role
-        description:
-          type: string
-          description: Description of the role
-
     CustomerResponse:
       type: object
       description: Customer information
@@ -3178,18 +3220,22 @@ components:
         id:
           type: integer
           description: Unique identifier for the customer
-        userId:
-          type: integer
-          description: Foreign key to users table
         first_name:
           type: string
           description: Customer's first name
         last_name:
           type: string
           description: Customer's last name
+        phone_number:
+          type: string
+          description: Customer's phone number
         email:
           type: string
           description: Customer's email address
+        status:
+          type: string
+          enum: [PENDING, ACTIVE, SUSPENDED, DELETED]
+          description: Customer status
         addresses:
           type: array
           description: List of customer addresses
@@ -3236,15 +3282,15 @@ components:
         postal_code:
           type: string
           description: Postal code
+        country:
+          type: string
+          description: Country code
         phone_number:
           type: string
           description: Contact phone number
         is_default:
           type: boolean
           description: Indicates if address is default
-        customerId:
-          type: integer
-          description: Foreign key to customers table
 
     CategoryResponse:
       type: object
@@ -3256,6 +3302,10 @@ components:
         title:
           type: string
           description: Category title
+        deleted_at:
+          type: ["string", "null"]
+          format: date-time
+          description: Timestamp when the category was deleted
 
     ProductCategoryResponse:
       type: object
@@ -3365,10 +3415,14 @@ components:
           description: Available stock quantity
         attributes:
           description: Attribute values assigned to the variant
-          $ref: "#/components/schemas/VariantAttributeValueResponse"
+          type: array
+          items:
+            $ref: "#/components/schemas/VariantAttributeValueResponse"
         images:
           description: Images associated with the variant
-          $ref: "#/components/schemas/VariantImageResponse"
+          type: array
+          items:
+            $ref: "#/components/schemas/VariantImageResponse"
 
     AttributeResponse:
       type: object
@@ -3377,9 +3431,9 @@ components:
         id:
           type: integer
           description: Unique identifier for the attribute
-        title:
+        name:
           type: string
-          description: Attribute title (e.g., Color, Storage)
+          description: Attribute name
 
     VariantAttributeValueResponse:
       type: object
@@ -3405,9 +3459,6 @@ components:
         url:
           type: string
           description: Image URL
-        variantId:
-          type: integer
-          description: Foreign key to variants table
 
     CartResponse:
       type: object
@@ -3456,51 +3507,75 @@ components:
 
     OrderResponse:
       type: object
+      description: Order information
       properties:
         id:
           description: Unique identifier for the order
           type: integer
-        orderNumber:
+        order_number:
           description: Order number assigned to the order
           type: string
-        customerId:
-          description: Identifier of the customer that placed the order
-          type: integer
-        status:
-          description: Current status of the order
-          type: string
-        paymentStatus:
-          description: Current payment status of the order
-          type: string
+        subtotal:
+          description: Order subtotal amount
+          type: number
+        tax_total:
+          description: Order tax amount
+          type: number
+        shipping_total:
+          description: Order shipping amount
+          type: number
         total:
           description: Total amount of the order
           type: number
-        createdAt:
+        notes:
+          description: Order notes
+          type: ["string", "null"]
+        status:
+          description: Current status of the order
+          type: string
+          enum: [PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED, REFUNDED]
+        items:
+          description: Order items
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderItemResponse"
+        payments:
+          description: Payments associated with the order
+          type: array
+          items:
+            $ref: "#/components/schemas/PaymentResponse"
+        shipments:
+          description: Shipments associated with the order
+          type: array
+          items:
+            $ref: "#/components/schemas/ShipmentResponse"
+        order_history:
+          description: Latest order history entry
+          type: array
+          items:
+            $ref: "#/components/schemas/OrderStatusHistoryResponse"
+        customer:
+          description: Customer who placed the order
+          $ref: "#/components/schemas/CustomerResponse"
+        shipping_address:
+          description: Shipping address assigned to the order
+          $ref: "#/components/schemas/CustomerAddressResponse"
+        created_at:
           description: Timestamp when the order was created
+          type: string
+          format: date-time
+        updated_at:
+          description: Timestamp when the order was last updated
           type: string
           format: date-time
 
     OrderItemResponse:
       type: object
+      description: Order item information
       properties:
         id:
           description: Unique identifier for the order item
           type: integer
-        productId:
-          description: Identifier of the product in the order item
-          type: integer
-        productTitle:
-          description: Title of the product in the order item
-          type: string
-        variantId:
-          description: Identifier of the product variant in the order item
-          type: integer
-        variantSku:
-          description: SKU of the product variant in the order item
-          type: string
-        variantName:
-          description: Name of the product variant in the order item
-          type: string
         quantity:
           description: Quantity of the order item
           type: integer
@@ -3510,23 +3585,24 @@ components:
         total:
           description: Total amount of the order item
           type: number
+        product:
+          description: Product associated with the item
+          $ref: "#/components/schemas/ProductResponse"
+        variant:
+          description: Variant associated with the item
+          $ref: "#/components/schemas/VariantResponse"
 
     OrderStatusHistoryResponse:
       type: object
+      description: Order status history information
       properties:
         id:
           description: Unique identifier for the order status history entry
           type: integer
-        status_id:
-          description: Identifier of the order status
-          type: integer
-        status:
-          description: Name of the order status
-          type: string
         notes:
           description: Notes associated with the order status change
-          type: string
-        changedAt:
+          type: ["string", "null"]
+        changed_at:
           description: Timestamp when the order status was changed
           type: string
           format: date-time
@@ -3585,32 +3661,35 @@ components:
         id:
           type: integer
           description: Unique identifier for the payment
-        orderId:
-          type: integer
-          description: Order identifier
         amount:
           type: number
           description: Payment amount
+        reference:
+          type: ["string", "null"]
+          description: External or internal payment reference
+        description:
+          type: ["string", "null"]
+          description: Payment description or notes
         method:
           type: string
           description: Payment method
+          enum: [CASH_ON_DELIVERY, CREDIT_CARD, DEBIT_CARD, BANK_TRANSFER]
         status:
           type: string
           description: Payment status
-        transactionId:
-          type: string
-          description: Transaction identifier
-        createdAt:
+          enum: [PENDING, COMPLETED, FAILED, CANCELLED, REFUNDED]
+        created_at:
           type: string
           format: date-time
           description: Timestamp when payment was created
-        updatedAt:
+        updated_at:
           type: string
           format: date-time
           description: Timestamp when payment was last updated
 
     CarrierResponse:
       type: object
+      description: Carrier information
       properties:
         id:
           description: Unique identifier for the carrier
@@ -3618,92 +3697,71 @@ components:
         name:
           description: Name of the carrier
           type: string
+        is_active:
+          description: Indicates if the carrier is active
+          type: boolean
 
     ShipmentResponse:
       type: object
+      description: Shipment information
       properties:
         id:
           description: Unique identifier for the shipment
           type: integer
-        orderId:
-          description: Identifier of the order associated with the shipment
-          type: integer
-        orderNumber:
-          description: Order number associated with the shipment
-          type: string
-        carrier_id:
-          description: Identifier of the carrier assigned to the shipment
-          type: integer
         carrier:
-          description: Name of the carrier assigned to the shipment
-          type: string
+          description: Carrier assigned to the shipment
+          $ref: "#/components/schemas/CarrierResponse"
         tracking_number:
           description: Tracking number assigned to the shipment
-          type: string
-        shippedAt:
+          type: ["string", "null"]
+        shipped_at:
           description: Timestamp when the shipment was shipped
           type: ["string", "null"]
           format: date-time
-        deliveredAt:
+        delivered_at:
           description: Timestamp when the shipment was delivered
           type: ["string", "null"]
           format: date-time
 
     RefundResponse:
       type: object
+      description: Refund information
       properties:
         id:
           description: Unique identifier for the refund
           type: integer
-        orderId:
-          description: Identifier of the order associated with the refund
-          type: integer
-        orderNumber:
-          description: Order number associated with the refund
-          type: string
         amount:
           description: Refund amount
           type: number
         reason:
           description: Reason for the refund
-          type: string
+          type: ["string", "null"]
         items:
           description: List of refunded items
           type: array
           items:
             $ref: "#/components/schemas/RefundItemResponse"
-        createdAt:
+        created_at:
           description: Timestamp when the refund was created
           type: string
           format: date-time
 
     RefundItemResponse:
       type: object
+      description: Refund item information
       properties:
         id:
           description: Unique identifier for the refunded item
           type: integer
-        order_item_id:
-          description: Identifier of the refunded order item
-          type: integer
-        productId:
-          description: Identifier of the product in the refunded item
-          type: integer
-        productTitle:
-          description: Title of the product in the refunded item
-          type: string
-        variantId:
-          description: Identifier of the product variant in the refunded item
-          type: integer
-        variantSku:
-          description: SKU of the product variant in the refunded item
-          type: string
         quantity:
           description: Quantity refunded for the item
           type: integer
         amount:
           description: Refunded amount for the item
           type: number
+        order_item:
+          description: Refunded order item
+          $ref: "#/components/schemas/OrderItemResponse"
 
     PaginationResponse:
       type: object

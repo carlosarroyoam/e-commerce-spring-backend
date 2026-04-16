@@ -1,7 +1,9 @@
-package com.carlosarroyoam.ecommerce.refund.dto;
+package com.carlosarroyoam.ecommerce.payment.dto;
 
 import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
-import com.carlosarroyoam.ecommerce.refund.entity.Refund;
+import com.carlosarroyoam.ecommerce.payment.entity.Payment;
+import com.carlosarroyoam.ecommerce.payment.entity.PaymentMethod;
+import com.carlosarroyoam.ecommerce.payment.entity.PaymentStatus;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,20 +20,23 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class RefundResponse {
+public class PaymentResponse {
   private Long id;
   private BigDecimal amount;
-  private String reason;
-  private List<RefundItemResponse> items;
+  private String reference;
+  private String description;
+  private PaymentMethod method;
+  private PaymentStatus status;
   private LocalDateTime createdAt;
+  private LocalDateTime updatedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
       OrderResponseMapper.class })
-  public interface RefundResponseMapper {
-    RefundResponseMapper INSTANCE = Mappers.getMapper(RefundResponseMapper.class);
+  public interface PaymentResponseMapper {
+    PaymentResponseMapper INSTANCE = Mappers.getMapper(PaymentResponseMapper.class);
 
-    RefundResponse toDto(Refund entity);
+    PaymentResponse toDto(Payment entity);
 
-    List<RefundResponse> toDtos(List<Refund> entities);
+    List<PaymentResponse> toDtos(List<Payment> entities);
   }
 }

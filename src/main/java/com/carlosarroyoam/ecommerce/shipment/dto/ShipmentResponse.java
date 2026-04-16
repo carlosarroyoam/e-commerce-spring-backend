@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.shipment.dto;
 
-import com.carlosarroyoam.ecommerce.order.dto.OrderResponse;
 import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
 import com.carlosarroyoam.ecommerce.shipment.dto.CarrierResponse.CarrierResponseMapper;
 import com.carlosarroyoam.ecommerce.shipment.entity.Shipment;
@@ -21,9 +20,8 @@ import org.mapstruct.factory.Mappers;
 @Builder
 public class ShipmentResponse {
   private Long id;
-  private OrderResponse order;
-  private CarrierResponse carrier;
   private String trackingNumber;
+  private CarrierResponse carrier;
   private LocalDateTime shippedAt;
   private LocalDateTime deliveredAt;
 

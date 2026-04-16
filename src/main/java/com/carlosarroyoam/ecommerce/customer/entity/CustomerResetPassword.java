@@ -1,4 +1,4 @@
-package com.carlosarroyoam.ecommerce.order.entity;
+package com.carlosarroyoam.ecommerce.customer.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -16,23 +16,29 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "order_status_history")
+@Table(name = "customer_reset_password")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderStatusHistory {
+public class CustomerResetPassword {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "notes", columnDefinition = "TEXT")
-  private String notes;
+  @Column(name = "token_hash", length = 254, nullable = false)
+  private String tokenHash;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
-  private Order order;
+  @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)
+  private Customer customer;
 
-  @Column(name = "changed_at", nullable = false)
-  private LocalDateTime changedAt;
+  @Column(name = "expires_on")
+  private LocalDateTime expiresOn;
+
+  @Column(name = "created_at", nullable = false)
+  private LocalDateTime createdAt;
+
+  @Column(name = "updated_at", nullable = false)
+  private LocalDateTime updatedAt;
 }
