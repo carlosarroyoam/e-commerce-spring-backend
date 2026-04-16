@@ -405,7 +405,7 @@ paths:
       tags:
         - Users
       summary: Changes a user's password
-      operationId: changePassword
+      operationId: changeUserPassword
       parameters:
         - name: userId
           in: path
@@ -638,7 +638,7 @@ paths:
       tags:
         - Customers
       summary: Changes a customer's password
-      operationId: changePassword
+      operationId: changeCustomerPassword
       parameters:
         - name: customerId
           in: path

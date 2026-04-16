@@ -13,6 +13,9 @@ public class AppMessages {
 
   public static final String CATEGORY_NOT_FOUND_EXCEPTION = "Category not found";
 
+  public static final String ORDER_NOT_FOUND_EXCEPTION = "Order not found";
+  public static final String ORDER_CANNOT_BE_CANCELLED_EXCEPTION = "Order cannot be cancelled";
+
   public static final String PAYMENT_NOT_FOUND_EXCEPTION = "Payment not found";
 
   public static final String SHIPMENT_NOT_FOUND_EXCEPTION = "Shipment not found";

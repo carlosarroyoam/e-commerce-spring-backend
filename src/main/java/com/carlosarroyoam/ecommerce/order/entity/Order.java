@@ -6,6 +6,7 @@ import com.carlosarroyoam.ecommerce.payment.entity.Payment;
 import com.carlosarroyoam.ecommerce.refund.entity.Refund;
 import com.carlosarroyoam.ecommerce.shipment.entity.Shipment;
 import jakarta.persistence.Column;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -84,7 +85,7 @@ public class Order {
   private List<Refund> refunds = new ArrayList<>();
 
   @Builder.Default
-  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   private List<OrderStatusHistory> statusHistory = new ArrayList<>();
 
   @Column(name = "created_at", nullable = false)
