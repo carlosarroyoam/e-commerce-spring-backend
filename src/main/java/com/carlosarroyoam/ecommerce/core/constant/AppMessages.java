@@ -9,9 +9,15 @@ public class AppMessages {
 
   public static final String CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION = "Customer address not found";
 
+  public static final String CATEGORY_NOT_FOUND_EXCEPTION = "Category not found";
+
   public static final String PRODUCT_NOT_FOUND_EXCEPTION = "Product not found";
 
-  public static final String CATEGORY_NOT_FOUND_EXCEPTION = "Category not found";
+  public static final String PRODUCT_VARIANT_NOT_FOUND_EXCEPTION = "Product variant not found";
+
+  public static final String ATTRIBUTE_NOT_FOUND_EXCEPTION = "Attribute not found";
+
+  public static final String PROPERTY_NOT_FOUND_EXCEPTION = "Property not found";
 
   public static final String ORDER_NOT_FOUND_EXCEPTION = "Order not found";
   public static final String ORDER_CANNOT_BE_CANCELLED_EXCEPTION = "Order cannot be cancelled";

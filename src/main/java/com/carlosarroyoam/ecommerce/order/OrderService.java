@@ -12,8 +12,8 @@ import com.carlosarroyoam.ecommerce.order.dto.OrderTrackResponse;
 import com.carlosarroyoam.ecommerce.order.dto.OrderTrackResponse.OrderTrackResponseMapper;
 import com.carlosarroyoam.ecommerce.order.entity.Order;
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatus;
-import com.carlosarroyoam.ecommerce.order.entity.Order_;
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatusHistory;
+import com.carlosarroyoam.ecommerce.order.entity.Order_;
 import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,38 +53,40 @@ public class OrderService {
 
   @Transactional(readOnly = true)
   public OrderResponse findById(Long orderId) {
-    return OrderResponseMapper.INSTANCE.toDto(findOrderByIdOrFail(orderId));
+    Order orderByIdOrFail = findOrderByIdOrFail(orderId);
+    return OrderResponseMapper.INSTANCE.toDto(orderByIdOrFail);
   }
 
   @Transactional(readOnly = true)
   public OrderTrackResponse findByOrderNumber(String orderNumber) {
-    Order order = orderRepository.findByOrderNumber(orderNumber).orElseThrow(() -> {
+    Order orderByOrderNumber = orderRepository.findByOrderNumber(orderNumber).orElseThrow(() -> {
       log.warn(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,
           AppMessages.ORDER_NOT_FOUND_EXCEPTION);
     });
 
-    return OrderTrackResponseMapper.INSTANCE.toDto(order);
+    return OrderTrackResponseMapper.INSTANCE.toDto(orderByOrderNumber);
   }
 
   @Transactional
   public void cancel(Long orderId) {
-    Order order = findOrderByIdOrFail(orderId);
+    Order orderById = findOrderByIdOrFail(orderId);
 
-    if (!canBeCancelled(order.getStatus())) {
+    if (!canBeCancelled(orderById.getStatus())) {
       log.warn(AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
       throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
           AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
     }
 
-    order.setStatus(OrderStatus.CANCELLED);
-    order.setUpdatedAt(LocalDateTime.now());
-    order.getStatusHistory().add(OrderStatusHistory.builder()
-        .order(order)
-        .notes("Order cancelled")
-        .changedAt(LocalDateTime.now())
-        .build());
-    orderRepository.save(order);
+    orderById.setStatus(OrderStatus.CANCELLED);
+    orderById.setUpdatedAt(LocalDateTime.now());
+    orderById.getStatusHistory()
+        .add(OrderStatusHistory.builder()
+            .order(orderById)
+            .notes("Order cancelled")
+            .changedAt(LocalDateTime.now())
+            .build());
+    orderRepository.save(orderById);
   }
 
   private boolean canBeCancelled(OrderStatus orderStatus) {

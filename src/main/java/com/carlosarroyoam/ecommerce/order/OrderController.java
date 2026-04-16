@@ -34,12 +34,14 @@ public class OrderController {
 
   @GetMapping(value = "/{orderId}", produces = "application/json")
   public ResponseEntity<OrderResponse> findById(@PathVariable Long orderId) {
-    return ResponseEntity.ok(orderService.findById(orderId));
+    OrderResponse orderById = orderService.findById(orderId);
+    return ResponseEntity.ok(orderById);
   }
 
   @GetMapping(value = "/track/{orderNumber}", produces = "application/json")
   public ResponseEntity<OrderTrackResponse> findByOrderNumber(@PathVariable String orderNumber) {
-    return ResponseEntity.ok(orderService.findByOrderNumber(orderNumber));
+    OrderTrackResponse orderByOrderNumber = orderService.findByOrderNumber(orderNumber);
+    return ResponseEntity.ok(orderByOrderNumber);
   }
 
   @PatchMapping(value = "/{orderId}/cancel")

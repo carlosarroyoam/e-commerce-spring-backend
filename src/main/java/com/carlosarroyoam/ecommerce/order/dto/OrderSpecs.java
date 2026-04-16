@@ -1,9 +1,7 @@
 package com.carlosarroyoam.ecommerce.order.dto;
 
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatus;
-
 import jakarta.validation.constraints.Size;
-
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Data;
