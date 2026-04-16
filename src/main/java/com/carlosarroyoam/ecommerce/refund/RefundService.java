@@ -49,13 +49,13 @@ public class RefundService {
 
   @Transactional(readOnly = true)
   public RefundResponse findByOrderId(Long orderId) {
-    Refund refund = refundRepository.findByOrderId(orderId).orElseThrow(() -> {
+    Refund refundByOrderId = refundRepository.findByOrderId(orderId).orElseThrow(() -> {
       log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,
           AppMessages.REFUND_NOT_FOUND_EXCEPTION);
     });
 
-    return RefundResponseMapper.INSTANCE.toDto(refund);
+    return RefundResponseMapper.INSTANCE.toDto(refundByOrderId);
   }
 
   private Refund findRefundByIdOrFail(Long refundId) {

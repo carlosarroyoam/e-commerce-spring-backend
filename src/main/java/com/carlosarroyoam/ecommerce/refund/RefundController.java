@@ -32,13 +32,13 @@ public class RefundController {
 
   @GetMapping(value = "/{refundId}", produces = "application/json")
   public ResponseEntity<RefundResponse> findById(@PathVariable Long refundId) {
-    RefundResponse refund = refundService.findById(refundId);
-    return ResponseEntity.ok(refund);
+    RefundResponse refundById = refundService.findById(refundId);
+    return ResponseEntity.ok(refundById);
   }
 
   @GetMapping(value = "/order/{orderId}", produces = "application/json")
   public ResponseEntity<RefundResponse> findByOrderId(@PathVariable Long orderId) {
-    RefundResponse refund = refundService.findByOrderId(orderId);
-    return ResponseEntity.ok(refund);
+    RefundResponse refundByOrderId = refundService.findByOrderId(orderId);
+    return ResponseEntity.ok(refundByOrderId);
   }
 }

@@ -20,15 +20,15 @@ public class CustomerAddressController {
   @GetMapping(produces = "application/json")
   public ResponseEntity<List<CustomerAddressResponse>> findAllByCustomerId(
       @PathVariable Long customerId) {
-    List<CustomerAddressResponse> addresses = customerAddressService
+    List<CustomerAddressResponse> customerAddresses = customerAddressService
         .findAllByCustomerId(customerId);
-    return ResponseEntity.ok(addresses);
+    return ResponseEntity.ok(customerAddresses);
   }
 
   @GetMapping(value = "/{addressId}", produces = "application/json")
   public ResponseEntity<CustomerAddressResponse> findById(@PathVariable Long customerId,
       @PathVariable Long addressId) {
-    CustomerAddressResponse address = customerAddressService.findById(customerId, addressId);
-    return ResponseEntity.ok(address);
+    CustomerAddressResponse customerAddress = customerAddressService.findById(customerId, addressId);
+    return ResponseEntity.ok(customerAddress);
   }
 }
