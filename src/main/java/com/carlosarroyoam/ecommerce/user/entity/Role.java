@@ -12,16 +12,19 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "user_roles")
+@Table(name = "roles")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UserRole {
+public class Role {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Byte id;
 
   @Column(name = "type", length = 32, nullable = false)
   private String type;
+
+  @Column(name = "description", length = 256, nullable = false)
+  private String description;
 }

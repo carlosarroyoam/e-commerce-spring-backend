@@ -4,11 +4,12 @@ CREATE DATABASE IF NOT EXISTS `spring-boot-e-commerce`;
 
 USE `spring-boot-e-commerce`;
 
-CREATE TABLE IF NOT EXISTS user_roles (
+CREATE TABLE IF NOT EXISTS roles (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
     type VARCHAR(32) NOT NULL,
+    description VARCHAR(256) NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE KEY uk_user_roles_type (type)
+    UNIQUE KEY uk_roles_type (type)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -17,57 +18,26 @@ CREATE TABLE IF NOT EXISTS users (
     last_name VARCHAR(64) NOT NULL,
     email VARCHAR(64) NOT NULL,
     password_hash VARCHAR(96) NOT NULL,
-    is_active TINYINT NOT NULL DEFAULT 1 CHECK (is_active IN (0, 1)),
-    user_role_id TINYINT UNSIGNED NOT NULL,
+    status VARCHAR(32) DEFAULT 'ACTIVE' CHECK (status IN ('PENDING', 'ACTIVE', 'SUSPENDED', 'DELETED')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     deleted_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uk_users_email (email),
-    INDEX idx_users_deleted_at (deleted_at),
-    FULLTEXT idx_users_full_name (first_name, last_name),
-    CONSTRAINT fk_users_user_role_id
-        FOREIGN KEY (user_role_id) REFERENCES user_roles (id)
+    INDEX idx_users_deleted_at (deleted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS customers (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS user_roles (
     user_id BIGINT UNSIGNED NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY uk_customers_user_id (user_id),
-    CONSTRAINT fk_customers_user_id
-        FOREIGN KEY (user_id) REFERENCES users (id)
+    role_id TINYINT UNSIGNED NOT NULL,
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT fk_user_roles_user_id
+        FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT fk_user_roles_role_id
+        FOREIGN KEY (role_id) REFERENCES roles (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS customer_addresses (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    street_name VARCHAR(64) NOT NULL,
-    street_number VARCHAR(5) NOT NULL,
-    apartament_number VARCHAR(5),
-    sublocality VARCHAR(45) NOT NULL,
-    locality VARCHAR(45) NOT NULL,
-    state VARCHAR(45) NOT NULL,
-    postal_code VARCHAR(5) NOT NULL,
-    country VARCHAR(2) DEFAULT 'MX',
-    phone_number VARCHAR(10) NOT NULL,
-    customer_id BIGINT UNSIGNED NOT NULL,
-    PRIMARY KEY (id),
-    INDEX idx_customer_addresses_customer_id (customer_id),
-    CONSTRAINT fk_customer_addresses_customer_id
-        FOREIGN KEY (customer_id) REFERENCES customers (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS admins (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    is_super TINYINT NOT NULL DEFAULT 0 CHECK (is_super IN (0, 1)),
-    user_id BIGINT UNSIGNED NOT NULL,
-    PRIMARY KEY (id),
-    UNIQUE KEY uk_admins_user_id (user_id),
-    CONSTRAINT fk_admins_user_id
-        FOREIGN KEY (user_id) REFERENCES users (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS personal_access_tokens (
+CREATE TABLE IF NOT EXISTS refresh_tokens (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     token VARCHAR(254) NOT NULL,
     last_used_at TIMESTAMP DEFAULT NULL,
@@ -81,6 +51,43 @@ CREATE TABLE IF NOT EXISTS personal_access_tokens (
     UNIQUE KEY uk_tokens_user_fingerprint (user_id, fingerprint),
     CONSTRAINT fk_tokens_user_id
         FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS customers (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(10) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    status VARCHAR(32) DEFAULT 'ACTIVE' CHECK (status IN ('PENDING', 'ACTIVE', 'SUSPENDED', 'DELETED')),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at TIMESTAMP DEFAULT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY uk_customers_email (email),
+    UNIQUE KEY uk_customers_phone_number (phone_number),
+    INDEX idx_customers_status (status),
+    INDEX idx_customers_deleted_at (deleted_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS customer_addresses (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    street_name VARCHAR(64) NOT NULL,
+    street_number VARCHAR(5) NOT NULL,
+    apartament_number VARCHAR(5),
+    sublocality VARCHAR(45) NOT NULL,
+    locality VARCHAR(45) NOT NULL,
+    state VARCHAR(45) NOT NULL,
+    postal_code VARCHAR(5) NOT NULL,
+    country VARCHAR(2) DEFAULT 'MX',
+    phone_number VARCHAR(10) NOT NULL,
+    is_default TINYINT NOT NULL DEFAULT 1 CHECK (is_default IN (0, 1)),
+    customer_id BIGINT UNSIGNED NOT NULL,
+    PRIMARY KEY (id),
+    INDEX idx_customer_addresses_customer_id (customer_id),
+    CONSTRAINT fk_customer_addresses_customer_id
+        FOREIGN KEY (customer_id) REFERENCES customers (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS categories (

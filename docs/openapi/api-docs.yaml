@@ -8,7 +8,6 @@ info:
     ## Features
     - Auth.
     - Users.
-    - Admins.
     - Customers.
     - Customers addresses.
     - Products.
@@ -36,9 +35,7 @@ tags:
   - name: Auth
     description: Operations about authentication
   - name: Users
-    description: Operations about users
-  - name: Admins
-    description: Operations about admin users
+    description: Operations about staff users
   - name: Customers
     description: Operations about customer users
   - name: Customer addresses
@@ -171,7 +168,11 @@ paths:
       summary: Resets a user password
       operationId: resetPassword
       parameters:
-        - $ref: "#/components/parameters/resetPasswordTokenParam"
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
       requestBody:
         description: User password object that will be changed
         content:
@@ -220,12 +221,13 @@ paths:
           schema:
             type: string
             maxLength: 64
-        - name: isActive
+        - name: status
           in: query
           required: false
-          description: Whether the user is active or not
+          description: User status
           schema:
-            type: boolean
+            type: string
+            enum: [PENDING, ACTIVE, SUSPENDED, DELETED]
         - name: startDate
           in: query
           required: false
@@ -240,13 +242,15 @@ paths:
           schema:
             type: string
             format: date
-        - name: userRoleId
+        - name: roleIds
           in: query
           required: false
-          description: User role identifier
+          description: User role identifiers (comma-separated list)
           schema:
-            type: integer
-            format: int64
+            type: array
+            items:
+              type: integer
+              format: int64
       responses:
         "200":
           description: OK
@@ -411,7 +415,7 @@ paths:
             type: integer
             format: int64
       requestBody:
-        description: Admin object that needs to be updated
+        description: User credentials object that will be changed
         content:
           application/json:
             schema:
@@ -420,134 +424,6 @@ paths:
       responses:
         "204":
           $ref: "#/components/responses/NoContent"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-  /admins:
-    get:
-      tags:
-        - Admins
-      summary: Lists all admins
-      operationId: findAllAdmins
-      parameters:
-        - $ref: "#/components/parameters/PageParam"
-        - $ref: "#/components/parameters/SizeParam"
-        - $ref: "#/components/parameters/SortParam"
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/PagedAdminsResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-    post:
-      tags:
-        - Admins
-      summary: Adds a new admin
-      operationId: createAdmin
-      requestBody:
-        description: Admin object that needs to be added
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateAdminRequest"
-        required: true
-      responses:
-        "201":
-          $ref: "#/components/responses/Created"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-    put:
-      tags:
-        - Admins
-      summary: Updates an admin by ID
-      operationId: updateAdmin
-      requestBody:
-        description: Admin object that needs to be updated
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateAdminRequest"
-        required: true
-      responses:
-        "204":
-          $ref: "#/components/responses/NoContent"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
-        "500":
-          $ref: "#/components/responses/InternalServerError"
-      security:
-        - BearerAuth: []
-
-  /admins/{adminId}:
-    get:
-      tags:
-        - Admins
-      summary: Gets an admin by ID
-      operationId: findAdminById
-      parameters:
-        - name: adminId
-          in: path
-          description: ID of admin to query
-          required: true
-          schema:
-            type: integer
-            format: int64
-      responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/AdminResponse"
-        "400":
-          $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -571,6 +447,12 @@ paths:
         - $ref: "#/components/parameters/PageParam"
         - $ref: "#/components/parameters/SizeParam"
         - $ref: "#/components/parameters/SortParam"
+        - name: status
+          in: query
+          description: Filter customers by status
+          schema:
+            type: string
+            enum: [ACTIVE, SUSPENDED, DELETED]
       responses:
         "200":
           description: OK
@@ -584,8 +466,6 @@ paths:
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
         "422":
           $ref: "#/components/responses/UnprocessableEntity"
         "500":
@@ -593,21 +473,27 @@ paths:
       security:
         - BearerAuth: []
 
-    post:
+  /customers/{customerId}:
+    get:
       tags:
         - Customers
-      summary: Adds a new customer
-      operationId: createCustomer
-      requestBody:
-        description: Customer object that needs to be added
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/CreateCustomerRequest"
-        required: true
+      summary: Gets customer by ID
+      operationId: findCustomerById
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Unique identifier of the customer
+          schema:
+            type: integer
+            format: int64
       responses:
-        "201":
-          $ref: "#/components/responses/Created"
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -616,8 +502,6 @@ paths:
           $ref: "#/components/responses/Forbidden"
         "404":
           $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
       security:
@@ -628,13 +512,77 @@ paths:
         - Customers
       summary: Updates a customer by ID
       operationId: updateCustomer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Unique identifier of the customer
+          schema:
+            type: integer
+            format: int64
       requestBody:
-        description: Customer object that needs to be updated
+        required: true
         content:
           application/json:
             schema:
               $ref: "#/components/schemas/UpdateCustomerRequest"
-        required: true
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
+    delete:
+      tags:
+        - Customers
+      summary: Deletes a customer by ID
+      operationId: deleteCustomer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Unique identifier of the customer
+          schema:
+            type: integer
+            format: int64
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
+  /customers/{customerId}/suspend:
+    post:
+      tags:
+        - Customers
+      summary: Suspends a customer by ID
+      operationId: suspendCustomer
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          description: Unique identifier of the customer
+          schema:
+            type: integer
+            format: int64
       responses:
         "204":
           $ref: "#/components/responses/NoContent"
@@ -653,29 +601,62 @@ paths:
       security:
         - BearerAuth: []
 
-  /customers/{customerId}:
-    get:
+  /customers/{customerId}/activate:
+    post:
       tags:
         - Customers
-      summary: Gets a customer by ID
-      operationId: findCustomerById
+      summary: Activates a suspended customer by ID
+      operationId: activateCustomer
       parameters:
         - name: customerId
           in: path
-          description: ID of customer to query
           required: true
+          description: Unique identifier of the customer
           schema:
             type: integer
             format: int64
       responses:
-        "200":
-          description: OK
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/CustomerResponse"
+        "204":
+          $ref: "#/components/responses/NoContent"
         "400":
           $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "403":
+          $ref: "#/components/responses/Forbidden"
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "422":
+          $ref: "#/components/responses/UnprocessableEntity"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+      security:
+        - BearerAuth: []
+
+  /customers/{customerId}/change-password:
+    put:
+      tags:
+        - Customers
+      summary: Changes a customer's password
+      operationId: changePassword
+      parameters:
+        - name: customerId
+          in: path
+          description: ID of customer to change its password
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        description: User credentials object that will be changed
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ChangePasswordRequest"
+        required: true
+      responses:
+        "204":
+          $ref: "#/components/responses/NoContent"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
@@ -1917,7 +1898,7 @@ paths:
             format: int64
       responses:
         "204":
-          $ref: '#/components/responses/NoContent'
+          $ref: "#/components/responses/NoContent"
         "422":
           $ref: "#/components/responses/UnprocessableEntity"
         "401":
@@ -2543,19 +2524,6 @@ components:
           description: Pagination metadata
           $ref: "#/components/schemas/PaginationResponse"
 
-    PagedAdminsResponse:
-      type: object
-      description: Paginated list of admins response
-      properties:
-        items:
-          type: array
-          description: List of admins
-          items:
-            $ref: "#/components/schemas/AdminResponse"
-        pagination:
-          description: Pagination metadata
-          $ref: "#/components/schemas/PaginationResponse"
-
     CreateAdminRequest:
       type: object
       properties:
@@ -3138,26 +3106,17 @@ components:
         email:
           type: string
           description: User's email address
-        user_role_id:
-          type: integer
-          description: Foreign key to user roles table
+        roles:
+          type: array
+          description: Roles assigned to the user
+          items:
+            $ref: "#/components/schemas/UserRoleResponse"
         access_token:
           type: string
           description: Access token
         refresh_token:
           type: string
           description: Refresh token
-
-    UserRoleResponse:
-      type: object
-      description: User role information
-      properties:
-        id:
-          type: integer
-          description: Unique identifier for the role
-        type:
-          type: string
-          description: Type of user role
 
     UserResponse:
       type: object
@@ -3175,13 +3134,16 @@ components:
         email:
           type: string
           description: User's email address
-        is_active:
-          type: boolean
-          description: Indicates if user is active
-        user_role:
-          description: Role assigned to the user
-          $ref: "#/components/schemas/UserRoleResponse"
-        created_at:
+        status:
+          type: string
+          enum: [PENDING, ACTIVE, SUSPENDED, DELETED]
+          description: User status
+        roles:
+          type: array
+          description: Roles assigned to the user
+          items:
+            $ref: "#/components/schemas/UserRoleResponse"
+        createdAt:
           type: string
           format: date-time
           description: Timestamp when the user was created
@@ -3194,40 +3156,20 @@ components:
           format: date-time
           description: Timestamp when the user was deleted (soft delete)
 
-    AdminResponse:
+    UserRoleResponse:
       type: object
-      description: Admin user information
+      description: User role information
       properties:
         id:
           type: integer
-          description: Unique identifier for the admin
-        userId:
-          type: integer
-          description: Foreign key to users table
-        first_name:
+          format: int8
+          description: Unique identifier for the role
+        type:
           type: string
-          description: Admin's first name
-        last_name:
+          description: Type of user role
+        description:
           type: string
-          description: Admin's last name
-        email:
-          type: string
-          description: Admin's email address
-        is_super:
-          type: boolean
-          description: Indicates if admin has super privileges
-        created_at:
-          type: string
-          format: date-time
-          description: Timestamp when the admin was created
-        updated_at:
-          type: string
-          format: date-time
-          description: Timestamp when the admin was last updated
-        deleted_at:
-          type: ["string", "null"]
-          format: date-time
-          description: Timestamp when the admin was deleted (soft delete)
+          description: Description of the role
 
     CustomerResponse:
       type: object
@@ -3297,6 +3239,9 @@ components:
         phone_number:
           type: string
           description: Contact phone number
+        is_default:
+          type: boolean
+          description: Indicates if address is default
         customerId:
           type: integer
           description: Foreign key to customers table
@@ -3833,13 +3778,6 @@ components:
       schema:
         type: string
         default: id,asc
-
-    resetPasswordTokenParam:
-      name: token
-      in: query
-      required: true
-      schema:
-        type: string
 
   responses:
     Created:

@@ -1,15 +1,21 @@
 package com.carlosarroyoam.ecommerce.user.entity;
 
+import com.carlosarroyoam.ecommerce.core.constant.UserStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,12 +44,14 @@ public class User {
   @Column(name = "password_hash", length = 96, nullable = false)
   private String passwordHash;
 
-  @Column(name = "is_active", columnDefinition = "TINYINT", nullable = false)
-  private Boolean isActive;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "status", length = 32, nullable = false)
+  private UserStatus status;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_role_id", referencedColumnName = "id", nullable = false)
-  private UserRole userRole;
+  @Builder.Default
+  @ManyToMany(fetch = FetchType.LAZY)
+  @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+  private Set<Role> roles = new HashSet<>();
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;

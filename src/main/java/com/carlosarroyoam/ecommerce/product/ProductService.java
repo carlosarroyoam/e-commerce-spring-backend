@@ -10,6 +10,7 @@ import com.carlosarroyoam.ecommerce.product.dto.ProductResponse.ProductResponseM
 import com.carlosarroyoam.ecommerce.product.dto.ProductSpecs;
 import com.carlosarroyoam.ecommerce.product.entity.Product;
 import com.carlosarroyoam.ecommerce.product.entity.Product_;
+import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -34,7 +35,7 @@ public class ProductService {
         .likeIfPresent(root -> root.get(Product_.slug), productSpecs.getSlug())
         .equalsIfPresent(root -> root.get(Product_.isFeatured), productSpecs.getIsFeatured())
         .equalsIfPresent(root -> root.get(Product_.isActive), productSpecs.getIsActive())
-        .equalsIfPresent(root -> root.join(Product_.category).get(Category_.id),
+        .equalsIfPresent(root -> root.join(Product_.category, JoinType.INNER).get(Category_.id),
             productSpecs.getCategoryId())
         .betweenDatesIfPresent(root -> root.get(Product_.createdAt), productSpecs.getStartDate(),
             productSpecs.getEndDate())

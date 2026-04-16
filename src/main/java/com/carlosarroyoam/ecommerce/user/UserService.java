@@ -7,9 +7,10 @@ import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse.UserResponseMapper;
 import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
+import com.carlosarroyoam.ecommerce.user.entity.Role_;
 import com.carlosarroyoam.ecommerce.user.entity.User;
-import com.carlosarroyoam.ecommerce.user.entity.UserRole_;
 import com.carlosarroyoam.ecommerce.user.entity.User_;
+import jakarta.persistence.criteria.JoinType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -30,14 +31,14 @@ public class UserService {
 
   public PagedResponse<UserResponse> findAll(UserSpecs userSpecs, Pageable pageable) {
     Specification<User> spec = SpecificationBuilder.<User>builder()
-        .likeIfPresent(root -> root.get(User_.firstName), userSpecs.getFirstName())
-        .likeIfPresent(root -> root.get(User_.lastName), userSpecs.getLastName())
-        .likeIfPresent(root -> root.get(User_.email), userSpecs.getEmail())
-        .equalsIfPresent(root -> root.get(User_.isActive), userSpecs.getIsActive())
-        .betweenDatesIfPresent(root -> root.get(User_.createdAt), userSpecs.getStartDate(),
+        .likeIfPresent(root -> root.get("firstName"), userSpecs.getFirstName())
+        .likeIfPresent(root -> root.get("lastName"), userSpecs.getLastName())
+        .likeIfPresent(root -> root.get("email"), userSpecs.getEmail())
+        .equalsIfPresent(root -> root.get("status"), userSpecs.getStatus())
+        .betweenDatesIfPresent(root -> root.get("createdAt"), userSpecs.getStartDate(),
             userSpecs.getEndDate())
-        .equalsIfPresent(root -> root.join(User_.userRole).get(UserRole_.id),
-            userSpecs.getUserRoleId())
+        .inIfPresent(root -> root.join(User_.roles, JoinType.INNER).get(Role_.id),
+            userSpecs.getRoleIds())
         .build();
 
     Page<User> users = userRepository.findAll(spec, pageable);

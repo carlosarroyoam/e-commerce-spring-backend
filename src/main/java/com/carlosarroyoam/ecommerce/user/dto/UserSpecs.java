@@ -1,8 +1,10 @@
 package com.carlosarroyoam.ecommerce.user.dto;
 
+import com.carlosarroyoam.ecommerce.core.constant.UserStatus;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.Builder;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -29,6 +31,6 @@ public class UserSpecs {
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
   private LocalDate endDate;
 
-  private Boolean isActive;
-  private Byte userRoleId;
+  private UserStatus status;
+  private List<Byte> roleIds;
 }

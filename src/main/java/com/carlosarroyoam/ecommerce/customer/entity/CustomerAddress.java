@@ -46,11 +46,14 @@ public class CustomerAddress {
   @Column(name = "postal_code", length = 5, nullable = false)
   private String postalCode;
 
-  @Column(name = "country", length = 2, columnDefinition = "CHAR(2) DEFAULT 'MX'")
+  @Column(name = "country", length = 2, columnDefinition = "CHAR(2)")
   private String country;
 
   @Column(name = "phone_number", length = 10, nullable = false)
   private String phoneNumber;
+
+  @Column(name = "is_default", columnDefinition = "TINYINT", nullable = false)
+  private Boolean isDefault;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "customer_id", referencedColumnName = "id", nullable = false)

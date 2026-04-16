@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.user.dto;
 
-import com.carlosarroyoam.ecommerce.user.entity.UserRole;
+import com.carlosarroyoam.ecommerce.user.entity.Role;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,13 +18,14 @@ import org.mapstruct.factory.Mappers;
 public class UserRoleResponse {
   private Byte id;
   private String type;
+  private String description;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface UserRoleResponseMapper {
     UserRoleResponseMapper INSTANCE = Mappers.getMapper(UserRoleResponseMapper.class);
 
-    UserRoleResponse toDto(UserRole entity);
+    UserRoleResponse toDto(Role entity);
 
-    List<UserRoleResponse> toDtos(List<UserRole> entities);
+    List<UserRoleResponse> toDtos(List<Role> entities);
   }
 }

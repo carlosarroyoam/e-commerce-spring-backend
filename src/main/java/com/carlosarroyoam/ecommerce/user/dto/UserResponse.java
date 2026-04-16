@@ -22,8 +22,8 @@ public class UserResponse {
   private String firstName;
   private String lastName;
   private String email;
-  private Boolean isActive;
-  private UserRoleResponse userRole;
+  private String status;
+  private List<UserRoleResponse> roles;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;

@@ -16,12 +16,12 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "personal_access_tokens")
+@Table(name = "refresh_tokens")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class PersonalAccessToken {
+public class RefreshToken {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;

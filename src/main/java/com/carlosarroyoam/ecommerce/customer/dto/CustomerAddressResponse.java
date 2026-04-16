@@ -27,6 +27,7 @@ public class CustomerAddressResponse {
   private String postalCode;
   private String country;
   private String phoneNumber;
+  private Boolean isDefault;
   private CustomerResponse customer;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
