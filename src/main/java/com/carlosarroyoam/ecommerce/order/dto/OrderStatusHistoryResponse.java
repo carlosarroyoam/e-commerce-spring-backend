@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.order.dto;
 
-import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatusHistory;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -22,8 +21,7 @@ public class OrderStatusHistoryResponse {
   private String notes;
   private LocalDateTime changedAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      OrderResponseMapper.class })
+  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface OrderStatusHistoryResponseMapper {
     OrderStatusHistoryResponseMapper INSTANCE = Mappers
         .getMapper(OrderStatusHistoryResponseMapper.class);

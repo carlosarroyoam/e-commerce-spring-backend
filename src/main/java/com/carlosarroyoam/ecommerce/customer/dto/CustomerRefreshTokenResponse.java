@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.customer.dto;
 
-import com.carlosarroyoam.ecommerce.user.dto.UserResponse.UserResponseMapper;
+import com.carlosarroyoam.ecommerce.customer.dto.CustomerResponse.CustomerResponseMapper;
 import com.carlosarroyoam.ecommerce.user.entity.UserRefreshToken;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,7 +27,7 @@ public class CustomerRefreshTokenResponse {
   private LocalDateTime updatedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      UserResponseMapper.class })
+      CustomerResponseMapper.class })
   public interface CustomerRefreshTokenResponseMapper {
     CustomerRefreshTokenResponseMapper INSTANCE = Mappers
         .getMapper(CustomerRefreshTokenResponseMapper.class);

@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.customer.dto;
 
-import com.carlosarroyoam.ecommerce.customer.dto.CustomerResponse.CustomerResponseMapper;
 import com.carlosarroyoam.ecommerce.customer.entity.CustomerAddress;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -8,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -28,12 +28,13 @@ public class CustomerAddressResponse {
   private String country;
   private String phoneNumber;
   private Boolean isDefault;
+  private Long customerId;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      CustomerResponseMapper.class })
+  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface CustomerAddressResponseMapper {
     CustomerAddressResponseMapper INSTANCE = Mappers.getMapper(CustomerAddressResponseMapper.class);
 
+    @Mapping(source = "customer.id", target = "customerId")
     CustomerAddressResponse toDto(CustomerAddress entity);
 
     List<CustomerAddressResponse> toDtos(List<CustomerAddress> entities);

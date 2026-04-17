@@ -2,12 +2,16 @@ package com.carlosarroyoam.ecommerce.order.dto;
 
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerAddressResponse;
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerAddressResponse.CustomerAddressResponseMapper;
-import com.carlosarroyoam.ecommerce.customer.dto.CustomerResponse;
-import com.carlosarroyoam.ecommerce.customer.dto.CustomerResponse.CustomerResponseMapper;
+import com.carlosarroyoam.ecommerce.customer.dto.CustomerSummaryResponse;
+import com.carlosarroyoam.ecommerce.customer.dto.CustomerSummaryResponse.CustomerSummaryResponseMapper;
+import com.carlosarroyoam.ecommerce.order.dto.OrderItemResponse.OrderItemResponseMapper;
+import com.carlosarroyoam.ecommerce.order.dto.OrderStatusHistoryResponse.OrderStatusHistoryResponseMapper;
 import com.carlosarroyoam.ecommerce.order.entity.Order;
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatus;
 import com.carlosarroyoam.ecommerce.payment.dto.PaymentResponse;
+import com.carlosarroyoam.ecommerce.payment.dto.PaymentResponse.PaymentResponseMapper;
 import com.carlosarroyoam.ecommerce.shipment.dto.ShipmentResponse;
+import com.carlosarroyoam.ecommerce.shipment.dto.ShipmentResponse.ShipmentResponseMapper;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -37,13 +41,15 @@ public class OrderResponse {
   private List<PaymentResponse> payments;
   private List<ShipmentResponse> shipments;
   private List<OrderStatusHistoryResponse> statusHistory;
-  private CustomerResponse customer;
+  private CustomerSummaryResponse customer;
   private CustomerAddressResponse shippingAddress;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      CustomerResponseMapper.class, CustomerAddressResponseMapper.class })
+      OrderItemResponseMapper.class, PaymentResponseMapper.class, ShipmentResponseMapper.class,
+      OrderStatusHistoryResponseMapper.class, CustomerSummaryResponseMapper.class,
+      CustomerAddressResponseMapper.class, })
   public interface OrderResponseMapper {
     OrderResponseMapper INSTANCE = Mappers.getMapper(OrderResponseMapper.class);
 

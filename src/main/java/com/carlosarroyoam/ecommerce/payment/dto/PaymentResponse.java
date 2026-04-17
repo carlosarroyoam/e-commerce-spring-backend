@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.payment.dto;
 
-import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
 import com.carlosarroyoam.ecommerce.payment.entity.Payment;
 import com.carlosarroyoam.ecommerce.payment.entity.PaymentMethod;
 import com.carlosarroyoam.ecommerce.payment.entity.PaymentStatus;
@@ -32,8 +31,7 @@ public class PaymentResponse {
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      OrderResponseMapper.class })
+  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface PaymentResponseMapper {
     PaymentResponseMapper INSTANCE = Mappers.getMapper(PaymentResponseMapper.class);
 

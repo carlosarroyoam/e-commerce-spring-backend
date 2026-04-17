@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.order.dto;
 
+import com.carlosarroyoam.ecommerce.order.dto.OrderStatusHistoryResponse.OrderStatusHistoryResponseMapper;
 import com.carlosarroyoam.ecommerce.order.entity.Order;
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatus;
 import com.carlosarroyoam.ecommerce.shipment.dto.ShipmentResponse;
@@ -29,7 +30,7 @@ public class OrderTrackResponse {
   private LocalDateTime createdAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      ShipmentResponseMapper.class })
+      ShipmentResponseMapper.class, OrderStatusHistoryResponseMapper.class })
   public interface OrderTrackResponseMapper {
     OrderTrackResponseMapper INSTANCE = Mappers.getMapper(OrderTrackResponseMapper.class);
 

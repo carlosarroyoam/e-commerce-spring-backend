@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
-import com.carlosarroyoam.ecommerce.product.dto.AttributeResponse.AttributeResponseMapper;
+import com.carlosarroyoam.ecommerce.product.dto.PropertyResponse.PropertyResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.ProductPropertyValue;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -22,7 +22,7 @@ public class ProductPropertyValueResponse {
   private PropertyResponse property;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      AttributeResponseMapper.class })
+      PropertyResponseMapper.class })
   public interface ProductPropertyValueResponseMapper {
     ProductPropertyValueResponseMapper INSTANCE = Mappers
         .getMapper(ProductPropertyValueResponseMapper.class);

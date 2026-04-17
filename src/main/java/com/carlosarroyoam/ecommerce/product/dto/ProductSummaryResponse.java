@@ -1,8 +1,5 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
-import com.carlosarroyoam.ecommerce.category.dto.CategoryResponse.CategoryResponseMapper;
-import com.carlosarroyoam.ecommerce.product.dto.ProductPropertyValueResponse.ProductPropertyValueResponseMapper;
-import com.carlosarroyoam.ecommerce.product.dto.VariantResponse.VariantResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Product;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -30,11 +27,9 @@ public class ProductSummaryResponse {
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      CategoryResponseMapper.class, ProductPropertyValueResponseMapper.class,
-      VariantResponseMapper.class })
-  public interface ProductResponseMapper {
-    ProductResponseMapper INSTANCE = Mappers.getMapper(ProductResponseMapper.class);
+  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  public interface ProductSummaryResponseMapper {
+    ProductSummaryResponseMapper INSTANCE = Mappers.getMapper(ProductSummaryResponseMapper.class);
 
     ProductSummaryResponse toDto(Product entity);
 

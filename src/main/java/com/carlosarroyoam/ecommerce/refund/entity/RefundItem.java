@@ -27,6 +27,12 @@ public class RefundItem {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "quantity", nullable = false)
+  private Integer quantity;
+
+  @Column(name = "amount", nullable = false, precision = 10, scale = 2)
+  private BigDecimal amount;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "refund_id", referencedColumnName = "id", nullable = false)
   private Refund refund;
@@ -34,10 +40,4 @@ public class RefundItem {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_item_id", referencedColumnName = "id", nullable = false)
   private OrderItem orderItem;
-
-  @Column(name = "quantity", nullable = false)
-  private Integer quantity;
-
-  @Column(name = "amount", nullable = false, precision = 10, scale = 2)
-  private BigDecimal amount;
 }

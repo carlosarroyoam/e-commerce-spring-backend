@@ -1,7 +1,5 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
-import com.carlosarroyoam.ecommerce.product.dto.VariantAttributeValueResponse.VariantAttributeValueResponseMapper;
-import com.carlosarroyoam.ecommerce.product.dto.VariantImageResponse.VariantImageResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Variant;
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,10 +22,9 @@ public class VariantSummaryResponse {
   private BigDecimal price;
   private BigDecimal comparedAtPrice;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      VariantAttributeValueResponseMapper.class, VariantImageResponseMapper.class })
-  public interface VariantResponseMapper {
-    VariantResponseMapper INSTANCE = Mappers.getMapper(VariantResponseMapper.class);
+  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  public interface VariantSummaryResponseMapper {
+    VariantSummaryResponseMapper INSTANCE = Mappers.getMapper(VariantSummaryResponseMapper.class);
 
     VariantSummaryResponse toDto(Variant entity);
 

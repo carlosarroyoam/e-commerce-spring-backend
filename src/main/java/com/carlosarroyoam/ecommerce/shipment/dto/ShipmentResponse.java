@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.shipment.dto;
 
-import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
 import com.carlosarroyoam.ecommerce.shipment.dto.CarrierResponse.CarrierResponseMapper;
 import com.carlosarroyoam.ecommerce.shipment.entity.Shipment;
 import java.time.LocalDateTime;
@@ -28,7 +27,7 @@ public class ShipmentResponse {
   private LocalDateTime deliveredAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      OrderResponseMapper.class, CarrierResponseMapper.class })
+      CarrierResponseMapper.class })
   public interface ShipmentResponseMapper {
     ShipmentResponseMapper INSTANCE = Mappers.getMapper(ShipmentResponseMapper.class);
 

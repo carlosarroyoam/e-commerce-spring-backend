@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.refund.dto;
 
-import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
+import com.carlosarroyoam.ecommerce.refund.dto.RefundItemResponse.RefundItemResponseMapper;
 import com.carlosarroyoam.ecommerce.refund.entity.Refund;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -28,7 +28,7 @@ public class RefundResponse {
   private LocalDateTime createdAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      OrderResponseMapper.class })
+      RefundItemResponseMapper.class })
   public interface RefundResponseMapper {
     RefundResponseMapper INSTANCE = Mappers.getMapper(RefundResponseMapper.class);
 
