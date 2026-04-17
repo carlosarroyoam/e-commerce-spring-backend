@@ -27,6 +27,9 @@ public class Shipment {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
+  @Column(name = "tracking_number", length = 128)
+  private String trackingNumber;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
   private Order order;
@@ -34,9 +37,6 @@ public class Shipment {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "carrier_id", referencedColumnName = "id", nullable = false)
   private Carrier carrier;
-
-  @Column(name = "tracking_number", length = 128)
-  private String trackingNumber;
 
   @Column(name = "shipped_at")
   private LocalDateTime shippedAt;

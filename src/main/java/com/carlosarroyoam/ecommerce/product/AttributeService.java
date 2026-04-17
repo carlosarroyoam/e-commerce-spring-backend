@@ -34,12 +34,15 @@ public class AttributeService {
 
   @Transactional(readOnly = true)
   public AttributeResponse findById(Long attributeId) {
-    Attribute attributeById = attributeRepository.findById(attributeId).orElseThrow(() -> {
+    Attribute attributeById = findAttributeByIdOrFail(attributeId);
+    return AttributeResponseMapper.INSTANCE.toDto(attributeById);
+  }
+
+  private Attribute findAttributeByIdOrFail(Long attributeId) {
+    return attributeRepository.findById(attributeId).orElseThrow(() -> {
       log.warn(AppMessages.ATTRIBUTE_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,
           AppMessages.ATTRIBUTE_NOT_FOUND_EXCEPTION);
     });
-
-    return AttributeResponseMapper.INSTANCE.toDto(attributeById);
   }
 }

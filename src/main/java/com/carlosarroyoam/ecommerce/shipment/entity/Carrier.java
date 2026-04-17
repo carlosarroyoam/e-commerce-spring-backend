@@ -6,6 +6,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -25,6 +26,6 @@ public class Carrier {
   @Column(name = "name", length = 45, nullable = false)
   private String name;
 
-  @Column(name = "is_active", nullable = false, columnDefinition = "TINYINT")
-  private Boolean isActive;
+  @Column(name = "deleted_at")
+  private LocalDateTime deletedAt;
 }

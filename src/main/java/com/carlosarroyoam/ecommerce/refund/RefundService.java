@@ -49,17 +49,20 @@ public class RefundService {
 
   @Transactional(readOnly = true)
   public RefundResponse findByOrderId(Long orderId) {
-    Refund refundByOrderId = refundRepository.findByOrderId(orderId).orElseThrow(() -> {
-      log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-    });
-
+    Refund refundByOrderId = findRefundByOrderIdOrFail(orderId);
     return RefundResponseMapper.INSTANCE.toDto(refundByOrderId);
   }
 
   private Refund findRefundByIdOrFail(Long refundId) {
     return refundRepository.findById(refundId).orElseThrow(() -> {
+      log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
+      return new ResponseStatusException(HttpStatus.NOT_FOUND,
+          AppMessages.REFUND_NOT_FOUND_EXCEPTION);
+    });
+  }
+
+  private Refund findRefundByOrderIdOrFail(Long orderId) {
+    return refundRepository.findByOrderId(orderId).orElseThrow(() -> {
       log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,
           AppMessages.REFUND_NOT_FOUND_EXCEPTION);

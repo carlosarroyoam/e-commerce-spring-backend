@@ -336,12 +336,12 @@ INSERT INTO movements (id, title, movement_type_id) VALUES
 (7, 'Theft/Loss', 2),
 (8, 'Inventory adjustment', 2);
 
-INSERT INTO carriers (id, name, is_active) VALUES
-(1, 'FedEx', 1),
-(2, 'UPS', 1),
-(3, 'DHL', 1),
-(4, 'Estafeta', 1),
-(5, 'Paquetexpress', 1);
+INSERT INTO carriers (id, name, deleted_at) VALUES
+(1, 'FedEx', NULL),
+(2, 'UPS', NULL),
+(3, 'DHL', NULL),
+(4, 'Estafeta', NULL),
+(5, 'Paquetexpress', NULL);
 
 INSERT INTO orders (id, order_number, customer_id, shipping_address_id, status, subtotal, tax_total, shipping_total, total, notes, created_at, updated_at) VALUES
 (1, 'a1b2c3d4-e5f6-7890-abcd-ef1234567890', 1, 1, 'CONFIRMED', 8999.00, 800.00, 150.00, 9949.00, 'Please handle with care', '2025-01-15 10:30:00', '2025-01-18 14:20:00'),

@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce.product.dto;
 
 import com.carlosarroyoam.ecommerce.product.entity.Property;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,6 +19,7 @@ import org.mapstruct.factory.Mappers;
 public class PropertyResponse {
   private Long id;
   private String title;
+  private LocalDateTime deletedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface PropertyResponseMapper {

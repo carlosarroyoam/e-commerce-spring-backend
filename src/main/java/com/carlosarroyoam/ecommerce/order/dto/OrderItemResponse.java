@@ -2,10 +2,10 @@ package com.carlosarroyoam.ecommerce.order.dto;
 
 import com.carlosarroyoam.ecommerce.order.dto.OrderResponse.OrderResponseMapper;
 import com.carlosarroyoam.ecommerce.order.entity.OrderItem;
-import com.carlosarroyoam.ecommerce.product.dto.ProductResponse;
 import com.carlosarroyoam.ecommerce.product.dto.ProductResponse.ProductResponseMapper;
-import com.carlosarroyoam.ecommerce.product.dto.VariantResponse;
+import com.carlosarroyoam.ecommerce.product.dto.ProductSummaryResponse;
 import com.carlosarroyoam.ecommerce.product.dto.VariantResponse.VariantResponseMapper;
+import com.carlosarroyoam.ecommerce.product.dto.VariantSummaryResponse;
 import java.math.BigDecimal;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -26,8 +26,8 @@ public class OrderItemResponse {
   private Integer quantity;
   private BigDecimal unitPrice;
   private BigDecimal total;
-  private ProductResponse product;
-  private VariantResponse variant;
+  private ProductSummaryResponse product;
+  private VariantSummaryResponse variant;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
       OrderResponseMapper.class, ProductResponseMapper.class, VariantResponseMapper.class })

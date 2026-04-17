@@ -34,12 +34,15 @@ public class PropertyService {
 
   @Transactional(readOnly = true)
   public PropertyResponse findById(Long propertyId) {
-    Property propertyById = propertyRepository.findById(propertyId).orElseThrow(() -> {
+    Property propertyById = findPropertyByIdOrFail(propertyId);
+    return PropertyResponseMapper.INSTANCE.toDto(propertyById);
+  }
+
+  private Property findPropertyByIdOrFail(Long propertyId) {
+    return propertyRepository.findById(propertyId).orElseThrow(() -> {
       log.warn(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,
           AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
     });
-
-    return PropertyResponseMapper.INSTANCE.toDto(propertyById);
   }
 }

@@ -12,6 +12,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -27,6 +28,7 @@ public class PaymentResponse {
   private String description;
   private PaymentMethod method;
   private PaymentStatus status;
+  private Long orderId;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
 
@@ -35,6 +37,7 @@ public class PaymentResponse {
   public interface PaymentResponseMapper {
     PaymentResponseMapper INSTANCE = Mappers.getMapper(PaymentResponseMapper.class);
 
+    @Mapping(source = "order.id", target = "orderId")
     PaymentResponse toDto(Payment entity);
 
     List<PaymentResponse> toDtos(List<Payment> entities);

@@ -35,18 +35,18 @@ public class VariantService {
   public VariantResponse findById(Long productId, Long variantId) {
     validateProductExists(productId);
 
-    Variant variant = variantRepository.findByIdAndProductId(variantId, productId)
+    Variant variantById = variantRepository.findByIdAndProductId(variantId, productId)
         .orElseThrow(() -> {
           log.warn(AppMessages.PRODUCT_VARIANT_NOT_FOUND_EXCEPTION);
           return new ResponseStatusException(HttpStatus.NOT_FOUND,
               AppMessages.PRODUCT_VARIANT_NOT_FOUND_EXCEPTION);
         });
 
-    return VariantResponseMapper.INSTANCE.toDto(variant);
+    return VariantResponseMapper.INSTANCE.toDto(variantById);
   }
 
   private void validateProductExists(Long productId) {
-    if (!productRepository.existsById(productId)) {
+    if (Boolean.FALSE.equals(productRepository.existsById(productId))) {
       log.warn(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
       throw new ResponseStatusException(HttpStatus.NOT_FOUND,
           AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);

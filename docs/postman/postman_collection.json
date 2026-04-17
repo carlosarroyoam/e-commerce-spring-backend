@@ -336,24 +336,25 @@
                   "disabled": true
                 },
                 {
-                  "key": "isActive",
-                  "value": "true",
+                  "key": "status",
+                  "value": "ACTIVE",
                   "disabled": true
                 },
                 {
                   "key": "startDate",
                   "value": "2026-01-01",
+                  "type": "text",
                   "disabled": true
                 },
                 {
                   "key": "endDate",
                   "value": "2026-05-01",
+                  "type": "text",
                   "disabled": true
                 },
                 {
-                  "key": "roleId",
-                  "value": "1",
-                  "type": "text",
+                  "key": "roleIds",
+                  "value": "1,2",
                   "disabled": true
                 },
                 {
@@ -517,156 +518,6 @@
       ]
     },
     {
-      "name": "admins",
-      "item": [
-        {
-          "name": "/admins",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/admins",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admins"
-              ],
-              "query": [
-                {
-                  "key": "search",
-                  "value": "martinez",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "status",
-                  "value": "inactive",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "page",
-                  "value": "1",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "size",
-                  "value": "20",
-                  "type": "text",
-                  "disabled": true
-                },
-                {
-                  "key": "sort",
-                  "value": "email",
-                  "type": "text",
-                  "disabled": true
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/admins/:adminId",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/admins/:adminId",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admins",
-                ":adminId"
-              ],
-              "variable": [
-                {
-                  "key": "adminId",
-                  "value": "1"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/admins",
-          "event": [
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {},
-                "requests": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"first_name\": \"Stefania\",\r\n    \"last_name\": \"Guido Rojas\",\r\n    \"email\": \"stefania.guido@e-commerce.com\",\r\n    \"password\": \"secret123\",\r\n    \"confirm_password\": \"secret123\",\r\n    \"is_super\": 0\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admins",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admins"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/admins/:adminId",
-          "request": {
-            "method": "PUT",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n    \"first_name\": \"Carlos Alberto\",\r\n    \"last_name\": \"Arroyo Martínez\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/admins/:adminId",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "admins",
-                ":adminId"
-              ],
-              "variable": [
-                {
-                  "key": "adminId",
-                  "value": "1"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
       "name": "customers",
       "item": [
         {
@@ -688,7 +539,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/customers",
+              "raw": "{{baseUrl}}/customers?page=0&size=20&sort=id,asc",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -697,34 +548,50 @@
               ],
               "query": [
                 {
-                  "key": "search",
-                  "value": "martinez",
+                  "key": "firstName",
+                  "value": "Jose",
+                  "disabled": true
+                },
+                {
+                  "key": "lastName",
+                  "value": "García",
                   "type": "text",
                   "disabled": true
                 },
                 {
+                  "key": "email",
+                  "value": "jose.garcia@example.com",
+                  "disabled": true
+                },
+                {
                   "key": "status",
-                  "value": "inactive",
+                  "value": "ACTIVE",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "type": "text",
+                  "disabled": true
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-05-01",
                   "type": "text",
                   "disabled": true
                 },
                 {
                   "key": "page",
-                  "value": "1",
-                  "type": "text",
-                  "disabled": true
+                  "value": "0"
                 },
                 {
                   "key": "size",
-                  "value": "20",
-                  "type": "text",
-                  "disabled": true
+                  "value": "20"
                 },
                 {
                   "key": "sort",
-                  "value": "email",
-                  "type": "text",
-                  "disabled": true
+                  "value": "id,asc"
                 }
               ]
             }
@@ -1206,7 +1073,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/categories",
+              "raw": "{{baseUrl}}/categories?page=0&size=20&sort=id,asc",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1216,21 +1083,18 @@
               "query": [
                 {
                   "key": "page",
-                  "value": "1",
-                  "type": "text",
-                  "disabled": true
+                  "value": "0",
+                  "type": "text"
                 },
                 {
                   "key": "size",
                   "value": "20",
-                  "type": "text",
-                  "disabled": true
+                  "type": "text"
                 },
                 {
                   "key": "sort",
-                  "value": "title",
-                  "type": "text",
-                  "disabled": true
+                  "value": "id,asc",
+                  "type": "text"
                 }
               ]
             }
@@ -1738,7 +1602,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/orders",
+              "raw": "{{baseUrl}}/orders?page=0&size=20&sort=id,asc",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1747,27 +1611,45 @@
               ],
               "query": [
                 {
-                  "key": "search",
+                  "key": "orderNumber",
                   "value": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
                   "disabled": true
                 },
                 {
                   "key": "page",
-                  "value": "1",
-                  "type": "text",
-                  "disabled": true
+                  "value": "0"
                 },
                 {
                   "key": "size",
-                  "value": "20",
-                  "type": "text",
-                  "disabled": true
+                  "value": "20"
                 },
                 {
                   "key": "sort",
-                  "value": "-created_at",
-                  "type": "text",
-                  "disabled": true
+                  "value": "id,asc"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/orders/:orderId",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/orders/:orderId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "orders",
+                ":orderId"
+              ],
+              "variable": [
+                {
+                  "key": "orderId",
+                  "value": "1"
                 }
               ]
             }
@@ -1829,31 +1711,7 @@
           "response": []
         },
         {
-          "name": "/orders/:orderId",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/orders/:orderId",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "orders",
-                ":orderId"
-              ],
-              "variable": [
-                {
-                  "key": "orderId",
-                  "value": "1"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/orders/:orderId/status",
+          "name": "/orders/:orderId/cancel",
           "request": {
             "method": "PATCH",
             "header": [],
@@ -1867,14 +1725,14 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/orders/:orderId/status",
+              "raw": "{{baseUrl}}/orders/:orderId/cancel",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
                 "orders",
                 ":orderId",
-                "status"
+                "cancel"
               ],
               "variable": [
                 {
@@ -1885,15 +1743,95 @@
             }
           },
           "response": []
+        }
+      ]
+    },
+    {
+      "name": "payments",
+      "item": [
+        {
+          "name": "/payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments?page=0&size=20&sort=id,asc",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments"
+              ],
+              "query": [
+                {
+                  "key": "orderId",
+                  "value": "1",
+                  "disabled": true
+                },
+                {
+                  "key": "reference",
+                  "value": "1234567",
+                  "disabled": true
+                },
+                {
+                  "key": "startDate",
+                  "value": "2026-01-01",
+                  "disabled": true
+                },
+                {
+                  "key": "endDate",
+                  "value": "2026-05-01",
+                  "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "0"
+                },
+                {
+                  "key": "size",
+                  "value": "20"
+                },
+                {
+                  "key": "sort",
+                  "value": "id,asc"
+                }
+              ]
+            }
+          },
+          "response": []
         },
         {
-          "name": "/orders/:orderId/payment-status",
+          "name": "/payments/:paymentId",
           "request": {
-            "method": "PATCH",
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/payments/:paymentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                ":paymentId"
+              ],
+              "variable": [
+                {
+                  "key": "paymentId",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/payments",
+          "request": {
+            "method": "POST",
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"payment_status_id\": 2\r\n}",
+              "raw": "{}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1901,18 +1839,76 @@
               }
             },
             "url": {
-              "raw": "{{baseUrl}}/orders/:orderId/payment-status",
+              "raw": "{{baseUrl}}/payments",
               "host": [
                 "{{baseUrl}}"
               ],
               "path": [
-                "orders",
-                ":orderId",
-                "payment-status"
+                "payments"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/payments/:paymentId",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/:paymentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                ":paymentId"
               ],
               "variable": [
                 {
-                  "key": "orderId",
+                  "key": "paymentId",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/payments/:paymentId/status",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"status\": \"CANCELLED\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments/:paymentId",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "payments",
+                ":paymentId"
+              ],
+              "variable": [
+                {
+                  "key": "paymentId",
                   "value": "1"
                 }
               ]
@@ -1931,7 +1927,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/shipments",
+              "raw": "{{baseUrl}}/shipments?page=0&size=20&sort=id,asc",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -1940,44 +1936,22 @@
               ],
               "query": [
                 {
-                  "key": "page",
+                  "key": "orderId",
                   "value": "1",
-                  "type": "text",
                   "disabled": true
+                },
+                {
+                  "key": "page",
+                  "value": "0"
                 },
                 {
                   "key": "size",
-                  "value": "20",
-                  "type": "text",
-                  "disabled": true
+                  "value": "20"
                 },
                 {
                   "key": "sort",
-                  "value": "-shipped_at",
-                  "type": "text",
-                  "disabled": true
+                  "value": "id,asc"
                 }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "/shipments/carriers",
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseUrl}}/shipments/carriers",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "shipments",
-                "carriers"
               ]
             }
           },
@@ -2030,6 +2004,27 @@
                   "key": "orderId",
                   "value": "1"
                 }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "/shipments/carriers",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/shipments/carriers",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "shipments",
+                "carriers"
               ]
             }
           },
@@ -2104,7 +2099,7 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrl}}/refunds",
+              "raw": "{{baseUrl}}/refunds?page=0&size=20&sort=id,asc",
               "host": [
                 "{{baseUrl}}"
               ],
@@ -2115,26 +2110,19 @@
                 {
                   "key": "orderId",
                   "value": "1",
-                  "type": "text",
                   "disabled": true
                 },
                 {
                   "key": "page",
-                  "value": "1",
-                  "type": "text",
-                  "disabled": true
+                  "value": "0"
                 },
                 {
                   "key": "size",
-                  "value": "20",
-                  "type": "text",
-                  "disabled": true
+                  "value": "20"
                 },
                 {
                   "key": "sort",
-                  "value": "-created_at",
-                  "type": "text",
-                  "disabled": true
+                  "value": "id,asc"
                 }
               ]
             }

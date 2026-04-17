@@ -267,7 +267,7 @@ CREATE TABLE IF NOT EXISTS inventory_movements (
 CREATE TABLE IF NOT EXISTS carriers (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
     name VARCHAR(45) NOT NULL,
-    is_active TINYINT NOT NULL DEFAULT 0 CHECK (is_active IN (0, 1)),
+    deleted_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uk_carriers_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

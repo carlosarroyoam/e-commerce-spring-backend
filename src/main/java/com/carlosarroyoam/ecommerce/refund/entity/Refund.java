@@ -31,10 +31,6 @@ public class Refund {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
-  private Order order;
-
   @Column(name = "amount", nullable = false, precision = 10, scale = 2)
   private BigDecimal amount;
 
@@ -44,6 +40,10 @@ public class Refund {
   @Builder.Default
   @OneToMany(mappedBy = "refund", fetch = FetchType.LAZY)
   private List<RefundItem> items = new ArrayList<>();
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "order_id", referencedColumnName = "id", nullable = false)
+  private Order order;
 
   @Column(name = "created_at", nullable = false)
   private LocalDateTime createdAt;

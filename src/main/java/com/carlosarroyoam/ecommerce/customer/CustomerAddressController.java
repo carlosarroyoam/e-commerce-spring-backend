@@ -28,8 +28,8 @@ public class CustomerAddressController {
   @GetMapping(value = "/{addressId}", produces = "application/json")
   public ResponseEntity<CustomerAddressResponse> findById(@PathVariable Long customerId,
       @PathVariable Long addressId) {
-    CustomerAddressResponse customerAddress = customerAddressService.findById(customerId,
+    CustomerAddressResponse customerAddressById = customerAddressService.findById(customerId,
         addressId);
-    return ResponseEntity.ok(customerAddress);
+    return ResponseEntity.ok(customerAddressById);
   }
 }

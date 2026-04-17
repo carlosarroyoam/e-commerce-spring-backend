@@ -18,21 +18,19 @@ import org.mapstruct.factory.Mappers;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class VariantResponse {
+public class VariantSummaryResponse {
   private Long id;
   private String sku;
   private BigDecimal price;
   private BigDecimal comparedAtPrice;
-  private List<VariantAttributeValueResponse> attributes;
-  private List<VariantImageResponse> images;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
       VariantAttributeValueResponseMapper.class, VariantImageResponseMapper.class })
   public interface VariantResponseMapper {
     VariantResponseMapper INSTANCE = Mappers.getMapper(VariantResponseMapper.class);
 
-    VariantResponse toDto(Variant entity);
+    VariantSummaryResponse toDto(Variant entity);
 
-    List<VariantResponse> toDtos(List<Variant> entities);
+    List<VariantSummaryResponse> toDtos(List<Variant> entities);
   }
 }

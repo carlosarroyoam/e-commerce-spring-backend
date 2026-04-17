@@ -32,12 +32,6 @@ public class ShipmentController {
     return ResponseEntity.ok(shipments);
   }
 
-  @GetMapping(value = "/carriers", produces = "application/json")
-  public ResponseEntity<List<CarrierResponse>> findAllCarriers() {
-    List<CarrierResponse> carriers = shipmentService.findAllActiveCarriers();
-    return ResponseEntity.ok(carriers);
-  }
-
   @GetMapping(value = "/{shipmentId}", produces = "application/json")
   public ResponseEntity<ShipmentResponse> findById(@PathVariable Long shipmentId) {
     ShipmentResponse shipmentById = shipmentService.findById(shipmentId);
@@ -48,5 +42,11 @@ public class ShipmentController {
   public ResponseEntity<ShipmentResponse> findByOrderId(@PathVariable Long orderId) {
     ShipmentResponse shipmentByOrderId = shipmentService.findByOrderId(orderId);
     return ResponseEntity.ok(shipmentByOrderId);
+  }
+
+  @GetMapping(value = "/carriers", produces = "application/json")
+  public ResponseEntity<List<CarrierResponse>> findAllCarriers() {
+    List<CarrierResponse> carriers = shipmentService.findAllActiveCarriers();
+    return ResponseEntity.ok(carriers);
   }
 }

@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce.shipment.dto;
 
 import com.carlosarroyoam.ecommerce.shipment.entity.Carrier;
+import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +19,7 @@ import org.mapstruct.factory.Mappers;
 public class CarrierResponse {
   private Byte id;
   private String name;
-  private Boolean isActive;
+  private LocalDateTime deletedAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface CarrierResponseMapper {

@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -22,6 +23,7 @@ public class ShipmentResponse {
   private Long id;
   private String trackingNumber;
   private CarrierResponse carrier;
+  private Long orderId;
   private LocalDateTime shippedAt;
   private LocalDateTime deliveredAt;
 
@@ -30,6 +32,7 @@ public class ShipmentResponse {
   public interface ShipmentResponseMapper {
     ShipmentResponseMapper INSTANCE = Mappers.getMapper(ShipmentResponseMapper.class);
 
+    @Mapping(source = "order.id", target = "orderId")
     ShipmentResponse toDto(Shipment entity);
 
     List<ShipmentResponse> toDtos(List<Shipment> entities);

@@ -57,22 +57,26 @@ public class ShipmentService {
 
   @Transactional(readOnly = true)
   public ShipmentResponse findByOrderId(Long orderId) {
-    Shipment shipmentByOrderId = shipmentRepository.findByOrderId(orderId).orElseThrow(() -> {
-      log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-    });
+    Shipment shipmentByOrderId = findShipmentByOrderIdOrFail(orderId);
     return ShipmentResponseMapper.INSTANCE.toDto(shipmentByOrderId);
   }
 
   @Transactional(readOnly = true)
   public List<CarrierResponse> findAllActiveCarriers() {
-    List<Carrier> carriers = carrierRepository.findAllByIsActiveTrue();
+    List<Carrier> carriers = carrierRepository.findAll();
     return CarrierResponseMapper.INSTANCE.toDtos(carriers);
   }
 
   private Shipment findShipmentByIdOrFail(Long shipmentId) {
     return shipmentRepository.findById(shipmentId).orElseThrow(() -> {
+      log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
+      return new ResponseStatusException(HttpStatus.NOT_FOUND,
+          AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
+    });
+  }
+
+  private Shipment findShipmentByOrderIdOrFail(Long orderId) {
+    return shipmentRepository.findByOrderId(orderId).orElseThrow(() -> {
       log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
       return new ResponseStatusException(HttpStatus.NOT_FOUND,
           AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);

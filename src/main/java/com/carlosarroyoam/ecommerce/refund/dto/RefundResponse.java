@@ -10,6 +10,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -23,6 +24,7 @@ public class RefundResponse {
   private BigDecimal amount;
   private String reason;
   private List<RefundItemResponse> items;
+  private Long orderId;
   private LocalDateTime createdAt;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
@@ -30,6 +32,7 @@ public class RefundResponse {
   public interface RefundResponseMapper {
     RefundResponseMapper INSTANCE = Mappers.getMapper(RefundResponseMapper.class);
 
+    @Mapping(source = "order.id", target = "orderId")
     RefundResponse toDto(Refund entity);
 
     List<RefundResponse> toDtos(List<Refund> entities);

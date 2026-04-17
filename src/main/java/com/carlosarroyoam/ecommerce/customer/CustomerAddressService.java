@@ -37,22 +37,25 @@ public class CustomerAddressService {
   public CustomerAddressResponse findById(Long customerId, Long addressId) {
     validateCustomerExists(customerId);
 
-    CustomerAddress customerAddress = customerAddressRepository
-        .findByIdAndCustomerId(addressId, customerId)
+    CustomerAddress customerAddressById = findCustomerAddressByIdOrFail(customerId, addressId);
+
+    return CustomerAddressResponseMapper.INSTANCE.toDto(customerAddressById);
+  }
+
+  private void validateCustomerExists(Long customerId) {
+    if (Boolean.FALSE.equals(customerRepository.existsById(customerId))) {
+      log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
+      throw new ResponseStatusException(HttpStatus.NOT_FOUND,
+          AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
+    }
+  }
+
+  private CustomerAddress findCustomerAddressByIdOrFail(Long customerId, Long addressId) {
+    return customerAddressRepository.findByIdAndCustomerId(addressId, customerId)
         .orElseThrow(() -> {
           log.warn(AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
           return new ResponseStatusException(HttpStatus.NOT_FOUND,
               AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
         });
-
-    return CustomerAddressResponseMapper.INSTANCE.toDto(customerAddress);
-  }
-
-  private void validateCustomerExists(Long customerId) {
-    if (!customerRepository.existsById(customerId)) {
-      log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
-    }
   }
 }

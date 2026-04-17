@@ -36,7 +36,7 @@ public class OrderResponse {
   private List<OrderItemResponse> items;
   private List<PaymentResponse> payments;
   private List<ShipmentResponse> shipments;
-  private List<OrderStatusHistoryResponse> orderHistory;
+  private List<OrderStatusHistoryResponse> statusHistory;
   private CustomerResponse customer;
   private CustomerAddressResponse shippingAddress;
   private LocalDateTime createdAt;

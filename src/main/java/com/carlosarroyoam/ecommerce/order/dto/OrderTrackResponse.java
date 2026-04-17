@@ -12,7 +12,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -25,7 +24,7 @@ public class OrderTrackResponse {
   private String orderNumber;
   private OrderStatus status;
   private BigDecimal total;
-  private ShipmentResponse shipment;
+  private List<ShipmentResponse> shipments;
   private List<OrderStatusHistoryResponse> statusHistory;
   private LocalDateTime createdAt;
 
@@ -34,14 +33,6 @@ public class OrderTrackResponse {
   public interface OrderTrackResponseMapper {
     OrderTrackResponseMapper INSTANCE = Mappers.getMapper(OrderTrackResponseMapper.class);
 
-    @Mapping(target = "shipment", expression = "java(mapShipment(entity))")
     OrderTrackResponse toDto(Order entity);
-
-    default ShipmentResponse mapShipment(Order entity) {
-      if (entity.getShipments() == null || entity.getShipments().isEmpty()) {
-        return null;
-      }
-      return ShipmentResponseMapper.INSTANCE.toDto(entity.getShipments().get(0));
-    }
   }
 }
