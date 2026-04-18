@@ -17,7 +17,7 @@ import org.mapstruct.factory.Mappers;
 @Builder
 public class RoleResponse {
   private Byte id;
-  private String type;
+  private String name;
   private String description;
 
   @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)

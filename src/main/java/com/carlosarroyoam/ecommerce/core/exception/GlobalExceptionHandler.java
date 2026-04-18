@@ -10,12 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -31,22 +34,28 @@ public class GlobalExceptionHandler {
         request);
   }
 
-  @ExceptionHandler(HttpMessageNotReadableException.class)
-  public ResponseEntity<AppExceptionResponse> handleMalformedJson(
+  @ExceptionHandler({ HttpMessageNotReadableException.class })
+  public ResponseEntity<AppExceptionResponse> handleHttpMessageNotReadable(
       HttpMessageNotReadableException ex, WebRequest request) {
     return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
   }
 
+  @ExceptionHandler({ MethodArgumentTypeMismatchException.class })
+  public ResponseEntity<AppExceptionResponse> handleMethodArgumentTypeMismatch(
+      MethodArgumentTypeMismatchException ex, WebRequest request) {
+    return buildResponseEntity(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
+  }
+
   @ExceptionHandler({ NoHandlerFoundException.class })
-  public ResponseEntity<AppExceptionResponse> handleNotFound(NoHandlerFoundException ex,
+  public ResponseEntity<AppExceptionResponse> handleNoHandlerFound(NoHandlerFoundException ex,
       WebRequest request) {
-    return buildResponseEntity(HttpStatus.NOT_FOUND, "Endpoint not found", request);
+    return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage(), request);
   }
 
   @ExceptionHandler({ NoResourceFoundException.class })
   public ResponseEntity<AppExceptionResponse> handleNoResourceFound(NoResourceFoundException ex,
       WebRequest request) {
-    return buildResponseEntity(HttpStatus.NOT_FOUND, "Static resource not found", request);
+    return buildResponseEntity(HttpStatus.NOT_FOUND, ex.getMessage(), request);
   }
 
   @ExceptionHandler({ HttpRequestMethodNotSupportedException.class })
@@ -55,9 +64,21 @@ public class GlobalExceptionHandler {
     return buildResponseEntity(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage(), request);
   }
 
-  @ExceptionHandler({ MethodArgumentNotValidException.class })
-  public ResponseEntity<AppExceptionResponse> handleValidation(MethodArgumentNotValidException ex,
+  @ExceptionHandler({ BadCredentialsException.class })
+  public ResponseEntity<AppExceptionResponse> handleBadCredentials(BadCredentialsException ex,
       WebRequest request) {
+    return buildResponseEntity(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler({ AuthorizationDeniedException.class })
+  public ResponseEntity<AppExceptionResponse> handleAuthorizationDenied(
+      AuthorizationDeniedException ex, WebRequest request) {
+    return buildResponseEntity(HttpStatus.FORBIDDEN, ex.getMessage(), request);
+  }
+
+  @ExceptionHandler({ MethodArgumentNotValidException.class })
+  public ResponseEntity<AppExceptionResponse> handleMethodArgumentNotValid(
+      MethodArgumentNotValidException ex, WebRequest request) {
     Map<String, String> details = ex.getBindingResult()
         .getFieldErrors()
         .stream()
@@ -69,8 +90,7 @@ public class GlobalExceptionHandler {
   }
 
   @ExceptionHandler({ Exception.class })
-  public ResponseEntity<AppExceptionResponse> handleGenericException(Exception ex,
-      WebRequest request) {
+  public ResponseEntity<AppExceptionResponse> handleException(Exception ex, WebRequest request) {
     log.error("Unhandled exception:", ex);
     return buildResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR, "Whoops! Something went wrong",
         request);

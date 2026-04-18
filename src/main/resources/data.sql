@@ -2,8 +2,8 @@
 
 USE `spring-boot-e-commerce`;
 
-INSERT INTO roles (id, type, description) VALUES
-(1, 'App/Admin', 'Admin role');
+INSERT INTO roles (id, name, description) VALUES
+(1, 'ADMIN', 'Admin user role');
 
 INSERT INTO users (id, first_name, last_name, email, password_hash, status, created_at, updated_at, deleted_at) VALUES
 (1, 'Carlos Alberto', 'Arroyo Martínez', 'carlos.arroyo@e-commerce.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
@@ -14,18 +14,18 @@ INSERT INTO user_roles (user_id, role_id) VALUES
 (2, 1);
 
 INSERT INTO customers (id, first_name, last_name, phone_number, email, password_hash, status) VALUES
-(1, 'José', 'García', '6181234567', 'jose.garcia@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(2, 'María', 'López', '6182345678', 'maria.lopez@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(3, 'Carlos', 'Martínez', '6183456789', 'carlos.martinez@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(4, 'Ana', 'González', '6184567890', 'ana.gonzalez@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(5, 'Juan', 'Hernández', '6185678901', 'juan.hernandez@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(6, 'Laura', 'Ramírez', '6186789012', 'laura.ramirez@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'SUSPENDED'),
-(7, 'Rodrigo', 'Torres', '6187890123', 'rodrigo.torres@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(8, 'Sofía', 'Flores', '6188901234', 'sofia.flores@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(9, 'Miguel', 'Aguilar', '6189012345', 'miguel.aguilar@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(10, 'Elena', 'Morales', '6180123456', 'elena.morales@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(11, 'Antonio', 'Rojas', '6181112222', 'antonio.rojas@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE'),
-(12, 'Karina', 'Navarro', '6183334444', 'karina.navarro@example.com', '$2b$10$xVfYjKn0kPQZ8K5kPQZ8KOqZ8K5kPQZ8K5kPQZ8K5kPQZ8K5kPQZ', 'ACTIVE');
+(1, 'José', 'García', '6181234567', 'jose.garcia@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(2, 'María', 'López', '6182345678', 'maria.lopez@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(3, 'Carlos', 'Martínez', '6183456789', 'carlos.martinez@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(4, 'Ana', 'González', '6184567890', 'ana.gonzalez@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(5, 'Juan', 'Hernández', '6185678901', 'juan.hernandez@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(6, 'Laura', 'Ramírez', '6186789012', 'laura.ramirez@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'SUSPENDED'),
+(7, 'Rodrigo', 'Torres', '6187890123', 'rodrigo.torres@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(8, 'Sofía', 'Flores', '6188901234', 'sofia.flores@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(9, 'Miguel', 'Aguilar', '6189012345', 'miguel.aguilar@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(10, 'Elena', 'Morales', '6180123456', 'elena.morales@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(11, 'Antonio', 'Rojas', '6181112222', 'antonio.rojas@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
+(12, 'Karina', 'Navarro', '6183334444', 'karina.navarro@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE');
 
 INSERT INTO customer_addresses (id, street_name, street_number, apartament_number, sublocality, locality, state, country, postal_code, phone_number, is_default, customer_id) VALUES
 (1, 'C Leona Vicario', '120', NULL, 'Centro', 'Acámbaro', 'Guanajuato', 'MX', '38923', '4431232123', 1, 1),

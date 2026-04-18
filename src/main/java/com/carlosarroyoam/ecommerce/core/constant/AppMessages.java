@@ -3,6 +3,8 @@ package com.carlosarroyoam.ecommerce.core.constant;
 public class AppMessages {
   public static final String ILLEGAL_ACCESS_EXCEPTION = "Illegal access to utility class";
 
+  public static final String TOKEN_IS_NOT_VALID = "The provided token is not valid or has expired";
+
   public static final String USER_NOT_FOUND_EXCEPTION = "User not found";
 
   public static final String CUSTOMER_NOT_FOUND_EXCEPTION = "Customer not found";

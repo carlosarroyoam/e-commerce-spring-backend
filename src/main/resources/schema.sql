@@ -6,10 +6,10 @@ USE `spring-boot-e-commerce`;
 
 CREATE TABLE IF NOT EXISTS roles (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    type VARCHAR(32) NOT NULL,
+    name VARCHAR(32) NOT NULL,
     description VARCHAR(256) NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE KEY uk_roles_type (type)
+    UNIQUE KEY uk_roles_name (name)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS users (
@@ -35,34 +35,6 @@ CREATE TABLE IF NOT EXISTS user_roles (
         FOREIGN KEY (user_id) REFERENCES users (id),
     CONSTRAINT fk_user_roles_role_id
         FOREIGN KEY (role_id) REFERENCES roles (id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS user_refresh_tokens (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    token VARCHAR(254) NOT NULL,
-    fingerprint VARCHAR(36) NOT NULL,
-    user_id BIGINT UNSIGNED NOT NULL,
-    last_used_at TIMESTAMP DEFAULT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    UNIQUE KEY uk_user_refresh_tokens_token (token),
-    UNIQUE KEY uk_user_refresh_tokens_user_fingerprint (user_id, fingerprint),
-    CONSTRAINT fk_user_refresh_tokens_user_id
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
-CREATE TABLE IF NOT EXISTS user_reset_password (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    token_hash VARCHAR(254) NOT NULL,
-    user_id BIGINT UNSIGNED NOT NULL,
-    expires_on TIMESTAMP NOT NULL,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    PRIMARY KEY (id),
-    UNIQUE KEY uk_user_reset_password_token_hash (token_hash),
-    CONSTRAINT fk_user_reset_password_user_id
-        FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS customers (
@@ -102,32 +74,31 @@ CREATE TABLE IF NOT EXISTS customer_addresses (
         FOREIGN KEY (customer_id) REFERENCES customers (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS customer_refresh_tokens (
+CREATE TABLE IF NOT EXISTS refresh_tokens (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     token VARCHAR(254) NOT NULL,
     fingerprint VARCHAR(36) NOT NULL,
-    customer_id BIGINT UNSIGNED NOT NULL,
+    principal_id BIGINT UNSIGNED NOT NULL,
+    principal_type VARCHAR(32) NOT NULL CHECK (principal_type IN ('STAFF', 'CUSTOMER')),
+    expires_on TIMESTAMP NOT NULL,
     last_used_at TIMESTAMP DEFAULT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    UNIQUE KEY uk_customer_refresh_tokens_token (token),
-    UNIQUE KEY uk_customer_refresh_tokens_fingerprint (customer_id, fingerprint),
-    CONSTRAINT fk_customer_refresh_tokens_customer_id
-        FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE CASCADE
+    UNIQUE KEY uk_refresh_tokens_token (token),
+    UNIQUE KEY uk_refresh_tokens_fingerprint (principal_id, principal_type, fingerprint)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE IF NOT EXISTS customer_reset_password (
+CREATE TABLE IF NOT EXISTS reset_password (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     token_hash VARCHAR(254) NOT NULL,
-    customer_id BIGINT UNSIGNED NOT NULL,
+    principal_id BIGINT UNSIGNED NOT NULL,
+    principal_type VARCHAR(32) NOT NULL CHECK (principal_type IN ('STAFF', 'CUSTOMER')),
     expires_on TIMESTAMP NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    UNIQUE KEY uk_customer_reset_password_token_hash (token_hash),
-    CONSTRAINT fk_customer_reset_password_customer_id
-        FOREIGN KEY (customer_id) REFERENCES customers (id) ON DELETE CASCADE
+    UNIQUE KEY uk_reset_password_token_hash (token_hash)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS categories (

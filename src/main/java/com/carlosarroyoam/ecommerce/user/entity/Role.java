@@ -22,8 +22,8 @@ public class Role {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Byte id;
 
-  @Column(name = "type", length = 32, nullable = false)
-  private String type;
+  @Column(name = "name", length = 32, nullable = false)
+  private String name;
 
   @Column(name = "description", length = 256, nullable = false)
   private String description;

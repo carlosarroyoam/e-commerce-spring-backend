@@ -2,6 +2,7 @@ package com.carlosarroyoam.ecommerce.customer.dto;
 
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerAddressResponse.CustomerAddressResponseMapper;
 import com.carlosarroyoam.ecommerce.customer.entity.Customer;
+import com.carlosarroyoam.ecommerce.customer.entity.CustomerStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -23,6 +24,7 @@ public class CustomerSummaryResponse {
   private String lastName;
   private String phoneNumber;
   private String email;
+  private CustomerStatus status;
   private LocalDateTime createdAt;
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
