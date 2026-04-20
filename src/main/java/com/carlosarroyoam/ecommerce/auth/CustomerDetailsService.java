@@ -27,6 +27,13 @@ public class CustomerDetailsService implements UserDetailsService {
         .orElseThrow(() -> new UsernameNotFoundException("Customer not found: " + email));
   }
 
+  @Transactional(readOnly = true)
+  public UserDetails loadUserById(Long customerId) throws UsernameNotFoundException {
+    return customerRepository.findById(customerId)
+        .map(this::mapCustomer)
+        .orElseThrow(() -> new UsernameNotFoundException("Customer not found: " + customerId));
+  }
+
   private AuthPrincipal mapCustomer(Customer customer) {
     return AuthPrincipal.builder()
         .id(customer.getId())

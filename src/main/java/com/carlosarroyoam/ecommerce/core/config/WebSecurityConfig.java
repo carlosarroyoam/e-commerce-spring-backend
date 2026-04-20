@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.core.config;
 
-import com.carlosarroyoam.ecommerce.core.filter.JwtAuthFilter;
+import com.carlosarroyoam.ecommerce.core.filter.JwtAuthenticationFilter;
 import com.carlosarroyoam.ecommerce.core.property.CorsProps;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
@@ -28,14 +28,15 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
-  private final JwtAuthFilter jwtAuthFilter;
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final UserDetailsService staffDetailsService;
   private final UserDetailsService customerDetailsService;
   private final CorsProps corsProps;
 
-  public WebSecurityConfig(JwtAuthFilter jwtAuthFilter, UserDetailsService staffDetailsService,
-      UserDetailsService customerDetailsService, CorsProps corsProps) {
-    this.jwtAuthFilter = jwtAuthFilter;
+  public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
+      UserDetailsService staffDetailsService, UserDetailsService customerDetailsService,
+      CorsProps corsProps) {
+    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     this.staffDetailsService = staffDetailsService;
     this.customerDetailsService = customerDetailsService;
     this.corsProps = corsProps;
@@ -53,7 +54,7 @@ public class WebSecurityConfig {
             .anyRequest()
             .authenticated())
         .authenticationManager(authenticationManager)
-        .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .build();
   }
 

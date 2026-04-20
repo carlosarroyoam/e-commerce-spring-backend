@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder
 public class RevokeTokenRequest {
-  private String deviceFingerprint;
+  private String refreshToken;
 }

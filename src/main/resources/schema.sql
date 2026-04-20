@@ -75,7 +75,7 @@ CREATE TABLE IF NOT EXISTS customer_addresses (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS refresh_tokens (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id BINARY(16) NOT NULL,
     token VARCHAR(254) NOT NULL,
     fingerprint VARCHAR(36) NOT NULL,
     principal_id BIGINT UNSIGNED NOT NULL,
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS reset_password (
-    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    id BINARY(16) NOT NULL,
     token_hash VARCHAR(254) NOT NULL,
     principal_id BIGINT UNSIGNED NOT NULL,
     principal_type VARCHAR(32) NOT NULL CHECK (principal_type IN ('STAFF', 'CUSTOMER')),

@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 @Builder
 public class RefreshTokenRequest {
   private String refreshToken;
-  private String deviceFingerprint;
 }

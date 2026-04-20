@@ -43,7 +43,7 @@ public class CustomerAddressService {
   }
 
   private void validateCustomerExists(Long customerId) {
-    if (Boolean.FALSE.equals(customerRepository.existsById(customerId))) {
+    if (!customerRepository.existsById(customerId)) {
       log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
       throw new ResponseStatusException(HttpStatus.NOT_FOUND,
           AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);

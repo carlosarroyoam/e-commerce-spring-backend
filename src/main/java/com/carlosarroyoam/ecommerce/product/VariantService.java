@@ -46,7 +46,7 @@ public class VariantService {
   }
 
   private void validateProductExists(Long productId) {
-    if (Boolean.FALSE.equals(productRepository.existsById(productId))) {
+    if (!productRepository.existsById(productId)) {
       log.warn(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
       throw new ResponseStatusException(HttpStatus.NOT_FOUND,
           AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);

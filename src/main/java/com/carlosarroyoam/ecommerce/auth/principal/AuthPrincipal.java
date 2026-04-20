@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.auth.principal;
 
+import java.io.Serial;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -14,6 +15,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 @AllArgsConstructor
 @Builder
 public class AuthPrincipal implements UserDetails {
+  @Serial
   private static final long serialVersionUID = -156588274831556503L;
   private final Long id;
   private final String fullName;
