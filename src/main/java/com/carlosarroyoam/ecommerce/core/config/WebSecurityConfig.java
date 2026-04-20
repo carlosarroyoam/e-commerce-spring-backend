@@ -2,6 +2,9 @@ package com.carlosarroyoam.ecommerce.core.config;
 
 import com.carlosarroyoam.ecommerce.core.filter.JwtAuthenticationFilter;
 import com.carlosarroyoam.ecommerce.core.property.CorsProps;
+import com.carlosarroyoam.ecommerce.core.security.CustomAccessDeniedHandler;
+import com.carlosarroyoam.ecommerce.core.security.CustomAuthenticationEntryPoint;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,7 +47,7 @@ public class WebSecurityConfig {
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http,
-      AuthenticationManager authenticationManager) throws Exception {
+      AuthenticationManager authenticationManager, ObjectMapper mapper) throws Exception {
     return http.csrf(AbstractHttpConfigurer::disable)
         .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
         .sessionManagement(
@@ -55,7 +58,15 @@ public class WebSecurityConfig {
             .authenticated())
         .authenticationManager(authenticationManager)
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+        .exceptionHandling(
+            ex -> ex.authenticationEntryPoint(new CustomAuthenticationEntryPoint(mapper))
+                .accessDeniedHandler(new CustomAccessDeniedHandler(mapper)))
         .build();
+  }
+
+  @Bean
+  PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder(12);
   }
 
   @Bean
@@ -75,11 +86,6 @@ public class WebSecurityConfig {
   @Bean
   AuthenticationManager authenticationManager(List<AuthenticationProvider> providers) {
     return new ProviderManager(providers);
-  }
-
-  @Bean
-  PasswordEncoder passwordEncoder() {
-    return new BCryptPasswordEncoder(12);
   }
 
   @Bean

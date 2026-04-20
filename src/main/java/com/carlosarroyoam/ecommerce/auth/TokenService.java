@@ -69,14 +69,14 @@ public class TokenService {
       jwtDecoder.decode(token);
       return true;
     } catch (Exception exception) {
-      log.error(AppMessages.TOKEN_IS_NOT_VALID);
-      throw new BadJwtException(AppMessages.TOKEN_IS_NOT_VALID);
+      log.error(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+      throw new BadJwtException(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
     }
   }
 
   public PrincipalType extractPrincipalType(String token) {
     Jwt jwtToken = jwtDecoder.decode(token);
-    return jwtToken.getClaim("principal_type");
+    return PrincipalType.valueOf(jwtToken.getClaim("principal_type"));
   }
 
   public String extractEmail(String token) {

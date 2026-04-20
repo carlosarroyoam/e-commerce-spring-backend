@@ -76,15 +76,17 @@ public class RefreshTokenService {
   private void validateRefreshToken(String currentRefreshToken, RefreshToken refreshToken) {
     if (LocalDateTime.now().isAfter(refreshToken.getExpiresOn())
         || !passwordEncoder.matches(currentRefreshToken, refreshToken.getToken())) {
-      log.warn(AppMessages.TOKEN_IS_NOT_VALID);
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, AppMessages.TOKEN_IS_NOT_VALID);
+      log.warn(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+          AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
     }
   }
 
   private RefreshToken findRefreshTokenByIdOrFail(UUID refreshTokenId) {
     return refreshTokenRepository.findById(refreshTokenId).orElseThrow(() -> {
-      log.warn(AppMessages.TOKEN_IS_NOT_VALID);
-      return new ResponseStatusException(HttpStatus.UNAUTHORIZED, AppMessages.TOKEN_IS_NOT_VALID);
+      log.warn(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+      return new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+          AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
     });
   }
 }

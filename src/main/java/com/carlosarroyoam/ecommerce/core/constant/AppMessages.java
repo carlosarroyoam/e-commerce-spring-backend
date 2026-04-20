@@ -4,7 +4,7 @@ public class AppMessages {
   public static final String ILLEGAL_ACCESS_EXCEPTION = "Illegal access to utility class";
 
   public static final String JWT_NO_TOKEN_AUTHORIZATION_PROVIDED = "No token authorization provided";
-  public static final String TOKEN_IS_NOT_VALID = "The provided token is not valid or has expired";
+  public static final String JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID = "The provided token is not valid or has expired";
 
   public static final String USER_NOT_FOUND_EXCEPTION = "User not found";
 

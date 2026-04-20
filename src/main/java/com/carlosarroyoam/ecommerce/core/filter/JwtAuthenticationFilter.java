@@ -47,6 +47,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       return;
     }
 
+    if (!tokenService.isValid(token.get())) {
+      log.warn(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+      filterChain.doFilter(request, response);
+      return;
+    }
+
     PrincipalType principalType = tokenService.extractPrincipalType(token.get());
     String email = tokenService.extractEmail(token.get());
 
@@ -55,12 +61,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     case CUSTOMER -> customerDetailsService.loadUserByUsername(email);
     };
 
-    if (tokenService.isValid(token.get())) {
-      var auth = new UsernamePasswordAuthenticationToken(principal, null,
-          principal.getAuthorities());
-      auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-      SecurityContextHolder.getContext().setAuthentication(auth);
-    }
+    var auth = new UsernamePasswordAuthenticationToken(principal, null, principal.getAuthorities());
+    auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+    SecurityContextHolder.getContext().setAuthentication(auth);
 
     filterChain.doFilter(request, response);
   }
