@@ -2,7 +2,7 @@ package com.carlosarroyoam.ecommerce.core.filter;
 
 import com.carlosarroyoam.ecommerce.auth.TokenService;
 import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
-import io.jsonwebtoken.JwtException;
+import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,27 +42,24 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     Optional<String> token = extractBearerToken(request);
 
     if (token.isEmpty()) {
+      log.warn(AppMessages.JWT_NO_TOKEN_AUTHORIZATION_PROVIDED);
       filterChain.doFilter(request, response);
       return;
     }
 
-    try {
-      PrincipalType principalType = tokenService.extractType(token.get());
-      String email = tokenService.extractEmail(token.get());
+    PrincipalType principalType = tokenService.extractPrincipalType(token.get());
+    String email = tokenService.extractEmail(token.get());
 
-      UserDetails principal = switch (principalType) {
-      case STAFF -> staffDetailsService.loadUserByUsername(email);
-      case CUSTOMER -> customerDetailsService.loadUserByUsername(email);
-      };
+    UserDetails principal = switch (principalType) {
+    case STAFF -> staffDetailsService.loadUserByUsername(email);
+    case CUSTOMER -> customerDetailsService.loadUserByUsername(email);
+    };
 
-      if (tokenService.isValid(token.get(), principal)) {
-        var auth = new UsernamePasswordAuthenticationToken(principal, null,
-            principal.getAuthorities());
-        auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-        SecurityContextHolder.getContext().setAuthentication(auth);
-      }
-    } catch (JwtException ex) {
-      log.warn("JwtException: {}", ex.getMessage());
+    if (tokenService.isValid(token.get())) {
+      var auth = new UsernamePasswordAuthenticationToken(principal, null,
+          principal.getAuthorities());
+      auth.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+      SecurityContextHolder.getContext().setAuthentication(auth);
     }
 
     filterChain.doFilter(request, response);

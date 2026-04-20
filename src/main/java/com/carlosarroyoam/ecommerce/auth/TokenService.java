@@ -2,90 +2,85 @@ package com.carlosarroyoam.ecommerce.auth;
 
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
 import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
+import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Date;
-import java.util.Map;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-import javax.crypto.SecretKey;
+import java.util.stream.Collectors;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
+import org.springframework.security.oauth2.jwt.BadJwtException;
+import org.springframework.security.oauth2.jwt.JwsHeader;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
 @Service
 public class TokenService {
-  private final SecretKey secretKey;
+  private static final Logger log = LoggerFactory.getLogger(TokenService.class);
   private final long accessTokenTtlMs;
+  private final JwtEncoder jwtEncoder;
+  private final JwtDecoder jwtDecoder;
 
-  public TokenService(JwtProps jwtProps) {
-    this.secretKey = Keys.hmacShaKeyFor(jwtProps.getSecret().getBytes(StandardCharsets.UTF_8));
+  public TokenService(JwtProps jwtProps, JwtEncoder jwtEncoder, JwtDecoder jwtDecoder) {
     this.accessTokenTtlMs = jwtProps.getAccessTokenTtlMs();
+    this.jwtEncoder = jwtEncoder;
+    this.jwtDecoder = jwtDecoder;
   }
 
   public String generateAccessToken(AuthPrincipal principal) {
-    return generateAccessToken(principal, Map.of());
-  }
-
-  public String generateAccessToken(AuthPrincipal principal, Map<String, Object> extraClaims) {
     Instant now = Instant.now();
-
-    return Jwts.builder()
+    JwtClaimsSet claims = JwtClaimsSet.builder()
         .issuer("self")
-        .issuedAt(Date.from(now))
-        .expiration(Date.from(now.plusMillis(accessTokenTtlMs)))
         .subject(principal.getId().toString())
         .claim("name", principal.getFullName())
         .claim("given_name", principal.getFirstName())
         .claim("family_name", principal.getLastName())
         .claim("email", principal.getEmail())
-        .claim("type", principal.getPrincipalType())
+        .claim("principal_type", principal.getPrincipalType())
         .claim("roles",
             principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
-        .claims(extraClaims)
-        .signWith(secretKey)
-        .compact();
+        .claim("scope",
+            principal.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" ")))
+        .issuedAt(now)
+        .expiresAt(now.plus(accessTokenTtlMs, ChronoUnit.MILLIS))
+        .build();
+
+    return this.jwtEncoder
+        .encode(JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims))
+        .getTokenValue();
   }
 
   public String generateRefreshToken() {
     return UUID.randomUUID().toString();
   }
 
-  public boolean isValid(String token, UserDetails principal) {
+  public boolean isValid(String token) {
     try {
-      String email = extractEmail(token);
-      return email.equals(principal.getUsername()) && !isExpired(token);
-    } catch (JwtException | IllegalArgumentException e) {
-      return false;
+      jwtDecoder.decode(token);
+      return true;
+    } catch (Exception exception) {
+      log.error(AppMessages.TOKEN_IS_NOT_VALID);
+      throw new BadJwtException(AppMessages.TOKEN_IS_NOT_VALID);
     }
   }
 
-  public boolean isExpired(String token) {
-    return parseClaims(token).getExpiration().before(new Date());
-  }
-
-  public String extractSubject(String token) {
-    return parseClaims(token).getSubject();
+  public PrincipalType extractPrincipalType(String token) {
+    Jwt jwtToken = jwtDecoder.decode(token);
+    return jwtToken.getClaim("principal_type");
   }
 
   public String extractEmail(String token) {
-    return parseClaims(token).get("email", String.class);
-  }
-
-  public PrincipalType extractType(String token) {
-    String raw = parseClaims(token).get("type", String.class);
-    return PrincipalType.valueOf(raw);
-  }
-
-  public <T> T extractClaim(String token, String name, Class<T> type) {
-    return parseClaims(token).get(name, type);
-  }
-
-  private Claims parseClaims(String token) {
-    return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload();
+    Jwt jwtToken = jwtDecoder.decode(token);
+    return jwtToken.getClaimAsString("email");
   }
 }
