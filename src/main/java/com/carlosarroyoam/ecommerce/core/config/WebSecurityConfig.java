@@ -1,6 +1,5 @@
 package com.carlosarroyoam.ecommerce.core.config;
 
-import com.carlosarroyoam.ecommerce.core.filter.JwtAuthenticationFilter;
 import com.carlosarroyoam.ecommerce.core.property.CorsProps;
 import com.carlosarroyoam.ecommerce.core.security.CustomAccessDeniedHandler;
 import com.carlosarroyoam.ecommerce.core.security.CustomAuthenticationEntryPoint;
@@ -12,6 +11,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,8 +21,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.util.StringUtils;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -31,15 +35,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
-  private final JwtAuthenticationFilter jwtAuthenticationFilter;
   private final UserDetailsService staffDetailsService;
   private final UserDetailsService customerDetailsService;
   private final CorsProps corsProps;
 
-  public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter,
-      UserDetailsService staffDetailsService, UserDetailsService customerDetailsService,
-      CorsProps corsProps) {
-    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+  public WebSecurityConfig(UserDetailsService staffDetailsService,
+      UserDetailsService customerDetailsService, CorsProps corsProps) {
     this.staffDetailsService = staffDetailsService;
     this.customerDetailsService = customerDetailsService;
     this.corsProps = corsProps;
@@ -47,21 +48,32 @@ public class WebSecurityConfig {
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http,
-      AuthenticationManager authenticationManager, ObjectMapper mapper) throws Exception {
-    return http.csrf(AbstractHttpConfigurer::disable)
+      AuthenticationManager authenticationManager, BearerTokenResolver bearerTokenResolver,
+      JwtDecoder jwtDecoder, JwtAuthenticationConverter jwtAuthenticationConverter,
+      ObjectMapper mapper) throws Exception {
+    http.csrf(AbstractHttpConfigurer::disable)
+        .cors(Customizer.withDefaults())
         .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/actuator/**")
-            .permitAll()
-            .anyRequest()
-            .authenticated())
-        .authenticationManager(authenticationManager)
-        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
-        .exceptionHandling(
-            ex -> ex.authenticationEntryPoint(new CustomAuthenticationEntryPoint(mapper))
-                .accessDeniedHandler(new CustomAccessDeniedHandler(mapper)))
-        .build();
+        .oauth2ResourceServer(oauth2 -> {
+          oauth2.bearerTokenResolver(bearerTokenResolver);
+          oauth2.jwt(jwt -> {
+            jwt.decoder(jwtDecoder);
+            jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
+          });
+        })
+        .exceptionHandling(ex -> {
+          ex.authenticationEntryPoint(new CustomAuthenticationEntryPoint(mapper));
+          ex.accessDeniedHandler(new CustomAccessDeniedHandler(mapper));
+        });
+
+    http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/actuator/**")
+        .permitAll()
+        .anyRequest()
+        .authenticated());
+
+    return http.build();
   }
 
   @Bean
@@ -86,6 +98,38 @@ public class WebSecurityConfig {
   @Bean
   AuthenticationManager authenticationManager(List<AuthenticationProvider> providers) {
     return new ProviderManager(providers);
+  }
+
+  @Bean
+  BearerTokenResolver bearerTokenResolver() {
+    return request -> {
+      Pattern authorizationPattern = Pattern.compile("^Bearer (?<token>[a-zA-Z0-9-._~+/]+=*)$",
+          Pattern.CASE_INSENSITIVE);
+
+      String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+      if (!StringUtils.startsWithIgnoreCase(authorization, "bearer")) {
+        return null;
+      }
+
+      Matcher matcher = authorizationPattern.matcher(authorization);
+      if (!matcher.matches()) {
+        BearerTokenError error = BearerTokenErrors.invalidToken("Bearer token is malformed");
+        throw new OAuth2AuthenticationException(error);
+      }
+
+      return matcher.group("token");
+    };
+  }
+
+  @Bean
+  JwtAuthenticationConverter jwtAuthenticationConverter() {
+    JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
+    authoritiesConverter.setAuthoritiesClaimName("roles");
+    authoritiesConverter.setAuthorityPrefix("ROLE_");
+
+    JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
+    converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
+    return converter;
   }
 
   @Bean
