@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.core.config;
 
+import com.carlosarroyoam.ecommerce.core.filter.CsrfCookieFilter;
 import com.carlosarroyoam.ecommerce.core.property.CorsProps;
 import com.carlosarroyoam.ecommerce.core.security.CustomAccessDeniedHandler;
 import com.carlosarroyoam.ecommerce.core.security.CustomAuthenticationEntryPoint;
@@ -15,7 +16,6 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,9 +24,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
-import org.springframework.security.oauth2.server.resource.web.BearerTokenResolver;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.util.StringUtils;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -48,25 +49,25 @@ public class WebSecurityConfig {
 
   @Bean
   SecurityFilterChain securityFilterChain(HttpSecurity http,
-      AuthenticationManager authenticationManager, BearerTokenResolver bearerTokenResolver,
+      CookieCsrfTokenRepository csrfTokenRepository, AuthenticationManager authenticationManager,
       JwtDecoder jwtDecoder, JwtAuthenticationConverter jwtAuthenticationConverter,
       ObjectMapper mapper) throws Exception {
-    http.csrf(AbstractHttpConfigurer::disable)
+    http.csrf(csrf -> csrf.csrfTokenRepository(csrfTokenRepository)
+        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+        .ignoringRequestMatchers("/auth/login"))
         .cors(Customizer.withDefaults())
         .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2ResourceServer(oauth2 -> {
-          oauth2.bearerTokenResolver(bearerTokenResolver);
-          oauth2.jwt(jwt -> {
-            jwt.decoder(jwtDecoder);
-            jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
-          });
-        })
+        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {
+          jwt.decoder(jwtDecoder);
+          jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
+        }))
         .exceptionHandling(ex -> {
           ex.authenticationEntryPoint(new CustomAuthenticationEntryPoint(mapper));
           ex.accessDeniedHandler(new CustomAccessDeniedHandler(mapper));
-        });
+        })
+        .addFilterBefore(new CsrfCookieFilter(), CsrfFilter.class);
 
     http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/actuator/**")
         .permitAll()
@@ -101,27 +102,6 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  BearerTokenResolver bearerTokenResolver() {
-    return request -> {
-      Pattern authorizationPattern = Pattern.compile("^Bearer (?<token>[a-zA-Z0-9-._~+/]+=*)$",
-          Pattern.CASE_INSENSITIVE);
-
-      String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
-      if (!StringUtils.startsWithIgnoreCase(authorization, "bearer")) {
-        return null;
-      }
-
-      Matcher matcher = authorizationPattern.matcher(authorization);
-      if (!matcher.matches()) {
-        BearerTokenError error = BearerTokenErrors.invalidToken("Bearer token is malformed");
-        throw new OAuth2AuthenticationException(error);
-      }
-
-      return matcher.group("token");
-    };
-  }
-
-  @Bean
   JwtAuthenticationConverter jwtAuthenticationConverter() {
     JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
     authoritiesConverter.setAuthoritiesClaimName("roles");
@@ -133,11 +113,21 @@ public class WebSecurityConfig {
   }
 
   @Bean
+  CookieCsrfTokenRepository csrfTokenRepository() {
+    CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository
+        .withHttpOnlyFalse();
+    cookieCsrfTokenRepository.setCookiePath("/");
+    cookieCsrfTokenRepository.setHeaderName("X-XSRF-TOKEN");
+    return cookieCsrfTokenRepository;
+  }
+
+  @Bean
   CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(corsProps.getAllowedOrigins());
     configuration.setAllowedMethods(corsProps.getAllowedMethods());
     configuration.setAllowedHeaders(corsProps.getAllowedHeaders());
+    configuration.setAllowCredentials(corsProps.getAllowCredentials());
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);

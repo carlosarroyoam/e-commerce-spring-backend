@@ -3,21 +3,30 @@ package com.carlosarroyoam.ecommerce.auth;
 import com.carlosarroyoam.ecommerce.auth.dto.ForgotPasswordRequest;
 import com.carlosarroyoam.ecommerce.auth.dto.LoginRequest;
 import com.carlosarroyoam.ecommerce.auth.dto.LoginResponse;
-import com.carlosarroyoam.ecommerce.auth.dto.RefreshTokenRequest;
 import com.carlosarroyoam.ecommerce.auth.dto.RefreshTokenResponse;
 import com.carlosarroyoam.ecommerce.auth.dto.ResetPasswordRequest;
-import com.carlosarroyoam.ecommerce.auth.dto.RevokeTokenRequest;
 import com.carlosarroyoam.ecommerce.auth.entity.RefreshToken;
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
+import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class AuthService {
+  private static final Logger log = LoggerFactory.getLogger(AuthService.class);
   private final AuthenticationManager authenticationManager;
   private final StaffDetailsService staffDetailsService;
   private final CustomerDetailsService customerDetailsService;
@@ -57,10 +66,19 @@ public class AuthService {
         .build();
   }
 
-  public RefreshTokenResponse refreshToken(RefreshTokenRequest request) {
-    String[] refreshTokenParts = request.getRefreshToken().split("\\.");
-    UUID refreshTokenId = UUID.fromString(refreshTokenParts[0]);
-    String currentRefreshToken = refreshTokenParts[1];
+  public RefreshTokenResponse refreshToken(String refreshTokenCookie) {
+    List<String> refreshTokenParts = Optional.ofNullable(refreshTokenCookie)
+        .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
+        .orElse(Collections.emptyList());
+
+    if (refreshTokenParts.isEmpty()) {
+      log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
+          AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+    }
+
+    UUID refreshTokenId = UUID.fromString(refreshTokenParts.get(0));
+    String currentRefreshToken = refreshTokenParts.get(1);
 
     RefreshToken refreshTokenById = refreshTokenService.findById(refreshTokenId);
     AuthPrincipal principal = switch (refreshTokenById.getPrincipalType()) {
@@ -82,11 +100,15 @@ public class AuthService {
         .build();
   }
 
-  public void revoke(RevokeTokenRequest request) {
-    String[] refreshTokenParts = request.getRefreshToken().split("\\.");
-    UUID refreshTokenId = UUID.fromString(refreshTokenParts[0]);
+  public void revoke(String refreshTokenCookie) {
+    List<String> refreshTokenParts = Optional.ofNullable(refreshTokenCookie)
+        .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
+        .orElse(Collections.emptyList());
 
-    refreshTokenService.revoke(refreshTokenId);
+    if (!refreshTokenParts.isEmpty()) {
+      UUID refreshTokenId = UUID.fromString(refreshTokenParts.get(0));
+      refreshTokenService.revoke(refreshTokenId);
+    }
   }
 
   public void forgotPassword(ForgotPasswordRequest request) {
