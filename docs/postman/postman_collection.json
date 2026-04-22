@@ -16,7 +16,13 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  ""
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.status === \"OK\" && response) {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", response.access_token);\r",
+                  "} else {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", null);\r",
+                  "}"
                 ],
                 "type": "text/javascript",
                 "packages": {},
@@ -46,7 +52,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"carlos.arroyo@e-commerce.com\",\r\n\t\"password\": \"secret123\",\r\n    \"device_fingerprint\": \"{{deviceFingerprint}}\"\r\n}",
+              "raw": "{\r\n    \"email\": \"carlos.arroyo@e-commerce.com\",\r\n    \"password\": \"secret123\",\r\n    \"device_fingerprint\": \"{{deviceFingerprint}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -68,15 +74,23 @@
           "response": []
         },
         {
-          "name": "/auth/logout",
+          "name": "/auth/refresh-token",
           "event": [
             {
               "listen": "test",
               "script": {
                 "exec": [
-                  ""
+                  "const response = pm.response.json();\r",
+                  "\r",
+                  "if (pm.response.status === \"OK\" && response) {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", response.access_token);\r",
+                  "} else {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", null);\r",
+                  "}"
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             },
             {
@@ -85,7 +99,58 @@
                 "exec": [
                   ""
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/auth/refresh-token",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "auth",
+                "refresh-token"
+              ]
+            },
+            "description": "Authenticates a user"
+          },
+          "response": []
+        },
+        {
+          "name": "/auth/logout",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.status === \"No Content\") {\r",
+                  "    pm.collectionVariables.set(\"accessToken\", \"\");\r",
+                  "    pm.collectionVariables.set(\"xsrfToken\", \"\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  ""
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -106,57 +171,6 @@
               "path": [
                 "auth",
                 "logout"
-              ]
-            },
-            "description": "Authenticates a user"
-          },
-          "response": []
-        },
-        {
-          "name": "/auth/refresh-token",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript"
-              }
-            },
-            {
-              "listen": "prerequest",
-              "script": {
-                "exec": [
-                  ""
-                ],
-                "type": "text/javascript"
-              }
-            }
-          ],
-          "request": {
-            "auth": {
-              "type": "noauth"
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\r\n\t\"device_fingerprint\": \"{{deviceFingerprint}}\"\r\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "{{baseUrl}}/auth/refresh-token",
-              "host": [
-                "{{baseUrl}}"
-              ],
-              "path": [
-                "auth",
-                "refresh-token"
               ]
             },
             "description": "Authenticates a user"
@@ -383,7 +397,9 @@
                 "exec": [
                   ""
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],
@@ -2216,6 +2232,63 @@
           "response": []
         }
       ]
+    },
+    {
+      "name": "actuator",
+      "item": [
+        {
+          "name": "/actuator/health",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"isbn\": \"978-3-16-148410-0\",\r\n    \"title\": \"Special Operations in the Age of Chivalry\",\r\n    \"cover_url\": \"https://images.isbndb.com/covers/39/36/9781784703936.jpg\",\r\n    \"price\": 20.99,\r\n    \"published_at\": \"2021-12-01\",\r\n    \"is_available_online\": false\r\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/actuator/health",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "actuator",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ],
+      "auth": {
+        "type": "noauth"
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {},
+            "exec": [
+              ""
+            ]
+          }
+        }
+      ]
     }
   ],
   "auth": {
@@ -2223,7 +2296,7 @@
     "bearer": [
       {
         "key": "token",
-        "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsInVzZXJSb2xlIjoiQXBwL0FkbWluIiwiaWF0IjoxNjkwOTA1OTY2LCJleHAiOjE2OTA5MDYyNjYsImlzcyI6ImVjb21tZXJjZSJ9.PstWc5EtxElOWadQU9lckKfRbz4uAZFfVGZFpDGMoYg",
+        "value": "{{accessToken}}",
         "type": "string"
       }
     ]
@@ -2233,7 +2306,14 @@
       "listen": "prerequest",
       "script": {
         "type": "text/javascript",
+        "requests": {},
         "exec": [
+          "const xsrfToken = pm.collectionVariables.get('xsrfToken');\r",
+          "\r",
+          "pm.request.headers.upsert({\r",
+          "    key: 'X-XSRF-TOKEN',\r",
+          "    value: xsrfToken\r",
+          "});\r",
           ""
         ]
       }
@@ -2242,8 +2322,13 @@
       "listen": "test",
       "script": {
         "type": "text/javascript",
+        "requests": {},
         "exec": [
-          ""
+          "const xsrfToken = pm.cookies.get('XSRF-TOKEN');\r",
+          "\r",
+          "if (xsrfToken) {\r",
+          "    pm.collectionVariables.set(\"xsrfToken\", xsrfToken);\r",
+          "}"
         ]
       }
     }
@@ -2255,7 +2340,15 @@
     },
     {
       "key": "deviceFingerprint",
-      "value": "3dc9db4a-edf5-4d1f-84cf-b2c243bb682a"
+      "value": ""
+    },
+    {
+      "key": "accessToken",
+      "value": ""
+    },
+    {
+      "key": "xsrfToken",
+      "value": ""
     }
   ]
 }
