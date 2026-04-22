@@ -2,8 +2,6 @@ package com.carlosarroyoam.ecommerce.core.config;
 
 import com.carlosarroyoam.ecommerce.core.filter.CsrfCookieFilter;
 import com.carlosarroyoam.ecommerce.core.property.CorsProps;
-import com.carlosarroyoam.ecommerce.core.security.CustomAccessDeniedHandler;
-import com.carlosarroyoam.ecommerce.core.security.CustomAuthenticationEntryPoint;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,9 +21,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -35,28 +36,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
-  private final UserDetailsService staffDetailsService;
-  private final UserDetailsService customerDetailsService;
-  private final CorsProps corsProps;
-
-  public WebSecurityConfig(
-      UserDetailsService staffDetailsService,
-      UserDetailsService customerDetailsService,
-      CorsProps corsProps) {
-    this.staffDetailsService = staffDetailsService;
-    this.customerDetailsService = customerDetailsService;
-    this.corsProps = corsProps;
-  }
-
   @Bean
   SecurityFilterChain securityFilterChain(
       HttpSecurity http,
-      CookieCsrfTokenRepository csrfTokenRepository,
-      AuthenticationManager authenticationManager,
+      CsrfTokenRepository csrfTokenRepository,
       JwtDecoder jwtDecoder,
       JwtAuthenticationConverter jwtAuthenticationConverter,
-      CustomAuthenticationEntryPoint authenticationEntryPoint,
-      CustomAccessDeniedHandler accessDeniedHandler)
+      AuthenticationEntryPoint authenticationEntryPoint,
+      AccessDeniedHandler accessDeniedHandler)
       throws Exception {
     http.csrf(
             csrf ->
@@ -85,7 +72,9 @@ public class WebSecurityConfig {
 
     http.authorizeHttpRequests(
         auth ->
-            auth.requestMatchers("/auth/**", "/actuator/**")
+            auth.requestMatchers("/auth/**")
+                .permitAll()
+                .requestMatchers("/actuator/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated());
@@ -99,14 +88,14 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  AuthenticationProvider staffAuthenticationProvider() {
+  AuthenticationProvider staffAuthenticationProvider(UserDetailsService staffDetailsService) {
     DaoAuthenticationProvider provider = new DaoAuthenticationProvider(staffDetailsService);
     provider.setPasswordEncoder(passwordEncoder());
     return provider;
   }
 
   @Bean
-  AuthenticationProvider customerAuthenticationProvider() {
+  AuthenticationProvider customerAuthenticationProvider(UserDetailsService customerDetailsService) {
     DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customerDetailsService);
     provider.setPasswordEncoder(passwordEncoder());
     return provider;
@@ -138,7 +127,7 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  CorsConfigurationSource corsConfigurationSource() {
+  CorsConfigurationSource corsConfigurationSource(CorsProps corsProps) {
     CorsConfiguration configuration = new CorsConfiguration();
     configuration.setAllowedOrigins(corsProps.getAllowedOrigins());
     configuration.setAllowedMethods(corsProps.getAllowedMethods());
