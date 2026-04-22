@@ -5,33 +5,31 @@ import com.carlosarroyoam.ecommerce.auth.dto.LoginRequest;
 import com.carlosarroyoam.ecommerce.auth.dto.LoginResponse;
 import com.carlosarroyoam.ecommerce.auth.dto.RefreshTokenResponse;
 import com.carlosarroyoam.ecommerce.auth.dto.ResetPasswordRequest;
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
-import com.carlosarroyoam.ecommerce.core.util.CookieUtil;
+import com.carlosarroyoam.ecommerce.core.util.CookieUtils;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import java.time.Duration;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
   private static final String REFRESH_TOKEN_COOKIE_NAME = "refresh_token";
   private final AuthService authService;
-  private final CookieUtil cookieUtil;
+  private final CookieUtils cookieUtils;
   private final JwtProps jwtProps;
 
-  public AuthController(AuthService authService, CookieUtil cookieUtil, JwtProps jwtProps) {
+  public AuthController(AuthService authService, CookieUtils cookieUtils, JwtProps jwtProps) {
     this.authService = authService;
-    this.cookieUtil = cookieUtil;
+    this.cookieUtils = cookieUtils;
     this.jwtProps = jwtProps;
   }
 
@@ -40,45 +38,35 @@ public class AuthController {
       HttpServletResponse response) {
     LoginResponse loginResponse = authService.login(request);
 
-    response.addHeader(HttpHeaders.SET_COOKIE,
-        cookieUtil
-            .createCookie(REFRESH_TOKEN_COOKIE_NAME, loginResponse.getRefreshToken(),
-                Duration.ofMillis(jwtProps.getRefreshTokenTtlMs()))
-            .toString());
+    ResponseCookie refreshTokenCookie = cookieUtils.createCookie(REFRESH_TOKEN_COOKIE_NAME,
+        loginResponse.getRefreshToken(), Duration.ofMillis(jwtProps.getRefreshTokenTtlMs()));
 
+    response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
     return ResponseEntity.ok(loginResponse);
   }
 
   @PostMapping("/refresh-token")
   public ResponseEntity<RefreshTokenResponse> refreshToken(
-      @CookieValue(name = "refresh_token", required = false) String refreshTokenCookie,
+      @CookieValue(name = "refresh_token", required = false) String rawRefreshTokenCookie,
       HttpServletResponse response) {
+    RefreshTokenResponse refreshTokenResponse = authService.refreshToken(rawRefreshTokenCookie);
 
-    if (refreshTokenCookie == null) {
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-          AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
-    }
+    ResponseCookie refreshTokenCookie = cookieUtils.createCookie(REFRESH_TOKEN_COOKIE_NAME,
+        refreshTokenResponse.getRefreshToken(), Duration.ofMillis(jwtProps.getRefreshTokenTtlMs()));
 
-    RefreshTokenResponse refreshTokenResponse = authService.refreshToken(refreshTokenCookie);
-
-    response.addHeader(HttpHeaders.SET_COOKIE,
-        cookieUtil
-            .createCookie(REFRESH_TOKEN_COOKIE_NAME, refreshTokenResponse.getRefreshToken(),
-                Duration.ofMillis(jwtProps.getRefreshTokenTtlMs()))
-            .toString());
-
+    response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
     return ResponseEntity.ok(refreshTokenResponse);
   }
 
   @PostMapping("/logout")
   public ResponseEntity<Void> logout(
-      @CookieValue(name = "refresh_token", required = false) String refreshTokenCookie,
+      @CookieValue(name = "refresh_token", required = false) String rawRefreshTokenCookie,
       HttpServletResponse response) {
-    authService.revoke(refreshTokenCookie);
+    authService.revoke(rawRefreshTokenCookie);
 
-    response.addHeader(HttpHeaders.SET_COOKIE,
-        cookieUtil.deleteCookie(REFRESH_TOKEN_COOKIE_NAME).toString());
+    ResponseCookie deleteCookie = cookieUtils.deleteCookie(REFRESH_TOKEN_COOKIE_NAME);
 
+    response.addHeader(HttpHeaders.SET_COOKIE, deleteCookie.toString());
     return ResponseEntity.noContent().build();
   }
 

@@ -66,8 +66,8 @@ public class AuthService {
         .build();
   }
 
-  public RefreshTokenResponse refreshToken(String refreshTokenCookie) {
-    List<String> refreshTokenParts = Optional.ofNullable(refreshTokenCookie)
+  public RefreshTokenResponse refreshToken(String rawRefreshTokenCookie) {
+    List<String> refreshTokenParts = Optional.ofNullable(rawRefreshTokenCookie)
         .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
         .orElse(Collections.emptyList());
 
@@ -100,8 +100,8 @@ public class AuthService {
         .build();
   }
 
-  public void revoke(String refreshTokenCookie) {
-    List<String> refreshTokenParts = Optional.ofNullable(refreshTokenCookie)
+  public void revoke(String rawRefreshTokenCookie) {
+    List<String> refreshTokenParts = Optional.ofNullable(rawRefreshTokenCookie)
         .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
         .orElse(Collections.emptyList());
 

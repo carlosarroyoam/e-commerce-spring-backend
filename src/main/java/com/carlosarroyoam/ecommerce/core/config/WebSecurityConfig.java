@@ -4,7 +4,6 @@ import com.carlosarroyoam.ecommerce.core.filter.CsrfCookieFilter;
 import com.carlosarroyoam.ecommerce.core.property.CorsProps;
 import com.carlosarroyoam.ecommerce.core.security.CustomAccessDeniedHandler;
 import com.carlosarroyoam.ecommerce.core.security.CustomAuthenticationEntryPoint;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +50,8 @@ public class WebSecurityConfig {
   SecurityFilterChain securityFilterChain(HttpSecurity http,
       CookieCsrfTokenRepository csrfTokenRepository, AuthenticationManager authenticationManager,
       JwtDecoder jwtDecoder, JwtAuthenticationConverter jwtAuthenticationConverter,
-      ObjectMapper mapper) throws Exception {
+      CustomAuthenticationEntryPoint authenticationEntryPoint,
+      CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
     http.csrf(csrf -> csrf.csrfTokenRepository(csrfTokenRepository)
         .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
         .ignoringRequestMatchers("/auth/login"))
@@ -59,15 +59,18 @@ public class WebSecurityConfig {
         .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2ResourceServer(oauth2 -> oauth2.jwt(jwt -> {
-          jwt.decoder(jwtDecoder);
-          jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
-        }))
-        .exceptionHandling(ex -> {
-          ex.authenticationEntryPoint(new CustomAuthenticationEntryPoint(mapper));
-          ex.accessDeniedHandler(new CustomAccessDeniedHandler(mapper));
+        .oauth2ResourceServer(oauth2 -> {
+          oauth2.authenticationEntryPoint(authenticationEntryPoint);
+          oauth2.jwt(jwt -> {
+            jwt.decoder(jwtDecoder);
+            jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
+          });
         })
-        .addFilterBefore(new CsrfCookieFilter(), CsrfFilter.class);
+        .exceptionHandling(ex -> {
+          ex.authenticationEntryPoint(authenticationEntryPoint);
+          ex.accessDeniedHandler(accessDeniedHandler);
+        })
+        .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class);
 
     http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/actuator/**")
         .permitAll()
