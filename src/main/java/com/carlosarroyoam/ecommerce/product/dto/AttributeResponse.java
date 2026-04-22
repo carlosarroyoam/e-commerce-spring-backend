@@ -22,7 +22,9 @@ public class AttributeResponse {
   private String name;
   private LocalDateTime deletedAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface AttributeResponseMapper {
     AttributeResponseMapper INSTANCE = Mappers.getMapper(AttributeResponseMapper.class);
 

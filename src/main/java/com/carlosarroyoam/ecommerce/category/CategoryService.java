@@ -28,8 +28,8 @@ public class CategoryService {
   public PagedResponse<CategoryResponse> findAll(Pageable pageable) {
     Page<Category> categories = categoryRepository.findAll(pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(categories.map(CategoryResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        categories.map(CategoryResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -39,10 +39,13 @@ public class CategoryService {
   }
 
   private Category findCategoryByIdOrFail(Byte categoryId) {
-    return categoryRepository.findById(categoryId).orElseThrow(() -> {
-      log.warn(AppMessages.CATEGORY_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.CATEGORY_NOT_FOUND_EXCEPTION);
-    });
+    return categoryRepository
+        .findById(categoryId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.CATEGORY_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.CATEGORY_NOT_FOUND_EXCEPTION);
+            });
   }
 }

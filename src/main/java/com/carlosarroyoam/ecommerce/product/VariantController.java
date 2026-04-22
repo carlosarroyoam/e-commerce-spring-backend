@@ -24,8 +24,8 @@ public class VariantController {
   }
 
   @GetMapping(value = "/{variantId}", produces = "application/json")
-  public ResponseEntity<VariantResponse> findById(@PathVariable Long productId,
-      @PathVariable Long variantId) {
+  public ResponseEntity<VariantResponse> findById(
+      @PathVariable Long productId, @PathVariable Long variantId) {
     VariantResponse variantById = variantService.findById(productId, variantId);
     return ResponseEntity.ok(variantById);
   }

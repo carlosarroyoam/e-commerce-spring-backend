@@ -34,9 +34,14 @@ public class ProductResponse {
   private LocalDateTime updatedAt;
   private LocalDateTime deletedAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      CategoryResponseMapper.class, ProductPropertyValueResponseMapper.class,
-      VariantResponseMapper.class })
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE,
+      uses = {
+        CategoryResponseMapper.class,
+        ProductPropertyValueResponseMapper.class,
+        VariantResponseMapper.class
+      })
   public interface ProductResponseMapper {
     ProductResponseMapper INSTANCE = Mappers.getMapper(ProductResponseMapper.class);
 

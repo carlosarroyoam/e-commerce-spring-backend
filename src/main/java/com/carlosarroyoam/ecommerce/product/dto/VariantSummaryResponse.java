@@ -22,7 +22,9 @@ public class VariantSummaryResponse {
   private BigDecimal price;
   private BigDecimal comparedAtPrice;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface VariantSummaryResponseMapper {
     VariantSummaryResponseMapper INSTANCE = Mappers.getMapper(VariantSummaryResponseMapper.class);
 

@@ -16,14 +16,20 @@ public class RequestLoggingFilter extends OncePerRequestFilter {
   private static final Logger log = LoggerFactory.getLogger(RequestLoggingFilter.class);
 
   @Override
-  protected void doFilterInternal(@NonNull HttpServletRequest request,
-      @NonNull HttpServletResponse response, FilterChain filterChain)
+  protected void doFilterInternal(
+      @NonNull HttpServletRequest request,
+      @NonNull HttpServletResponse response,
+      FilterChain filterChain)
       throws ServletException, IOException {
     long startTime = System.currentTimeMillis();
     filterChain.doFilter(request, response);
     long duration = System.currentTimeMillis() - startTime;
 
-    log.info("{} {} {} - {} ms", request.getMethod(), request.getRequestURI(), response.getStatus(),
+    log.info(
+        "{} {} {} - {} ms",
+        request.getMethod(),
+        request.getRequestURI(),
+        response.getStatus(),
         duration);
   }
 }

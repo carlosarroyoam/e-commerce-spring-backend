@@ -18,7 +18,8 @@ public class CustomerAddressService {
   private final CustomerRepository customerRepository;
   private final CustomerAddressRepository customerAddressRepository;
 
-  public CustomerAddressService(final CustomerRepository customerRepository,
+  public CustomerAddressService(
+      final CustomerRepository customerRepository,
       final CustomerAddressRepository customerAddressRepository) {
     this.customerRepository = customerRepository;
     this.customerAddressRepository = customerAddressRepository;
@@ -45,17 +46,19 @@ public class CustomerAddressService {
   private void validateCustomerExists(Long customerId) {
     if (!customerRepository.existsById(customerId)) {
       log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
-      throw new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
+      throw new ResponseStatusException(
+          HttpStatus.NOT_FOUND, AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
     }
   }
 
   private CustomerAddress findCustomerAddressByIdOrFail(Long customerId, Long addressId) {
-    return customerAddressRepository.findByIdAndCustomerId(addressId, customerId)
-        .orElseThrow(() -> {
-          log.warn(AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
-          return new ResponseStatusException(HttpStatus.NOT_FOUND,
-              AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
-        });
+    return customerAddressRepository
+        .findByIdAndCustomerId(addressId, customerId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
+            });
   }
 }

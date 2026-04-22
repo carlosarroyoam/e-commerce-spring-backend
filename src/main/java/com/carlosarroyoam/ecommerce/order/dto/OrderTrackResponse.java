@@ -29,8 +29,10 @@ public class OrderTrackResponse {
   private List<OrderStatusHistoryResponse> statusHistory;
   private LocalDateTime createdAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      ShipmentResponseMapper.class, OrderStatusHistoryResponseMapper.class })
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE,
+      uses = {ShipmentResponseMapper.class, OrderStatusHistoryResponseMapper.class})
   public interface OrderTrackResponseMapper {
     OrderTrackResponseMapper INSTANCE = Mappers.getMapper(OrderTrackResponseMapper.class);
 

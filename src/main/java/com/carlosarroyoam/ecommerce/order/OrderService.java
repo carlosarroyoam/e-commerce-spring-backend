@@ -36,19 +36,22 @@ public class OrderService {
 
   @Transactional(readOnly = true)
   public PagedResponse<OrderResponse> findAll(OrderSpecs orderSpecs, Pageable pageable) {
-    Specification<Order> spec = SpecificationBuilder.<Order>builder()
-        .likeIfPresent(root -> root.get(Order_.orderNumber), orderSpecs.getOrderNumber())
-        .equalsIfPresent(root -> root.join(Order_.customer).get(Customer_.id),
-            orderSpecs.getCustomerId())
-        .equalsIfPresent(root -> root.get(Order_.status), orderSpecs.getStatus())
-        .betweenDatesIfPresent(root -> root.get(Order_.createdAt), orderSpecs.getStartDate(),
-            orderSpecs.getEndDate())
-        .build();
+    Specification<Order> spec =
+        SpecificationBuilder.<Order>builder()
+            .likeIfPresent(root -> root.get(Order_.orderNumber), orderSpecs.getOrderNumber())
+            .equalsIfPresent(
+                root -> root.join(Order_.customer).get(Customer_.id), orderSpecs.getCustomerId())
+            .equalsIfPresent(root -> root.get(Order_.status), orderSpecs.getStatus())
+            .betweenDatesIfPresent(
+                root -> root.get(Order_.createdAt),
+                orderSpecs.getStartDate(),
+                orderSpecs.getEndDate())
+            .build();
 
     Page<Order> orders = orderRepository.findAll(spec, pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(orders.map(OrderResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        orders.map(OrderResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -59,11 +62,15 @@ public class OrderService {
 
   @Transactional(readOnly = true)
   public OrderTrackResponse findByOrderNumber(String orderNumber) {
-    Order orderByOrderNumber = orderRepository.findByOrderNumber(orderNumber).orElseThrow(() -> {
-      log.warn(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-    });
+    Order orderByOrderNumber =
+        orderRepository
+            .findByOrderNumber(orderNumber)
+            .orElseThrow(
+                () -> {
+                  log.warn(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
+                  return new ResponseStatusException(
+                      HttpStatus.NOT_FOUND, AppMessages.ORDER_NOT_FOUND_EXCEPTION);
+                });
 
     return OrderTrackResponseMapper.INSTANCE.toDto(orderByOrderNumber);
   }
@@ -74,31 +81,37 @@ public class OrderService {
 
     if (!canBeCancelled(orderById.getStatus())) {
       log.warn(AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
-      throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,
-          AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
+      throw new ResponseStatusException(
+          HttpStatus.UNPROCESSABLE_ENTITY, AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
     }
 
     orderById.setStatus(OrderStatus.CANCELLED);
     orderById.setUpdatedAt(LocalDateTime.now());
-    orderById.getStatusHistory()
-        .add(OrderStatusHistory.builder()
-            .order(orderById)
-            .notes("Order cancelled")
-            .changedAt(LocalDateTime.now())
-            .build());
+    orderById
+        .getStatusHistory()
+        .add(
+            OrderStatusHistory.builder()
+                .order(orderById)
+                .notes("Order cancelled")
+                .changedAt(LocalDateTime.now())
+                .build());
     orderRepository.save(orderById);
   }
 
   private boolean canBeCancelled(OrderStatus orderStatus) {
-    return orderStatus == OrderStatus.PENDING || orderStatus == OrderStatus.CONFIRMED
+    return orderStatus == OrderStatus.PENDING
+        || orderStatus == OrderStatus.CONFIRMED
         || orderStatus == OrderStatus.PROCESSING;
   }
 
   private Order findOrderByIdOrFail(Long orderId) {
-    return orderRepository.findById(orderId).orElseThrow(() -> {
-      log.warn(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-    });
+    return orderRepository
+        .findById(orderId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.ORDER_NOT_FOUND_EXCEPTION);
+            });
   }
 }

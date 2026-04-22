@@ -1,5 +1,3 @@
 package com.carlosarroyoam.ecommerce.auth.dto;
 
-public class ForgotPasswordRequest {
-
-}
+public class ForgotPasswordRequest {}

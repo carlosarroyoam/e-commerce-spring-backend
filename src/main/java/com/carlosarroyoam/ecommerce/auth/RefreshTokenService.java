@@ -21,7 +21,9 @@ public class RefreshTokenService {
   private final RefreshTokenRepository refreshTokenRepository;
   private final JwtProps jwtProps;
 
-  public RefreshTokenService(PasswordEncoder passwordEncoder, JwtProps jwtProps,
+  public RefreshTokenService(
+      PasswordEncoder passwordEncoder,
+      JwtProps jwtProps,
       RefreshTokenRepository refreshTokenRepository) {
     this.passwordEncoder = passwordEncoder;
     this.jwtProps = jwtProps;
@@ -35,17 +37,19 @@ public class RefreshTokenService {
   public RefreshToken save(AuthPrincipal principal, String fingerprint, String newRefreshToken) {
     LocalDateTime now = LocalDateTime.now();
 
-    RefreshToken refreshTokenById = refreshTokenRepository
-        .findByFingerprintAndPrincipalType(fingerprint, principal.getPrincipalType())
-        .orElse(RefreshToken.builder()
-            .fingerprint(fingerprint)
-            .token(passwordEncoder.encode(newRefreshToken))
-            .principalId(principal.getId())
-            .principalType(principal.getPrincipalType())
-            .expiresOn(now.plus(jwtProps.getRefreshTokenTtlMs(), ChronoUnit.MILLIS))
-            .createdAt(now)
-            .updatedAt(now)
-            .build());
+    RefreshToken refreshTokenById =
+        refreshTokenRepository
+            .findByFingerprintAndPrincipalType(fingerprint, principal.getPrincipalType())
+            .orElse(
+                RefreshToken.builder()
+                    .fingerprint(fingerprint)
+                    .token(passwordEncoder.encode(newRefreshToken))
+                    .principalId(principal.getId())
+                    .principalType(principal.getPrincipalType())
+                    .expiresOn(now.plus(jwtProps.getRefreshTokenTtlMs(), ChronoUnit.MILLIS))
+                    .createdAt(now)
+                    .updatedAt(now)
+                    .build());
 
     refreshTokenById.setToken(passwordEncoder.encode(newRefreshToken));
     refreshTokenById.setExpiresOn(now.plus(jwtProps.getRefreshTokenTtlMs(), ChronoUnit.MILLIS));
@@ -55,8 +59,8 @@ public class RefreshTokenService {
     return refreshTokenRepository.save(refreshTokenById);
   }
 
-  public RefreshToken rotate(UUID refreshTokenId, String currentRefreshToken,
-      String newRefreshToken) {
+  public RefreshToken rotate(
+      UUID refreshTokenId, String currentRefreshToken, String newRefreshToken) {
     LocalDateTime now = LocalDateTime.now();
     RefreshToken refreshTokenById = findRefreshTokenByIdOrFail(refreshTokenId);
 
@@ -77,16 +81,19 @@ public class RefreshTokenService {
     if (LocalDateTime.now().isAfter(refreshToken.getExpiresOn())
         || !passwordEncoder.matches(currentRefreshToken, refreshToken.getToken())) {
       log.warn(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-          AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+      throw new ResponseStatusException(
+          HttpStatus.UNAUTHORIZED, AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
     }
   }
 
   private RefreshToken findRefreshTokenByIdOrFail(UUID refreshTokenId) {
-    return refreshTokenRepository.findById(refreshTokenId).orElseThrow(() -> {
-      log.warn(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
-      return new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-          AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
-    });
+    return refreshTokenRepository
+        .findById(refreshTokenId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+              return new ResponseStatusException(
+                  HttpStatus.UNAUTHORIZED, AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+            });
   }
 }

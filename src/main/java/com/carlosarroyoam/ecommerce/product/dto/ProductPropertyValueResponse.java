@@ -21,11 +21,13 @@ public class ProductPropertyValueResponse {
   private String value;
   private PropertyResponse property;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      PropertyResponseMapper.class })
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE,
+      uses = {PropertyResponseMapper.class})
   public interface ProductPropertyValueResponseMapper {
-    ProductPropertyValueResponseMapper INSTANCE = Mappers
-        .getMapper(ProductPropertyValueResponseMapper.class);
+    ProductPropertyValueResponseMapper INSTANCE =
+        Mappers.getMapper(ProductPropertyValueResponseMapper.class);
 
     ProductPropertyValueResponse toDto(ProductPropertyValue entity);
 

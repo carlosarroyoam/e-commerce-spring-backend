@@ -26,8 +26,10 @@ public class VariantResponse {
   private List<VariantAttributeValueResponse> attributes;
   private List<VariantImageResponse> images;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      VariantAttributeValueResponseMapper.class, VariantImageResponseMapper.class })
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE,
+      uses = {VariantAttributeValueResponseMapper.class, VariantImageResponseMapper.class})
   public interface VariantResponseMapper {
     VariantResponseMapper INSTANCE = Mappers.getMapper(VariantResponseMapper.class);
 

@@ -28,8 +28,8 @@ public class PropertyService {
   public PagedResponse<PropertyResponse> findAll(Pageable pageable) {
     Page<Property> properties = propertyRepository.findAll(pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(properties.map(PropertyResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        properties.map(PropertyResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -39,10 +39,13 @@ public class PropertyService {
   }
 
   private Property findPropertyByIdOrFail(Long propertyId) {
-    return propertyRepository.findById(propertyId).orElseThrow(() -> {
-      log.warn(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
-    });
+    return propertyRepository
+        .findById(propertyId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
+            });
   }
 }

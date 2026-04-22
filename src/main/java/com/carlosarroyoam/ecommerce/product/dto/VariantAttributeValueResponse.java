@@ -21,11 +21,13 @@ public class VariantAttributeValueResponse {
   private String value;
   private AttributeResponse attribute;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      AttributeResponseMapper.class })
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE,
+      uses = {AttributeResponseMapper.class})
   public interface VariantAttributeValueResponseMapper {
-    VariantAttributeValueResponseMapper INSTANCE = Mappers
-        .getMapper(VariantAttributeValueResponseMapper.class);
+    VariantAttributeValueResponseMapper INSTANCE =
+        Mappers.getMapper(VariantAttributeValueResponseMapper.class);
 
     VariantAttributeValueResponse toDto(VariantAttributeValue entity);
 

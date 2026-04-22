@@ -30,7 +30,9 @@ public class CustomerAddressResponse {
   private Boolean isDefault;
   private Long customerId;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface CustomerAddressResponseMapper {
     CustomerAddressResponseMapper INSTANCE = Mappers.getMapper(CustomerAddressResponseMapper.class);
 

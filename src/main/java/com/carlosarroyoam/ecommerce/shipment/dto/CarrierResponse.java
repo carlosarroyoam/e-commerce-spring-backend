@@ -21,7 +21,9 @@ public class CarrierResponse {
   private String name;
   private LocalDateTime deletedAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface CarrierResponseMapper {
     CarrierResponseMapper INSTANCE = Mappers.getMapper(CarrierResponseMapper.class);
 

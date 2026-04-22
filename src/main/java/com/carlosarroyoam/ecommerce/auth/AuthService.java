@@ -33,9 +33,12 @@ public class AuthService {
   private final RefreshTokenService refreshTokenService;
   private final TokenService tokenService;
 
-  public AuthService(AuthenticationManager authenticationManager,
-      StaffDetailsService staffDetailsService, CustomerDetailsService customerDetailsService,
-      RefreshTokenService refreshTokenService, TokenService tokenService) {
+  public AuthService(
+      AuthenticationManager authenticationManager,
+      StaffDetailsService staffDetailsService,
+      CustomerDetailsService customerDetailsService,
+      RefreshTokenService refreshTokenService,
+      TokenService tokenService) {
     this.authenticationManager = authenticationManager;
     this.staffDetailsService = staffDetailsService;
     this.customerDetailsService = customerDetailsService;
@@ -44,15 +47,16 @@ public class AuthService {
   }
 
   public LoginResponse login(LoginRequest request) {
-    Authentication auth = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+    Authentication auth =
+        authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
     AuthPrincipal principal = (AuthPrincipal) auth.getPrincipal();
 
     String accessToken = tokenService.generateAccessToken(principal);
     String refreshToken = tokenService.generateRefreshToken();
 
-    RefreshToken createdRefreshToken = refreshTokenService.save(principal,
-        request.getDeviceFingerprint(), refreshToken);
+    RefreshToken createdRefreshToken =
+        refreshTokenService.save(principal, request.getDeviceFingerprint(), refreshToken);
 
     return LoginResponse.builder()
         .id(principal.getId())
@@ -67,32 +71,35 @@ public class AuthService {
   }
 
   public RefreshTokenResponse refreshToken(String rawRefreshTokenCookie) {
-    List<String> refreshTokenParts = Optional.ofNullable(rawRefreshTokenCookie)
-        .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
-        .orElse(Collections.emptyList());
+    List<String> refreshTokenParts =
+        Optional.ofNullable(rawRefreshTokenCookie)
+            .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
+            .orElse(Collections.emptyList());
 
     if (refreshTokenParts.isEmpty()) {
       log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
-      throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,
-          AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+      throw new ResponseStatusException(
+          HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
     }
 
     UUID refreshTokenId = UUID.fromString(refreshTokenParts.get(0));
     String currentRefreshToken = refreshTokenParts.get(1);
 
     RefreshToken refreshTokenById = refreshTokenService.findById(refreshTokenId);
-    AuthPrincipal principal = switch (refreshTokenById.getPrincipalType()) {
-    case STAFF -> (AuthPrincipal) staffDetailsService
-        .loadUserById(refreshTokenById.getPrincipalId());
-    case CUSTOMER -> (AuthPrincipal) customerDetailsService
-        .loadUserById(refreshTokenById.getPrincipalId());
-    };
+    AuthPrincipal principal =
+        switch (refreshTokenById.getPrincipalType()) {
+          case STAFF ->
+              (AuthPrincipal) staffDetailsService.loadUserById(refreshTokenById.getPrincipalId());
+          case CUSTOMER ->
+              (AuthPrincipal)
+                  customerDetailsService.loadUserById(refreshTokenById.getPrincipalId());
+        };
 
     String accessToken = tokenService.generateAccessToken(principal);
     String refreshToken = tokenService.generateRefreshToken();
 
-    RefreshToken createdRefreshToken = refreshTokenService.rotate(refreshTokenId,
-        currentRefreshToken, refreshToken);
+    RefreshToken createdRefreshToken =
+        refreshTokenService.rotate(refreshTokenId, currentRefreshToken, refreshToken);
 
     return RefreshTokenResponse.builder()
         .accessToken(accessToken)
@@ -101,9 +108,10 @@ public class AuthService {
   }
 
   public void revoke(String rawRefreshTokenCookie) {
-    List<String> refreshTokenParts = Optional.ofNullable(rawRefreshTokenCookie)
-        .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
-        .orElse(Collections.emptyList());
+    List<String> refreshTokenParts =
+        Optional.ofNullable(rawRefreshTokenCookie)
+            .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
+            .orElse(Collections.emptyList());
 
     if (!refreshTokenParts.isEmpty()) {
       UUID refreshTokenId = UUID.fromString(refreshTokenParts.get(0));
@@ -111,9 +119,7 @@ public class AuthService {
     }
   }
 
-  public void forgotPassword(ForgotPasswordRequest request) {
-  }
+  public void forgotPassword(ForgotPasswordRequest request) {}
 
-  public void resetPassword(ResetPasswordRequest request) {
-  }
+  public void resetPassword(ResetPasswordRequest request) {}
 }

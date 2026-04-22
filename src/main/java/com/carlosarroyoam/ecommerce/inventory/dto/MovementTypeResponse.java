@@ -19,7 +19,9 @@ public class MovementTypeResponse {
   private Byte id;
   private String title;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface MovementTypeResponseMapper {
     MovementTypeResponseMapper INSTANCE = Mappers.getMapper(MovementTypeResponseMapper.class);
 

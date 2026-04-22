@@ -28,8 +28,8 @@ public class AttributeService {
   public PagedResponse<AttributeResponse> findAll(Pageable pageable) {
     Page<Attribute> attributes = attributeRepository.findAll(pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(attributes.map(AttributeResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        attributes.map(AttributeResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -39,10 +39,13 @@ public class AttributeService {
   }
 
   private Attribute findAttributeByIdOrFail(Long attributeId) {
-    return attributeRepository.findById(attributeId).orElseThrow(() -> {
-      log.warn(AppMessages.ATTRIBUTE_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.ATTRIBUTE_NOT_FOUND_EXCEPTION);
-    });
+    return attributeRepository
+        .findById(attributeId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.ATTRIBUTE_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.ATTRIBUTE_NOT_FOUND_EXCEPTION);
+            });
   }
 }

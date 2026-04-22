@@ -29,19 +29,22 @@ public class PaymentService {
 
   @Transactional(readOnly = true)
   public PagedResponse<PaymentResponse> findAll(PaymentSpecs paymentSpecs, Pageable pageable) {
-    Specification<Payment> spec = SpecificationBuilder.<Payment>builder()
-        .equalsIfPresent(root -> root.join("order").get("id"), paymentSpecs.getOrderId())
-        .likeIfPresent(root -> root.get("reference"), paymentSpecs.getReference())
-        .equalsIfPresent(root -> root.get("method"), paymentSpecs.getMethod())
-        .equalsIfPresent(root -> root.get("status"), paymentSpecs.getStatus())
-        .betweenDatesIfPresent(root -> root.get("createdAt"), paymentSpecs.getStartDate(),
-            paymentSpecs.getEndDate())
-        .build();
+    Specification<Payment> spec =
+        SpecificationBuilder.<Payment>builder()
+            .equalsIfPresent(root -> root.join("order").get("id"), paymentSpecs.getOrderId())
+            .likeIfPresent(root -> root.get("reference"), paymentSpecs.getReference())
+            .equalsIfPresent(root -> root.get("method"), paymentSpecs.getMethod())
+            .equalsIfPresent(root -> root.get("status"), paymentSpecs.getStatus())
+            .betweenDatesIfPresent(
+                root -> root.get("createdAt"),
+                paymentSpecs.getStartDate(),
+                paymentSpecs.getEndDate())
+            .build();
 
     Page<Payment> payments = paymentRepository.findAll(spec, pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(payments.map(PaymentResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        payments.map(PaymentResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -51,10 +54,13 @@ public class PaymentService {
   }
 
   private Payment findPaymentByIdOrFail(Long paymentId) {
-    return paymentRepository.findById(paymentId).orElseThrow(() -> {
-      log.warn(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
-    });
+    return paymentRepository
+        .findById(paymentId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
+            });
   }
 }

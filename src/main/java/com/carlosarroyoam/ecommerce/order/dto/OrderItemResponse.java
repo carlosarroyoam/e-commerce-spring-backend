@@ -30,8 +30,10 @@ public class OrderItemResponse {
   private VariantSummaryResponse variant;
   private Long orderId;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      ProductSummaryResponseMapper.class, VariantSummaryResponseMapper.class })
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE,
+      uses = {ProductSummaryResponseMapper.class, VariantSummaryResponseMapper.class})
   public interface OrderItemResponseMapper {
     OrderItemResponseMapper INSTANCE = Mappers.getMapper(OrderItemResponseMapper.class);
 

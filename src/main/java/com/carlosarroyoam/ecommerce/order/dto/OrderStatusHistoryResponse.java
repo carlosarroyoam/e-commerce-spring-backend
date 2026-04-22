@@ -21,10 +21,12 @@ public class OrderStatusHistoryResponse {
   private String notes;
   private LocalDateTime changedAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface OrderStatusHistoryResponseMapper {
-    OrderStatusHistoryResponseMapper INSTANCE = Mappers
-        .getMapper(OrderStatusHistoryResponseMapper.class);
+    OrderStatusHistoryResponseMapper INSTANCE =
+        Mappers.getMapper(OrderStatusHistoryResponseMapper.class);
 
     OrderStatusHistoryResponse toDto(OrderStatusHistory entity);
 

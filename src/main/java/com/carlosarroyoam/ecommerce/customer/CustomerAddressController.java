@@ -20,16 +20,16 @@ public class CustomerAddressController {
   @GetMapping(produces = "application/json")
   public ResponseEntity<List<CustomerAddressResponse>> findAllByCustomerId(
       @PathVariable Long customerId) {
-    List<CustomerAddressResponse> customerAddresses = customerAddressService
-        .findAllByCustomerId(customerId);
+    List<CustomerAddressResponse> customerAddresses =
+        customerAddressService.findAllByCustomerId(customerId);
     return ResponseEntity.ok(customerAddresses);
   }
 
   @GetMapping(value = "/{addressId}", produces = "application/json")
-  public ResponseEntity<CustomerAddressResponse> findById(@PathVariable Long customerId,
-      @PathVariable Long addressId) {
-    CustomerAddressResponse customerAddressById = customerAddressService.findById(customerId,
-        addressId);
+  public ResponseEntity<CustomerAddressResponse> findById(
+      @PathVariable Long customerId, @PathVariable Long addressId) {
+    CustomerAddressResponse customerAddressById =
+        customerAddressService.findById(customerId, addressId);
     return ResponseEntity.ok(customerAddressById);
   }
 }

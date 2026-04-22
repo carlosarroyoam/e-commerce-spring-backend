@@ -24,14 +24,16 @@ public class StaffDetailsService implements UserDetailsService {
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return userRepository.findByEmail(email)
+    return userRepository
+        .findByEmail(email)
         .map(this::mapStaff)
         .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
   }
 
   @Transactional(readOnly = true)
   public UserDetails loadUserById(Long userId) throws UsernameNotFoundException {
-    return userRepository.findById(userId)
+    return userRepository
+        .findById(userId)
         .map(this::mapStaff)
         .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userId));
   }

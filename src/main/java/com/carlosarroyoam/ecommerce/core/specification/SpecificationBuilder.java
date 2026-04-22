@@ -29,8 +29,9 @@ public class SpecificationBuilder<T> {
 
   public SpecificationBuilder<T> likeIfPresent(Function<Root<T>, Path<String>> path, String value) {
     if (value != null && !value.isBlank()) {
-      specs.add((root, query, cb) -> cb.like(cb.lower(path.apply(root)),
-          "%" + value.toLowerCase() + "%"));
+      specs.add(
+          (root, query, cb) ->
+              cb.like(cb.lower(path.apply(root)), "%" + value.toLowerCase() + "%"));
     }
     return this;
   }
@@ -47,16 +48,16 @@ public class SpecificationBuilder<T> {
     return this;
   }
 
-  public SpecificationBuilder<T> betweenDatesIfPresent(Function<Root<T>, Path<LocalDateTime>> path,
-      LocalDate start, LocalDate end) {
+  public SpecificationBuilder<T> betweenDatesIfPresent(
+      Function<Root<T>, Path<LocalDateTime>> path, LocalDate start, LocalDate end) {
     if (start != null) {
       specs.add(
           (root, query, cb) -> cb.greaterThanOrEqualTo(path.apply(root), start.atStartOfDay()));
     }
 
     if (end != null) {
-      specs
-          .add((root, query, cb) -> cb.lessThanOrEqualTo(path.apply(root), end.atTime(23, 59, 59)));
+      specs.add(
+          (root, query, cb) -> cb.lessThanOrEqualTo(path.apply(root), end.atTime(23, 59, 59)));
     }
 
     return this;
@@ -69,8 +70,8 @@ public class SpecificationBuilder<T> {
     return this;
   }
 
-  public <Y> SpecificationBuilder<T> isNullIfPresent(Function<Root<T>, Path<Y>> path,
-      Boolean isNull) {
+  public <Y> SpecificationBuilder<T> isNullIfPresent(
+      Function<Root<T>, Path<Y>> path, Boolean isNull) {
     if (isNull != null) {
       if (isNull) {
         specs.add((root, query, cb) -> cb.isNull(path.apply(root)));

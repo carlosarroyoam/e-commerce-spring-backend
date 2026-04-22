@@ -20,7 +20,9 @@ public class RoleResponse {
   private String name;
   private String description;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface RoleResponseMapper {
     RoleResponseMapper INSTANCE = Mappers.getMapper(RoleResponseMapper.class);
 

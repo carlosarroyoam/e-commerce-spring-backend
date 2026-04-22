@@ -27,8 +27,10 @@ public class RefundResponse {
   private Long orderId;
   private LocalDateTime createdAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      RefundItemResponseMapper.class })
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE,
+      uses = {RefundItemResponseMapper.class})
   public interface RefundResponseMapper {
     RefundResponseMapper INSTANCE = Mappers.getMapper(RefundResponseMapper.class);
 

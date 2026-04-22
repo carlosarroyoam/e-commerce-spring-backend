@@ -24,11 +24,13 @@ public class InventoryMovementResponse {
   private VariantResponse variant;
   private MovementResponse movement;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      VariantResponseMapper.class, MovementResponseMapper.class })
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE,
+      uses = {VariantResponseMapper.class, MovementResponseMapper.class})
   public interface InventoryMovementResponseMapper {
-    InventoryMovementResponseMapper INSTANCE = Mappers
-        .getMapper(InventoryMovementResponseMapper.class);
+    InventoryMovementResponseMapper INSTANCE =
+        Mappers.getMapper(InventoryMovementResponseMapper.class);
 
     InventoryMovementResponse toDto(InventoryMovement entity);
 

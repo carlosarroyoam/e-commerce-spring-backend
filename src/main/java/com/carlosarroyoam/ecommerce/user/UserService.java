@@ -32,21 +32,23 @@ public class UserService {
 
   @Transactional(readOnly = true)
   public PagedResponse<UserResponse> findAll(UserSpecs userSpecs, Pageable pageable) {
-    Specification<User> spec = SpecificationBuilder.<User>builder()
-        .likeIfPresent(root -> root.get(User_.firstName), userSpecs.getFirstName())
-        .likeIfPresent(root -> root.get(User_.lastName), userSpecs.getLastName())
-        .likeIfPresent(root -> root.get(User_.email), userSpecs.getEmail())
-        .equalsIfPresent(root -> root.get(User_.status), userSpecs.getStatus())
-        .betweenDatesIfPresent(root -> root.get(User_.createdAt), userSpecs.getStartDate(),
-            userSpecs.getEndDate())
-        .inIfPresent(root -> root.join(User_.roles, JoinType.INNER).get(Role_.id),
-            userSpecs.getRoleIds())
-        .build();
+    Specification<User> spec =
+        SpecificationBuilder.<User>builder()
+            .likeIfPresent(root -> root.get(User_.firstName), userSpecs.getFirstName())
+            .likeIfPresent(root -> root.get(User_.lastName), userSpecs.getLastName())
+            .likeIfPresent(root -> root.get(User_.email), userSpecs.getEmail())
+            .equalsIfPresent(root -> root.get(User_.status), userSpecs.getStatus())
+            .betweenDatesIfPresent(
+                root -> root.get(User_.createdAt), userSpecs.getStartDate(), userSpecs.getEndDate())
+            .inIfPresent(
+                root -> root.join(User_.roles, JoinType.INNER).get(Role_.id),
+                userSpecs.getRoleIds())
+            .build();
 
     Page<User> users = userRepository.findAll(spec, pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(users.map(UserResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        users.map(UserResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -56,10 +58,13 @@ public class UserService {
   }
 
   private User findUserByIdOrFail(Long userId) {
-    return userRepository.findById(userId).orElseThrow(() -> {
-      log.warn(AppMessages.USER_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.USER_NOT_FOUND_EXCEPTION);
-    });
+    return userRepository
+        .findById(userId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.USER_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.USER_NOT_FOUND_EXCEPTION);
+            });
   }
 }

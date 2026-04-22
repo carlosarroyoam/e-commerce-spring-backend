@@ -22,14 +22,16 @@ public class CustomerDetailsService implements UserDetailsService {
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    return customerRepository.findByEmail(email)
+    return customerRepository
+        .findByEmail(email)
         .map(this::mapCustomer)
         .orElseThrow(() -> new UsernameNotFoundException("Customer not found: " + email));
   }
 
   @Transactional(readOnly = true)
   public UserDetails loadUserById(Long customerId) throws UsernameNotFoundException {
-    return customerRepository.findById(customerId)
+    return customerRepository
+        .findById(customerId)
         .map(this::mapCustomer)
         .orElseThrow(() -> new UsernameNotFoundException("Customer not found: " + customerId));
   }

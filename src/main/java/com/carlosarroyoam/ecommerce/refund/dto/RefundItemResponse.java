@@ -26,8 +26,10 @@ public class RefundItemResponse {
   private OrderItemResponse orderItem;
   private Long refundId;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {
-      OrderItemResponseMapper.class })
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE,
+      uses = {OrderItemResponseMapper.class})
   public interface RefundItemResponseMapper {
     RefundItemResponseMapper INSTANCE = Mappers.getMapper(RefundItemResponseMapper.class);
 

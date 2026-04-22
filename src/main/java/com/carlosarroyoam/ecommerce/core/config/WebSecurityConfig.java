@@ -39,43 +39,56 @@ public class WebSecurityConfig {
   private final UserDetailsService customerDetailsService;
   private final CorsProps corsProps;
 
-  public WebSecurityConfig(UserDetailsService staffDetailsService,
-      UserDetailsService customerDetailsService, CorsProps corsProps) {
+  public WebSecurityConfig(
+      UserDetailsService staffDetailsService,
+      UserDetailsService customerDetailsService,
+      CorsProps corsProps) {
     this.staffDetailsService = staffDetailsService;
     this.customerDetailsService = customerDetailsService;
     this.corsProps = corsProps;
   }
 
   @Bean
-  SecurityFilterChain securityFilterChain(HttpSecurity http,
-      CookieCsrfTokenRepository csrfTokenRepository, AuthenticationManager authenticationManager,
-      JwtDecoder jwtDecoder, JwtAuthenticationConverter jwtAuthenticationConverter,
+  SecurityFilterChain securityFilterChain(
+      HttpSecurity http,
+      CookieCsrfTokenRepository csrfTokenRepository,
+      AuthenticationManager authenticationManager,
+      JwtDecoder jwtDecoder,
+      JwtAuthenticationConverter jwtAuthenticationConverter,
       CustomAuthenticationEntryPoint authenticationEntryPoint,
-      CustomAccessDeniedHandler accessDeniedHandler) throws Exception {
-    http.csrf(csrf -> csrf.csrfTokenRepository(csrfTokenRepository)
-        .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-        .ignoringRequestMatchers("/auth/login"))
+      CustomAccessDeniedHandler accessDeniedHandler)
+      throws Exception {
+    http.csrf(
+            csrf ->
+                csrf.csrfTokenRepository(csrfTokenRepository)
+                    .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                    .ignoringRequestMatchers("/auth/login"))
         .cors(Customizer.withDefaults())
         .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2ResourceServer(oauth2 -> {
-          oauth2.authenticationEntryPoint(authenticationEntryPoint);
-          oauth2.jwt(jwt -> {
-            jwt.decoder(jwtDecoder);
-            jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
-          });
-        })
-        .exceptionHandling(ex -> {
-          ex.authenticationEntryPoint(authenticationEntryPoint);
-          ex.accessDeniedHandler(accessDeniedHandler);
-        })
+        .oauth2ResourceServer(
+            oauth2 -> {
+              oauth2.authenticationEntryPoint(authenticationEntryPoint);
+              oauth2.jwt(
+                  jwt -> {
+                    jwt.decoder(jwtDecoder);
+                    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
+                  });
+            })
+        .exceptionHandling(
+            ex -> {
+              ex.authenticationEntryPoint(authenticationEntryPoint);
+              ex.accessDeniedHandler(accessDeniedHandler);
+            })
         .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class);
 
-    http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**", "/actuator/**")
-        .permitAll()
-        .anyRequest()
-        .authenticated());
+    http.authorizeHttpRequests(
+        auth ->
+            auth.requestMatchers("/auth/**", "/actuator/**")
+                .permitAll()
+                .anyRequest()
+                .authenticated());
 
     return http.build();
   }
@@ -117,8 +130,8 @@ public class WebSecurityConfig {
 
   @Bean
   CookieCsrfTokenRepository csrfTokenRepository() {
-    CookieCsrfTokenRepository cookieCsrfTokenRepository = CookieCsrfTokenRepository
-        .withHttpOnlyFalse();
+    CookieCsrfTokenRepository cookieCsrfTokenRepository =
+        CookieCsrfTokenRepository.withHttpOnlyFalse();
     cookieCsrfTokenRepository.setCookiePath("/");
     cookieCsrfTokenRepository.setHeaderName("X-XSRF-TOKEN");
     return cookieCsrfTokenRepository;

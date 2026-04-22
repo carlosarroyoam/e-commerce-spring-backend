@@ -19,7 +19,9 @@ public class VariantImageResponse {
   private Long id;
   private String url;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface VariantImageResponseMapper {
     VariantImageResponseMapper INSTANCE = Mappers.getMapper(VariantImageResponseMapper.class);
 

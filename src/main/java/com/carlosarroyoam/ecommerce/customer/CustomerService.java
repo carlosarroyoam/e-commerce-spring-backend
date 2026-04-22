@@ -30,19 +30,22 @@ public class CustomerService {
 
   @Transactional(readOnly = true)
   public PagedResponse<CustomerResponse> findAll(CustomerSpecs customerSpecs, Pageable pageable) {
-    Specification<Customer> spec = SpecificationBuilder.<Customer>builder()
-        .likeIfPresent(root -> root.get(Customer_.firstName), customerSpecs.getFirstName())
-        .likeIfPresent(root -> root.get(Customer_.lastName), customerSpecs.getLastName())
-        .likeIfPresent(root -> root.get(Customer_.email), customerSpecs.getEmail())
-        .equalsIfPresent(root -> root.get(Customer_.status), customerSpecs.getStatus())
-        .betweenDatesIfPresent(root -> root.get(Customer_.createdAt), customerSpecs.getStartDate(),
-            customerSpecs.getEndDate())
-        .build();
+    Specification<Customer> spec =
+        SpecificationBuilder.<Customer>builder()
+            .likeIfPresent(root -> root.get(Customer_.firstName), customerSpecs.getFirstName())
+            .likeIfPresent(root -> root.get(Customer_.lastName), customerSpecs.getLastName())
+            .likeIfPresent(root -> root.get(Customer_.email), customerSpecs.getEmail())
+            .equalsIfPresent(root -> root.get(Customer_.status), customerSpecs.getStatus())
+            .betweenDatesIfPresent(
+                root -> root.get(Customer_.createdAt),
+                customerSpecs.getStartDate(),
+                customerSpecs.getEndDate())
+            .build();
 
     Page<Customer> customers = customerRepository.findAll(spec, pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(customers.map(CustomerResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        customers.map(CustomerResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -52,10 +55,13 @@ public class CustomerService {
   }
 
   private Customer findCustomerByIdOrFail(Long customerId) {
-    return customerRepository.findById(customerId).orElseThrow(() -> {
-      log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
-    });
+    return customerRepository
+        .findById(customerId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
+            });
   }
 }

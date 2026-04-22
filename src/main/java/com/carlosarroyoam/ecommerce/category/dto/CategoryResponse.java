@@ -21,7 +21,9 @@ public class CategoryResponse {
   private String title;
   private LocalDateTime deletedAt;
 
-  @Mapper(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+  @Mapper(
+      nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE,
+      unmappedTargetPolicy = ReportingPolicy.IGNORE)
   public interface CategoryResponseMapper {
     CategoryResponseMapper INSTANCE = Mappers.getMapper(CategoryResponseMapper.class);
 

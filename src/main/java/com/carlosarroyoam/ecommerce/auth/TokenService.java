@@ -36,24 +36,26 @@ public class TokenService {
 
   public String generateAccessToken(AuthPrincipal principal) {
     Instant now = Instant.now();
-    JwtClaimsSet claims = JwtClaimsSet.builder()
-        .issuer("self")
-        .subject(principal.getId().toString())
-        .claim("name", principal.getFullName())
-        .claim("given_name", principal.getFirstName())
-        .claim("family_name", principal.getLastName())
-        .claim("email", principal.getEmail())
-        .claim("principal_type", principal.getPrincipalType())
-        .claim("roles",
-            principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
-        .claim("scope",
-            principal.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" ")))
-        .issuedAt(now)
-        .expiresAt(now.plus(accessTokenTtlMs, ChronoUnit.MILLIS))
-        .build();
+    JwtClaimsSet claims =
+        JwtClaimsSet.builder()
+            .issuer("self")
+            .subject(principal.getId().toString())
+            .claim("name", principal.getFullName())
+            .claim("given_name", principal.getFirstName())
+            .claim("family_name", principal.getLastName())
+            .claim("email", principal.getEmail())
+            .claim("principal_type", principal.getPrincipalType())
+            .claim(
+                "roles",
+                principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+            .claim(
+                "scope",
+                principal.getAuthorities().stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.joining(" ")))
+            .issuedAt(now)
+            .expiresAt(now.plus(accessTokenTtlMs, ChronoUnit.MILLIS))
+            .build();
 
     return this.jwtEncoder
         .encode(JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims))

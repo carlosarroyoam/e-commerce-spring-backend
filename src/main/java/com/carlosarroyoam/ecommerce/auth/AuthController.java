@@ -34,12 +34,15 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest request,
-      HttpServletResponse response) {
+  public ResponseEntity<LoginResponse> login(
+      @Valid @RequestBody LoginRequest request, HttpServletResponse response) {
     LoginResponse loginResponse = authService.login(request);
 
-    ResponseCookie refreshTokenCookie = cookieUtils.createCookie(REFRESH_TOKEN_COOKIE_NAME,
-        loginResponse.getRefreshToken(), Duration.ofMillis(jwtProps.getRefreshTokenTtlMs()));
+    ResponseCookie refreshTokenCookie =
+        cookieUtils.createCookie(
+            REFRESH_TOKEN_COOKIE_NAME,
+            loginResponse.getRefreshToken(),
+            Duration.ofMillis(jwtProps.getRefreshTokenTtlMs()));
 
     response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
     return ResponseEntity.ok(loginResponse);
@@ -51,8 +54,11 @@ public class AuthController {
       HttpServletResponse response) {
     RefreshTokenResponse refreshTokenResponse = authService.refreshToken(rawRefreshTokenCookie);
 
-    ResponseCookie refreshTokenCookie = cookieUtils.createCookie(REFRESH_TOKEN_COOKIE_NAME,
-        refreshTokenResponse.getRefreshToken(), Duration.ofMillis(jwtProps.getRefreshTokenTtlMs()));
+    ResponseCookie refreshTokenCookie =
+        cookieUtils.createCookie(
+            REFRESH_TOKEN_COOKIE_NAME,
+            refreshTokenResponse.getRefreshToken(),
+            Duration.ofMillis(jwtProps.getRefreshTokenTtlMs()));
 
     response.addHeader(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString());
     return ResponseEntity.ok(refreshTokenResponse);

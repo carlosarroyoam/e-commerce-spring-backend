@@ -32,21 +32,25 @@ public class ProductService {
 
   @Transactional(readOnly = true)
   public PagedResponse<ProductResponse> findAll(ProductSpecs productSpecs, Pageable pageable) {
-    Specification<Product> spec = SpecificationBuilder.<Product>builder()
-        .likeIfPresent(root -> root.get(Product_.title), productSpecs.getTitle())
-        .likeIfPresent(root -> root.get(Product_.slug), productSpecs.getSlug())
-        .equalsIfPresent(root -> root.get(Product_.isFeatured), productSpecs.getIsFeatured())
-        .equalsIfPresent(root -> root.get(Product_.isActive), productSpecs.getIsActive())
-        .equalsIfPresent(root -> root.join(Product_.category, JoinType.INNER).get(Category_.id),
-            productSpecs.getCategoryId())
-        .betweenDatesIfPresent(root -> root.get(Product_.createdAt), productSpecs.getStartDate(),
-            productSpecs.getEndDate())
-        .build();
+    Specification<Product> spec =
+        SpecificationBuilder.<Product>builder()
+            .likeIfPresent(root -> root.get(Product_.title), productSpecs.getTitle())
+            .likeIfPresent(root -> root.get(Product_.slug), productSpecs.getSlug())
+            .equalsIfPresent(root -> root.get(Product_.isFeatured), productSpecs.getIsFeatured())
+            .equalsIfPresent(root -> root.get(Product_.isActive), productSpecs.getIsActive())
+            .equalsIfPresent(
+                root -> root.join(Product_.category, JoinType.INNER).get(Category_.id),
+                productSpecs.getCategoryId())
+            .betweenDatesIfPresent(
+                root -> root.get(Product_.createdAt),
+                productSpecs.getStartDate(),
+                productSpecs.getEndDate())
+            .build();
 
     Page<Product> products = productRepository.findAll(spec, pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(products.map(ProductResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        products.map(ProductResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -56,10 +60,13 @@ public class ProductService {
   }
 
   private Product findProductByIdOrFail(Long productId) {
-    return productRepository.findById(productId).orElseThrow(() -> {
-      log.warn(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
-    });
+    return productRepository
+        .findById(productId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
+            });
   }
 }

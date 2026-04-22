@@ -30,23 +30,24 @@ public class ShipmentService {
   private final ShipmentRepository shipmentRepository;
   private final CarrierRepository carrierRepository;
 
-  public ShipmentService(final ShipmentRepository shipmentRepository,
-      final CarrierRepository carrierRepository) {
+  public ShipmentService(
+      final ShipmentRepository shipmentRepository, final CarrierRepository carrierRepository) {
     this.shipmentRepository = shipmentRepository;
     this.carrierRepository = carrierRepository;
   }
 
   @Transactional(readOnly = true)
   public PagedResponse<ShipmentResponse> findAll(ShipmentSpecs shipmentSpecs, Pageable pageable) {
-    Specification<Shipment> spec = SpecificationBuilder.<Shipment>builder()
-        .equalsIfPresent(root -> root.join(Shipment_.order).get(Order_.id),
-            shipmentSpecs.getOrderId())
-        .build();
+    Specification<Shipment> spec =
+        SpecificationBuilder.<Shipment>builder()
+            .equalsIfPresent(
+                root -> root.join(Shipment_.order).get(Order_.id), shipmentSpecs.getOrderId())
+            .build();
 
     Page<Shipment> shipments = shipmentRepository.findAll(spec, pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(shipments.map(ShipmentResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        shipments.map(ShipmentResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -68,18 +69,24 @@ public class ShipmentService {
   }
 
   private Shipment findShipmentByIdOrFail(Long shipmentId) {
-    return shipmentRepository.findById(shipmentId).orElseThrow(() -> {
-      log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-    });
+    return shipmentRepository
+        .findById(shipmentId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
+            });
   }
 
   private Shipment findShipmentByOrderIdOrFail(Long orderId) {
-    return shipmentRepository.findByOrderId(orderId).orElseThrow(() -> {
-      log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-    });
+    return shipmentRepository
+        .findByOrderId(orderId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
+            });
   }
 }

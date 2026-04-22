@@ -31,14 +31,16 @@ public class RefundService {
 
   @Transactional(readOnly = true)
   public PagedResponse<RefundResponse> findAll(RefundSpecs refundSpecs, Pageable pageable) {
-    Specification<Refund> spec = SpecificationBuilder.<Refund>builder()
-        .equalsIfPresent(root -> root.join(Refund_.order).get(Order_.id), refundSpecs.getOrderId())
-        .build();
+    Specification<Refund> spec =
+        SpecificationBuilder.<Refund>builder()
+            .equalsIfPresent(
+                root -> root.join(Refund_.order).get(Order_.id), refundSpecs.getOrderId())
+            .build();
 
     Page<Refund> refunds = refundRepository.findAll(spec, pageable);
 
-    return PagedResponseMapper.INSTANCE
-        .toPagedResponse(refunds.map(RefundResponseMapper.INSTANCE::toDto));
+    return PagedResponseMapper.INSTANCE.toPagedResponse(
+        refunds.map(RefundResponseMapper.INSTANCE::toDto));
   }
 
   @Transactional(readOnly = true)
@@ -54,18 +56,24 @@ public class RefundService {
   }
 
   private Refund findRefundByIdOrFail(Long refundId) {
-    return refundRepository.findById(refundId).orElseThrow(() -> {
-      log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-    });
+    return refundRepository
+        .findById(refundId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.REFUND_NOT_FOUND_EXCEPTION);
+            });
   }
 
   private Refund findRefundByOrderIdOrFail(Long orderId) {
-    return refundRepository.findByOrderId(orderId).orElseThrow(() -> {
-      log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-      return new ResponseStatusException(HttpStatus.NOT_FOUND,
-          AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-    });
+    return refundRepository
+        .findByOrderId(orderId)
+        .orElseThrow(
+            () -> {
+              log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
+              return new ResponseStatusException(
+                  HttpStatus.NOT_FOUND, AppMessages.REFUND_NOT_FOUND_EXCEPTION);
+            });
   }
 }
