@@ -25,7 +25,7 @@ public class Carrier {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Byte id;
 
-  @Column(name = "name", length = 45, nullable = false)
+  @Column(name = "name", length = 64, nullable = false)
   private String name;
 
   @Column(name = "deleted_at")

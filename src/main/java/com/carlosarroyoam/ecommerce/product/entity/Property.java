@@ -25,7 +25,7 @@ public class Property {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "title", length = 45, unique = true, nullable = false)
+  @Column(name = "title", length = 64, unique = true, nullable = false)
   private String title;
 
   @Column(name = "deleted_at")

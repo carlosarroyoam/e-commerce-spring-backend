@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS users (
     first_name VARCHAR(64) NOT NULL,
     last_name VARCHAR(64) NOT NULL,
     email VARCHAR(64) NOT NULL,
-    password_hash VARCHAR(96) NOT NULL,
+    password_hash VARCHAR(254) NOT NULL,
     status VARCHAR(32) NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('ACTIVE', 'INACTIVE', 'DELETED')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -39,11 +39,11 @@ CREATE TABLE IF NOT EXISTS user_roles (
 
 CREATE TABLE IF NOT EXISTS customers (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
+    first_name VARCHAR(64) NOT NULL,
+    last_name VARCHAR(64) NOT NULL,
     phone_number VARCHAR(10) NOT NULL,
-    email VARCHAR(255) NOT NULL,
-    password_hash VARCHAR(255) NOT NULL,
+    email VARCHAR(64) NOT NULL,
+    password_hash VARCHAR(254) NOT NULL,
     status VARCHAR(32) NOT NULL DEFAULT 'ACTIVE' CHECK (status IN ('PENDING', 'ACTIVE', 'SUSPENDED', 'DELETED')),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -58,11 +58,11 @@ CREATE TABLE IF NOT EXISTS customers (
 CREATE TABLE IF NOT EXISTS customer_addresses (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     street_name VARCHAR(64) NOT NULL,
-    street_number VARCHAR(5) NOT NULL,
-    apartament_number VARCHAR(5),
-    sublocality VARCHAR(45) NOT NULL,
-    locality VARCHAR(45) NOT NULL,
-    state VARCHAR(45) NOT NULL,
+    street_number VARCHAR(6) NOT NULL,
+    apartament_number VARCHAR(6),
+    sublocality VARCHAR(64) NOT NULL,
+    locality VARCHAR(64) NOT NULL,
+    state VARCHAR(64) NOT NULL,
     postal_code VARCHAR(5) NOT NULL,
     country VARCHAR(2) DEFAULT 'MX',
     phone_number VARCHAR(10) NOT NULL,
@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS reset_password (
 
 CREATE TABLE IF NOT EXISTS categories (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    title VARCHAR(45) NOT NULL,
+    title VARCHAR(64) NOT NULL,
     deleted_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uk_categories_title (title),
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS products (
 
 CREATE TABLE IF NOT EXISTS properties (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    title VARCHAR(45) NOT NULL,
+    title VARCHAR(64) NOT NULL,
     deleted_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uk_properties_title (title),
@@ -140,7 +140,7 @@ CREATE TABLE IF NOT EXISTS properties (
 
 CREATE TABLE IF NOT EXISTS product_property_values (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    value VARCHAR(45) NOT NULL,
+    value VARCHAR(64) NOT NULL,
     product_id BIGINT UNSIGNED NOT NULL,
     property_id BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (id),
@@ -181,7 +181,7 @@ CREATE TABLE IF NOT EXISTS variant_images (
 
 CREATE TABLE IF NOT EXISTS attributes (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    title VARCHAR(45) NOT NULL,
+    title VARCHAR(64) NOT NULL,
     deleted_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uk_attributes_title (title),
@@ -190,7 +190,7 @@ CREATE TABLE IF NOT EXISTS attributes (
 
 CREATE TABLE IF NOT EXISTS variant_attribute_values (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    value VARCHAR(45) NOT NULL,
+    value VARCHAR(64) NOT NULL,
     variant_id BIGINT UNSIGNED NOT NULL,
     attribute_id BIGINT UNSIGNED NOT NULL,
     PRIMARY KEY (id),
@@ -205,14 +205,14 @@ CREATE TABLE IF NOT EXISTS variant_attribute_values (
 
 CREATE TABLE IF NOT EXISTS movement_types (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    title VARCHAR(45) NOT NULL,
+    title VARCHAR(64) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uk_movement_types_title (title)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS movements (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    title VARCHAR(45) NOT NULL,
+    title VARCHAR(64) NOT NULL,
     movement_type_id TINYINT UNSIGNED NOT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uk_movements_title (title),
@@ -237,7 +237,7 @@ CREATE TABLE IF NOT EXISTS inventory_movements (
 
 CREATE TABLE IF NOT EXISTS carriers (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name VARCHAR(45) NOT NULL,
+    name VARCHAR(64) NOT NULL,
     deleted_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uk_carriers_name (name)
@@ -294,7 +294,7 @@ CREATE TABLE IF NOT EXISTS order_status_history (
 CREATE TABLE IF NOT EXISTS payments (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     amount DECIMAL(10,2) NOT NULL,
-    reference VARCHAR(255),
+    reference VARCHAR(254),
     description TEXT,
     method VARCHAR(32) NOT NULL CHECK (method IN ('CASH_ON_DELIVERY', 'CREDIT_CARD', 'DEBIT_CARD', 'BANK_TRANSFER')),
     status VARCHAR(32) NOT NULL DEFAULT 'PENDING' CHECK (status IN ('PENDING', 'COMPLETED', 'FAILED', 'CANCELLED', 'REFUNDED')),

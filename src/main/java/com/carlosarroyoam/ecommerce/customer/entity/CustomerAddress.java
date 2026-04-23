@@ -30,19 +30,19 @@ public class CustomerAddress {
   @Column(name = "street_name", length = 64, nullable = false)
   private String streetName;
 
-  @Column(name = "street_number", length = 5, nullable = false)
+  @Column(name = "street_number", length = 6, nullable = false)
   private String streetNumber;
 
-  @Column(name = "apartament_number", length = 5)
+  @Column(name = "apartament_number", length = 6)
   private String apartamentNumber;
 
-  @Column(name = "sublocality", length = 45, nullable = false)
+  @Column(name = "sublocality", length = 64, nullable = false)
   private String sublocality;
 
-  @Column(name = "locality", length = 45, nullable = false)
+  @Column(name = "locality", length = 64, nullable = false)
   private String locality;
 
-  @Column(name = "state", length = 45, nullable = false)
+  @Column(name = "state", length = 64, nullable = false)
   private String state;
 
   @Column(name = "postal_code", length = 5, nullable = false)

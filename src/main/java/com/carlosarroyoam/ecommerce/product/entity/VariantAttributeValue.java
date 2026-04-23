@@ -27,7 +27,7 @@ public class VariantAttributeValue {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(name = "value", length = 45, nullable = false)
+  @Column(name = "value", length = 64, nullable = false)
   private String value;
 
   @ManyToOne(fetch = FetchType.LAZY)

@@ -27,7 +27,7 @@ public class Movement {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Byte id;
 
-  @Column(name = "title", length = 45, nullable = false)
+  @Column(name = "title", length = 64, nullable = false)
   private String title;
 
   @ManyToOne(fetch = FetchType.LAZY)

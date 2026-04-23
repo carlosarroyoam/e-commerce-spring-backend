@@ -27,7 +27,7 @@ public class ProductPropertyValue {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
 
-  @Column(length = 45, nullable = false)
+  @Column(length = 64, nullable = false)
   private String value;
 
   @ManyToOne(fetch = FetchType.LAZY)

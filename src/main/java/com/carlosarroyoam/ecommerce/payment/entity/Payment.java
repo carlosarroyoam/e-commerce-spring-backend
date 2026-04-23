@@ -35,7 +35,7 @@ public class Payment {
   @Column(name = "amount", nullable = false, precision = 10, scale = 2)
   private BigDecimal amount;
 
-  @Column(name = "reference", length = 255)
+  @Column(name = "reference", length = 254)
   private String reference;
 
   @Column(name = "description", columnDefinition = "TEXT")

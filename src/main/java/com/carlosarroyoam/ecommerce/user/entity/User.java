@@ -42,7 +42,7 @@ public class User {
   @Column(name = "email", length = 64, nullable = false)
   private String email;
 
-  @Column(name = "password_hash", length = 96, nullable = false)
+  @Column(name = "password_hash", length = 254, nullable = false)
   private String passwordHash;
 
   @Enumerated(EnumType.STRING)

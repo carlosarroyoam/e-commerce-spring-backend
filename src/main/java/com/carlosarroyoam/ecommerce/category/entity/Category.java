@@ -30,7 +30,7 @@ public class Category {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Byte id;
 
-  @Column(name = "title", length = 45, unique = true, nullable = false)
+  @Column(name = "title", length = 64, unique = true, nullable = false)
   private String title;
 
   @Builder.Default
