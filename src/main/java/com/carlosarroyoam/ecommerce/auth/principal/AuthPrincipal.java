@@ -4,15 +4,15 @@ import java.io.Serial;
 import java.util.Collection;
 import java.util.Set;
 import java.util.stream.Collectors;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Data
-@AllArgsConstructor
+@Getter
+@Setter
 @Builder
 public class AuthPrincipal implements UserDetails {
   @Serial private static final long serialVersionUID = -156588274831556503L;

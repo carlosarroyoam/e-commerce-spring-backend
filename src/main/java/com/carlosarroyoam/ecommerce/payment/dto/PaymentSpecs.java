@@ -5,10 +5,12 @@ import com.carlosarroyoam.ecommerce.payment.entity.PaymentStatus;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class PaymentSpecs {
   @Size(max = 255, message = "Reference should be max 255")

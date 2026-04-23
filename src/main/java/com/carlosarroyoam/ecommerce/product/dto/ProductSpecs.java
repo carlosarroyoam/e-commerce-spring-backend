@@ -3,10 +3,12 @@ package com.carlosarroyoam.ecommerce.product.dto;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class ProductSpecs {
   @Size(max = 96, message = "Title should be max 96")
