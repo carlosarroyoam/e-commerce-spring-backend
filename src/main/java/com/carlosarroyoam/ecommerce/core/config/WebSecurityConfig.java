@@ -9,7 +9,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -40,6 +39,7 @@ public class WebSecurityConfig {
   SecurityFilterChain securityFilterChain(
       HttpSecurity http,
       CsrfTokenRepository csrfTokenRepository,
+      CorsConfigurationSource corsConfigurationSource,
       JwtDecoder jwtDecoder,
       JwtAuthenticationConverter jwtAuthenticationConverter,
       AuthenticationEntryPoint authenticationEntryPoint,
@@ -50,7 +50,7 @@ public class WebSecurityConfig {
                 csrf.csrfTokenRepository(csrfTokenRepository)
                     .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
                     .ignoringRequestMatchers("/auth/login"))
-        .cors(Customizer.withDefaults())
+        .cors(cors -> cors.configurationSource(corsConfigurationSource))
         .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -132,6 +132,7 @@ public class WebSecurityConfig {
     configuration.setAllowedOrigins(corsProps.getAllowedOrigins());
     configuration.setAllowedMethods(corsProps.getAllowedMethods());
     configuration.setAllowedHeaders(corsProps.getAllowedHeaders());
+    configuration.setExposedHeaders(corsProps.getExposedHeaders());
     configuration.setAllowCredentials(corsProps.getAllowCredentials());
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
