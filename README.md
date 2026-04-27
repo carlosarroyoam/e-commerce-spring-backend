@@ -62,3 +62,6 @@ See `docs/openapi/api-docs.yaml` for OpenAPI specification.
 ## Database Schema
 
 Schema defined in `src/main/resources/schema.sql` with initial data in `src/main/resources/data.sql`.
+
+## License
+This project is licensed under Apache 2.0. See [`LICENSE`](LICENSE).
