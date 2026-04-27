@@ -88,17 +88,21 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  AuthenticationProvider staffAuthenticationProvider(UserDetailsService staffDetailsService) {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider(staffDetailsService);
-    provider.setPasswordEncoder(passwordEncoder());
-    return provider;
+  AuthenticationProvider staffAuthenticationProvider(
+      UserDetailsService staffDetailsService, PasswordEncoder passwordEncoder) {
+    DaoAuthenticationProvider authenticationProvider =
+        new DaoAuthenticationProvider(staffDetailsService);
+    authenticationProvider.setPasswordEncoder(passwordEncoder);
+    return authenticationProvider;
   }
 
   @Bean
-  AuthenticationProvider customerAuthenticationProvider(UserDetailsService customerDetailsService) {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customerDetailsService);
-    provider.setPasswordEncoder(passwordEncoder());
-    return provider;
+  AuthenticationProvider customerAuthenticationProvider(
+      UserDetailsService customerDetailsService, PasswordEncoder passwordEncoder) {
+    DaoAuthenticationProvider authenticationProvider =
+        new DaoAuthenticationProvider(customerDetailsService);
+    authenticationProvider.setPasswordEncoder(passwordEncoder);
+    return authenticationProvider;
   }
 
   @Bean

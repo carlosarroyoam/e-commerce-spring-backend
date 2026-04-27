@@ -11,9 +11,7 @@ import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.oauth2.jose.jws.MacAlgorithm;
 import org.springframework.security.oauth2.jwt.BadJwtException;
-import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
@@ -40,10 +38,10 @@ public class TokenService {
         JwtClaimsSet.builder()
             .issuer("self")
             .subject(principal.getId().toString())
+            .claim("email", principal.getEmail())
             .claim("name", principal.getFullName())
             .claim("given_name", principal.getFirstName())
             .claim("family_name", principal.getLastName())
-            .claim("email", principal.getEmail())
             .claim("principal_type", principal.getPrincipalType())
             .claim(
                 "roles",
@@ -57,9 +55,7 @@ public class TokenService {
             .expiresAt(now.plus(accessTokenTtlMs, ChronoUnit.MILLIS))
             .build();
 
-    return this.jwtEncoder
-        .encode(JwtEncoderParameters.from(JwsHeader.with(MacAlgorithm.HS256).build(), claims))
-        .getTokenValue();
+    return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
   }
 
   public String generateRefreshToken() {

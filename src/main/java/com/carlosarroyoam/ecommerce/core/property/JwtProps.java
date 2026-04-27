@@ -11,9 +11,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class JwtProps {
-  @NotNull(message = "secret must not be null")
-  private String secret;
-
   @NotNull(message = "access-token-ttl-ms must not be null")
   private long accessTokenTtlMs;
 
