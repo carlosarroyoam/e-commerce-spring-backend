@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.core.config;
 
-import com.carlosarroyoam.ecommerce.core.property.RsaKeysProps;
+import com.carlosarroyoam.ecommerce.core.property.RsaKeyProps;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.ImmutableJWKSet;
@@ -15,17 +15,19 @@ import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 @Configuration
 public class JwtConfig {
   @Bean
-  JwtEncoder jwtEncoder(RsaKeysProps rsaKeys) {
+  JwtEncoder jwtEncoder(RsaKeyProps rsaKeyProps) {
     RSAKey rsaKey =
-        new RSAKey.Builder(rsaKeys.getPublicKey()).privateKey(rsaKeys.getPrivateKey()).build();
+        new RSAKey.Builder(rsaKeyProps.getPublicKey())
+            .privateKey(rsaKeyProps.getPrivateKey())
+            .build();
+
     JWKSet jwkSet = new JWKSet(rsaKey);
     ImmutableJWKSet<SecurityContext> immutableJWKSet = new ImmutableJWKSet<>(jwkSet);
-
     return new NimbusJwtEncoder(immutableJWKSet);
   }
 
   @Bean
-  JwtDecoder jwtDecoder(RsaKeysProps rsaKeys) {
-    return NimbusJwtDecoder.withPublicKey(rsaKeys.getPublicKey()).build();
+  JwtDecoder jwtDecoder(RsaKeyProps rsaKeyProps) {
+    return NimbusJwtDecoder.withPublicKey(rsaKeyProps.getPublicKey()).build();
   }
 }

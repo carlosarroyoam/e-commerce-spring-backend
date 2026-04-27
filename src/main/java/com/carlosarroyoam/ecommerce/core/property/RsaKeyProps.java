@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "application.rsa")
 @Getter
 @Setter
-public class RsaKeysProps {
+public class RsaKeyProps {
   @NotNull(message = "private-key must not be null")
   private RSAPrivateKey privateKey;
 
