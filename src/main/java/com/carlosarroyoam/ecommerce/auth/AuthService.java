@@ -56,7 +56,7 @@ public class AuthService {
     String refreshToken = tokenService.generateRefreshToken();
 
     RefreshToken createdRefreshToken =
-        refreshTokenService.save(principal, request.getDeviceFingerprint(), refreshToken);
+        refreshTokenService.save(principal, request.getDeviceId(), refreshToken);
 
     return LoginResponse.builder()
         .id(principal.getId())

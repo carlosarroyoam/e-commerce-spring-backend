@@ -52,7 +52,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\r\n    \"email\": \"carlos.arroyo@e-commerce.com\",\r\n    \"password\": \"secret123\",\r\n    \"device_fingerprint\": \"{{deviceFingerprint}}\"\r\n}",
+              "raw": "{\r\n    \"email\": \"carlos.arroyo@e-commerce.com\",\r\n    \"password\": \"secret123\",\r\n    \"device_id\": \"{{deviceId}}\"\r\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2339,7 +2339,7 @@
       "value": "http://localhost:3000/api/v1"
     },
     {
-      "key": "deviceFingerprint",
+      "key": "deviceId",
       "value": ""
     },
     {

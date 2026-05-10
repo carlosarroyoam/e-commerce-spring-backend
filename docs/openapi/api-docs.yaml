@@ -119,13 +119,6 @@ paths:
         - Auth
       summary: Rotates a user's tokens
       operationId: refreshToken
-      requestBody:
-        description: Refresh token context used to rotate the user's tokens
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/RefreshTokenRequest"
-        required: true
       responses:
         "204":
           $ref: "#/components/responses/NoContent"
@@ -2487,22 +2480,13 @@ components:
         password:
           description: User's password
           type: string
-        device_fingerprint:
-          description: Device fingerprint used to identify the client device
+        device_id:
+          description: Unique identifier for the client device
           type: string
       required:
         - email
         - password
-        - device_fingerprint
-
-    RefreshTokenRequest:
-      type: object
-      properties:
-        device_fingerprint:
-          description: Device fingerprint used to identify the client device
-          type: string
-      required:
-        - device_fingerprint
+        - device_id
 
     ForgotPasswordRequest:
       type: object

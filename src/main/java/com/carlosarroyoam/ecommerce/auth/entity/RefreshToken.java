@@ -29,11 +29,11 @@ public class RefreshToken {
   @GeneratedValue(strategy = GenerationType.UUID)
   private UUID id;
 
-  @Column(name = "token", length = 254, nullable = false)
-  private String token;
+  @Column(name = "token_hash", length = 254, nullable = false)
+  private String tokenHash;
 
-  @Column(name = "fingerprint", length = 36, nullable = false)
-  private String fingerprint;
+  @Column(name = "device_id", length = 36, nullable = false)
+  private String deviceId;
 
   @Column(name = "principal_id", nullable = false)
   private Long principalId;

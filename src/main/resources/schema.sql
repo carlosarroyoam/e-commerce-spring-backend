@@ -76,8 +76,8 @@ CREATE TABLE IF NOT EXISTS customer_addresses (
 
 CREATE TABLE IF NOT EXISTS refresh_tokens (
     id BINARY(16) NOT NULL,
-    token VARCHAR(254) NOT NULL,
-    fingerprint VARCHAR(36) NOT NULL,
+    token_hash VARCHAR(254) NOT NULL,
+    device_id VARCHAR(36) NOT NULL,
     principal_id BIGINT UNSIGNED NOT NULL,
     principal_type VARCHAR(32) NOT NULL CHECK (principal_type IN ('STAFF', 'CUSTOMER')),
     expires_on TIMESTAMP NOT NULL,
@@ -85,8 +85,8 @@ CREATE TABLE IF NOT EXISTS refresh_tokens (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
-    UNIQUE KEY uk_refresh_tokens_token (token),
-    UNIQUE KEY uk_refresh_tokens_fingerprint (principal_id, principal_type, fingerprint)
+    UNIQUE KEY uk_refresh_tokens_token_hash (token_hash),
+    UNIQUE KEY uk_refresh_tokens_device_id (principal_id, principal_type, device_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS reset_password (

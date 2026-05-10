@@ -34,16 +34,16 @@ public class RefreshTokenService {
     return findRefreshTokenByIdOrFail(refreshTokenId);
   }
 
-  public RefreshToken save(AuthPrincipal principal, String fingerprint, String newRefreshToken) {
+  public RefreshToken save(AuthPrincipal principal, String deviceId, String newRefreshToken) {
     LocalDateTime now = LocalDateTime.now();
 
     RefreshToken refreshTokenById =
         refreshTokenRepository
-            .findByFingerprintAndPrincipalType(fingerprint, principal.getPrincipalType())
+            .findByDeviceIdAndPrincipalType(deviceId, principal.getPrincipalType())
             .orElse(
                 RefreshToken.builder()
-                    .fingerprint(fingerprint)
-                    .token(passwordEncoder.encode(newRefreshToken))
+                    .deviceId(deviceId)
+                    .tokenHash(passwordEncoder.encode(newRefreshToken))
                     .principalId(principal.getId())
                     .principalType(principal.getPrincipalType())
                     .expiresOn(now.plus(jwtProps.getRefreshTokenTtlMs(), ChronoUnit.MILLIS))
@@ -51,7 +51,7 @@ public class RefreshTokenService {
                     .updatedAt(now)
                     .build());
 
-    refreshTokenById.setToken(passwordEncoder.encode(newRefreshToken));
+    refreshTokenById.setTokenHash(passwordEncoder.encode(newRefreshToken));
     refreshTokenById.setExpiresOn(now.plus(jwtProps.getRefreshTokenTtlMs(), ChronoUnit.MILLIS));
     refreshTokenById.setLastUsedAt(null);
     refreshTokenById.setCreatedAt(now);
@@ -66,7 +66,7 @@ public class RefreshTokenService {
 
     validateRefreshToken(currentRefreshToken, refreshTokenById);
 
-    refreshTokenById.setToken(passwordEncoder.encode(newRefreshToken));
+    refreshTokenById.setTokenHash(passwordEncoder.encode(newRefreshToken));
     refreshTokenById.setExpiresOn(now.plus(jwtProps.getRefreshTokenTtlMs(), ChronoUnit.MILLIS));
     refreshTokenById.setLastUsedAt(now);
     refreshTokenById.setUpdatedAt(now);
@@ -79,7 +79,7 @@ public class RefreshTokenService {
 
   private void validateRefreshToken(String currentRefreshToken, RefreshToken refreshToken) {
     if (LocalDateTime.now().isAfter(refreshToken.getExpiresOn())
-        || !passwordEncoder.matches(currentRefreshToken, refreshToken.getToken())) {
+        || !passwordEncoder.matches(currentRefreshToken, refreshToken.getTokenHash())) {
       log.warn(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
       throw new ResponseStatusException(
           HttpStatus.UNAUTHORIZED, AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
