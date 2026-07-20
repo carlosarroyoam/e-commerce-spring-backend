@@ -33,8 +33,8 @@ public class CustomerAddress {
   @Column(name = "street_number", length = 6, nullable = false)
   private String streetNumber;
 
-  @Column(name = "apartament_number", length = 6)
-  private String apartamentNumber;
+  @Column(name = "apartment_number", length = 6)
+  private String apartmentNumber;
 
   @Column(name = "sublocality", length = 64, nullable = false)
   private String sublocality;

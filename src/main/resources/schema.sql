@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS customer_addresses (
     id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
     street_name VARCHAR(64) NOT NULL,
     street_number VARCHAR(6) NOT NULL,
-    apartament_number VARCHAR(6),
+    apartment_number VARCHAR(6),
     sublocality VARCHAR(64) NOT NULL,
     locality VARCHAR(64) NOT NULL,
     state VARCHAR(64) NOT NULL,

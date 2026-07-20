@@ -18,7 +18,7 @@ public class CustomerAddressResponse {
   private Long id;
   private String streetName;
   private String streetNumber;
-  private String apartamentNumber;
+  private String apartmentNumber;
   private String sublocality;
   private String locality;
   private String state;

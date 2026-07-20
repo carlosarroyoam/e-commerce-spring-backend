@@ -3251,7 +3251,7 @@ components:
         street_number:
           type: string
           description: Street number
-        apartament_number:
+        apartment_number:
           type: ["string", "null"]
           description: Apartment or suite number
         sublocality:

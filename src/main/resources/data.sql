@@ -27,7 +27,7 @@ INSERT INTO customers (id, first_name, last_name, phone_number, email, password_
 (11, 'Antonio', 'Rojas', '6181112222', 'antonio.rojas@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE'),
 (12, 'Karina', 'Navarro', '6183334444', 'karina.navarro@example.com', '$2b$10$vNVtCVv7IxX1Q9Whwb//ie6SZROFY4IYcDOSn146SWph8UBEzSYte', 'ACTIVE');
 
-INSERT INTO customer_addresses (id, street_name, street_number, apartament_number, sublocality, locality, state, country, postal_code, phone_number, is_default, customer_id) VALUES
+INSERT INTO customer_addresses (id, street_name, street_number, apartment_number, sublocality, locality, state, country, postal_code, phone_number, is_default, customer_id) VALUES
 (1, 'C Leona Vicario', '120', NULL, 'Centro', 'Acámbaro', 'Guanajuato', 'MX', '38923', '4431232123', 1, 1),
 (2, 'Av Universidad', '456', '302', 'Del Valle', 'Ciudad de México', 'CDMX', 'MX', '03100', '5556789012', 1, 2),
 (3, 'Calle Juárez', '78', NULL, 'Zona Centro', 'León', 'Guanajuato', 'MX', '37000', '4771234567', 1, 3),
