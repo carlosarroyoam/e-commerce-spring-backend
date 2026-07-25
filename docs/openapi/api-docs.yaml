@@ -220,7 +220,7 @@ paths:
           description: User status
           schema:
             type: string
-            enum: [PENDING, ACTIVE, SUSPENDED, DELETED]
+            enum: [ACTIVE, INACTIVE, DELETED]
         - name: startDate
           in: query
           required: false
@@ -440,12 +440,48 @@ paths:
         - $ref: "#/components/parameters/PageParam"
         - $ref: "#/components/parameters/SizeParam"
         - $ref: "#/components/parameters/SortParam"
-        - name: status
+
+        - name: firstName
           in: query
-          description: Filter customers by status
+          required: false
+          description: Customer's first name
           schema:
             type: string
-            enum: [ACTIVE, SUSPENDED, DELETED]
+            maxLength: 64
+        - name: lastName
+          in: query
+          required: false
+          description: Customer's last name
+          schema:
+            type: string
+            maxLength: 64
+        - name: email
+          in: query
+          required: false
+          description: Customer's email address
+          schema:
+            type: string
+            maxLength: 64
+        - name: status
+          in: query
+          description: Customer status
+          schema:
+            type: string
+            enum: [PENDING, ACTIVE, SUSPENDED, DELETED]
+        - name: startDate
+          in: query
+          required: false
+          description: Start date for date range filter in the ISO format YYYY-MM-DD
+          schema:
+            type: string
+            format: date
+        - name: endDate
+          in: query
+          required: false
+          description: End date for date range filter in the ISO format YYYY-MM-DD
+          schema:
+            type: string
+            format: date
       responses:
         "200":
           description: OK
@@ -3517,7 +3553,16 @@ components:
         status:
           description: Current status of the order
           type: string
-          enum: [PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED, REFUNDED]
+          enum:
+            [
+              PENDING,
+              CONFIRMED,
+              PROCESSING,
+              SHIPPED,
+              DELIVERED,
+              CANCELLED,
+              REFUNDED,
+            ]
         items:
           description: Order items
           type: array
