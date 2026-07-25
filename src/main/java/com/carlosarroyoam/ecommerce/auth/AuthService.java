@@ -102,6 +102,12 @@ public class AuthService {
         refreshTokenService.rotate(refreshTokenId, currentRefreshToken, refreshToken);
 
     return RefreshTokenResponse.builder()
+        .id(principal.getId())
+        .fullName(principal.getFullName())
+        .firstName(principal.getFirstName())
+        .lastName(principal.getLastName())
+        .email(principal.getEmail())
+        .roles(principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
         .accessToken(accessToken)
         .refreshToken(createdRefreshToken.getId() + "." + refreshToken)
         .build();
