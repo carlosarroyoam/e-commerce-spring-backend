@@ -1,0 +1,97 @@
+# CLAUDE.md
+
+This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+
+## Overview
+
+REST API for an e-commerce platform: Spring Boot 3.5 / Java 17, MySQL 8, Spring Data JPA, MapStruct, Lombok. Package-by-feature under `com.carlosarroyoam.ecommerce`.
+
+## Setup
+
+Before the app will start, two things must exist:
+
+1. **Database.** `spring.jpa.hibernate.ddl-auto=validate` — Hibernate never creates/alters tables. There is no Flyway/Liquibase and no `spring.sql.init.mode`, so `schema.sql`/`data.sql` are **not** run automatically against MySQL (Spring Boot only auto-runs them for embedded DBs). Apply manually before first run:
+   ```bash
+   mysql -u root -p < src/main/resources/schema.sql
+   mysql -u root -p < src/main/resources/data.sql
+   ```
+   DB connection defaults (overridable via `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD` env vars): `localhost:3306`, db `spring-boot-e-commerce`, user `root`/`toor`.
+
+2. **RSA keys** for JWT signing, expected at `src/main/resources/certs/` (`private.pem`, `public.pem`) — already committed, but if regenerating:
+   ```bash
+   openssl genrsa -out src/main/resources/certs/keypair.pem 2048
+   openssl rsa -in src/main/resources/certs/keypair.pem -pubout -out src/main/resources/certs/public.pem
+   openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in src/main/resources/certs/keypair.pem -out src/main/resources/certs/private.pem
+   ```
+
+## Common commands
+
+```bash
+./mvnw spring-boot:run       # run locally, http://localhost:8080
+./mvnw clean package         # build jar
+./mvnw test                  # run tests
+./mvnw test -Dtest=ClassName # run a single test class
+```
+
+Test note: the only test present (`ECommerceApplicationTest`) is a full `@SpringBootTest` context load with no test profile/embedded DB — `mvn test` needs a real, reachable MySQL with `schema.sql`/`data.sql` already applied, same as running the app.
+
+There is no linter/formatter plugin configured in `pom.xml`.
+
+## Architecture
+
+### Package-by-feature layout
+
+Each business domain is a top-level package (`auth`, `user`, `customer`, `product`, `category`, `inventory`, `order`, `payment`, `shipment`, `refund`) with the same internal shape:
+
+- `XController` — REST endpoints (thin; delegates to service)
+- `XService` — `@Service`, transactional, business logic, throws `ResponseStatusException`
+- `XRepository` — `JpaRepository` + `JpaSpecificationExecutor` when the entity supports query-param filtering
+- `dto/` — request/response DTOs and `*Specs` filter DTOs
+- `entity/` — JPA entities. Static metamodel classes (`User_`, `Role_`, etc.) are generated at compile time by `hibernate-jpamodelgen` (annotation processor in `pom.xml`) and used for type-safe Criteria/Specification paths — don't hand-write them.
+
+Cross-cutting code lives in `core/`: `config` (security, JWT), `constant` (`AppMessages` — centralized exception message strings, reused across services), `dto` (`PagedResponse`/`PaginationResponse`), `exception` (`GlobalExceptionHandler`, response factory), `filter`, `property` (`@ConfigurationProperties` classes), `security`, `specification` (`SpecificationBuilder`), `util`.
+
+### DTO mapping: MapStruct nested in the DTO, not Spring beans
+
+Response DTOs are plain Lombok (`@Getter @Setter @Builder`) classes that declare their own MapStruct `@Mapper` interface as a nested type, resolved via `Mappers.getMapper(...)` — **not** a Spring-managed bean:
+
+```java
+public class UserResponse {
+  ...
+  @Mapper(nullValuePropertyMappingStrategy = ..., unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {...})
+  public interface UserResponseMapper {
+    UserResponseMapper INSTANCE = Mappers.getMapper(UserResponseMapper.class);
+    UserResponse toDto(User entity);
+    List<UserResponse> toDtos(List<User> entities);
+  }
+}
+```
+Services call `XResponseMapper.INSTANCE.toDto(entity)` directly. Follow this pattern for new response DTOs rather than introducing standalone/Spring-injected mappers.
+
+### Filtering and pagination
+
+List endpoints bind query params to a `*Specs` DTO via `@ModelAttribute`, then build a `Specification<T>` with the generic `SpecificationBuilder` (`core/specification/SpecificationBuilder.java`) using fluent, null-safe combinators (`likeIfPresent`, `equalsIfPresent`, `betweenDatesIfPresent`, `inIfPresent`, `isNullIfPresent`) against static metamodel paths. Results are wrapped with `PagedResponse.PagedResponseMapper.INSTANCE.toPagedResponse(page)` into `{ items, pagination }`.
+
+### Error handling
+
+Services signal failures with `ResponseStatusException(HttpStatus, AppMessages.SOME_CONSTANT)`. `GlobalExceptionHandler` (`@RestControllerAdvice`) is the single place that turns all exception types (validation, auth, 404s, method-not-allowed, generic) into a uniform `AppExceptionResponse` body (`message`, `error`, `status`, `details`, `path`, `timestamp`). Bean validation failures (`MethodArgumentNotValidException`) map to **422**, not 400. Add new user-facing error strings to `AppMessages` rather than inlining them.
+
+### Auth model
+
+Two independent principal types share the same JWT-based auth, not a single `users` table:
+- **STAFF** (`user` package, `users` table) and **CUSTOMER** (`customer` package, `customers` table) each have their own `UserDetailsService` (`StaffDetailsService`/`CustomerDetailsService`) and `AuthenticationProvider` bean, combined into one `AuthenticationManager`.
+- JWTs are RS256, signed/verified with the RSA key pair via Nimbus (`JwtConfig`), consumed as a Spring Security OAuth2 **resource server** (self-issued, self-validated — no external IdP). Roles are carried as a `roles` JWT claim and mapped to `ROLE_*` authorities; `@EnableMethodSecurity` is on.
+- Sessions are stateless; refresh tokens are hashed and bound to `(principal_id, principal_type, device_id)` (see `refresh_tokens` table / `RefreshTokenService`).
+- CSRF cookie protection (`CsrfCookieFilter`, double-submit `X-XSRF-TOKEN`) applies to non-`/auth/login` routes even though the API is stateless/token-based.
+
+### JSON naming convention
+
+`spring.jackson.property-naming-strategy=SNAKE_CASE` is set globally in `application.properties`. Java/DTO fields stay camelCase; **request and response bodies are serialized as snake_case on the wire**. Query parameters are bound directly to `*Specs`/other DTOs via `@ModelAttribute` and are unaffected by that Jackson setting, so they stay **camelCase**. This split is intentional — keep it when adding fields (see `docs/openapi/api-docs.yaml`, which documents the same convention).
+
+### API documentation
+
+`docs/openapi/api-docs.yaml` is a hand-maintained OpenAPI 3.1 spec (not generated from code) describing every path, schema, and enum. When changing a controller, DTO, or a `CHECK` constraint in `schema.sql`, update this file to match — there's no build-time check that keeps them in sync.
+
+### Database
+
+`src/main/resources/schema.sql` is the source of truth for table structure (MySQL, `InnoDB`/`utf8mb4`); status-like columns are plain `VARCHAR` with `CHECK (... IN (...))` constraints rather than lookup tables (e.g. `orders.status`, `payments.status`, `payments.method`) — keep enum values in `schema.sql`, JPA entities, and `api-docs.yaml` in sync when adding/renaming a status. `data.sql` holds seed data loaded on top of it.
