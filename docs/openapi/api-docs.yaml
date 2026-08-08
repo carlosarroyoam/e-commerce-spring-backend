@@ -2569,7 +2569,7 @@ components:
         status:
           description: New status for the user account
           type: string
-          enum: [ACTIVE, SUSPEND, DELETED]
+          enum: [ACTIVE, INACTIVE, DELETED]
       required:
         - status
 
@@ -2586,52 +2586,6 @@ components:
           description: Pagination metadata
           $ref: "#/components/schemas/PaginationResponse"
 
-    CreateAdminRequest:
-      type: object
-      properties:
-        first_name:
-          description: Admin's first name
-          type: string
-        last_name:
-          description: Admin's last name
-          type: string
-        email:
-          description: Admin's email address
-          type: string
-        password:
-          description: Admin's password
-          type: string
-        password_confirm:
-          description: Confirmation of the admin's password
-          type: string
-        is_super:
-          description: Indicates if the admin has super privileges
-          type: boolean
-          default: false
-      required:
-        - first_name
-        - last_name
-        - email
-        - password
-        - password_confirm
-
-    UpdateAdminRequest:
-      type: object
-      properties:
-        first_name:
-          description: Admin's first name
-          type: string
-        last_name:
-          description: Admin's last name
-          type: string
-        is_super:
-          description: Indicates if the admin has super privileges
-          type: boolean
-          default: false
-      required:
-        - first_name
-        - last_name
-
     PagedCustomersResponse:
       type: object
       description: Paginated list of customers response
@@ -2645,31 +2599,6 @@ components:
           description: Pagination metadata
           $ref: "#/components/schemas/PaginationResponse"
 
-    CreateCustomerRequest:
-      type: object
-      properties:
-        first_name:
-          description: Customer's first name
-          type: string
-        last_name:
-          description: Customer's last name
-          type: string
-        email:
-          description: Customer's email address
-          type: string
-        password:
-          description: Customer's password
-          type: string
-        password_confirm:
-          description: Confirmation of the customer's password
-          type: string
-      required:
-        - first_name
-        - last_name
-        - email
-        - password
-        - password_confirm
-
     UpdateCustomerRequest:
       type: object
       properties:
@@ -2682,7 +2611,6 @@ components:
       required:
         - first_name
         - last_name
-        - password
 
     CreateCustomerAddressRequest:
       type: object
@@ -2705,6 +2633,9 @@ components:
         postal_code:
           description: Postal code of the address
           type: string
+        phone_number:
+          description: Contact phone number for the address
+          type: string
       required:
         - street_name
         - street_number
@@ -2712,6 +2643,7 @@ components:
         - locality
         - state
         - postal_code
+        - phone_number
 
     UpdateCustomerAddressRequest:
       type: object
@@ -2734,6 +2666,9 @@ components:
         postal_code:
           description: Postal code of the address
           type: string
+        phone_number:
+          description: Contact phone number for the address
+          type: string
       required:
         - street_name
         - street_number
@@ -2741,6 +2676,7 @@ components:
         - locality
         - state
         - postal_code
+        - phone_number
 
     PagedProductsResponse:
       type: object
@@ -2835,38 +2771,38 @@ components:
       type: object
       description: Request to add an item to cart
       properties:
-        productId:
+        product_id:
           type: integer
           description: Identifier of the product to add to the cart
-        variantId:
+        variant_id:
           type: integer
           description: Identifier of the product variant to add to the cart
         quantity:
           type: integer
           description: Quantity of items to add to the cart
       required:
-        - ProductsId
+        - product_id
         - quantity
 
     UpdateCartItemRequest:
       type: object
       description: Request to update cart item
       properties:
-        cartItemId:
+        cart_item_id:
           type: integer
           description: Unique identifier for the cart item
         quantity:
           type: integer
           description: Updated quantity for the cart item
       required:
-        - CartsItemId
+        - cart_item_id
         - quantity
 
     CreatePaymentRequest:
       type: object
       description: Request to create a payment
       properties:
-        orderId:
+        order_id:
           type: integer
           description: Identifier of the order associated with the payment
         method:
@@ -2875,11 +2811,10 @@ components:
           enum:
             - CREDIT_CARD
             - DEBIT_CARD
-            - PAYPAL
             - BANK_TRANSFER
             - CASH_ON_DELIVERY
       required:
-        - OrdersId
+        - order_id
         - method
 
     UpdatePaymentRequest:
@@ -2892,7 +2827,6 @@ components:
           enum:
             - CREDIT_CARD
             - DEBIT_CARD
-            - PAYPAL
             - BANK_TRANSFER
             - CASH_ON_DELIVERY
 
@@ -2908,7 +2842,7 @@ components:
             - COMPLETED
             - FAILED
             - CANCELLED
-            - RefundsED
+            - REFUNDED
       required:
         - status
 
@@ -3008,7 +2942,7 @@ components:
     CreateOrderRequest:
       type: object
       properties:
-        customerId:
+        customer_id:
           description: Identifier of the customer placing the order
           type: integer
         shipping_address_id:
@@ -3035,40 +2969,19 @@ components:
           items:
             $ref: "#/components/schemas/OrderItemRequest"
       required:
-        - CustomersId
+        - customer_id
         - shipping_address_id
         - subtotal
         - total
         - items
 
-    UpdateOrderStatusRequest:
-      type: object
-      properties:
-        notes:
-          description: Additional notes about the order status update
-          type: string
-        status_id:
-          description: Identifier of the new order status
-          type: integer
-      required:
-        - status_id
-
-    UpdateOrderPaymentStatusRequest:
-      type: object
-      properties:
-        payment_status_id:
-          description: Identifier of the new payment status for the order
-          type: integer
-      required:
-        - Payments_status_id
-
     OrderItemRequest:
       type: object
       properties:
-        productId:
+        product_id:
           description: Identifier of the product included in the order
           type: integer
-        variantId:
+        variant_id:
           description: Identifier of the product variant included in the order
           type: integer
         quantity:
@@ -3078,8 +2991,8 @@ components:
           description: Unit price of the order item
           type: number
       required:
-        - ProductsId
-        - variantId
+        - product_id
+        - variant_id
         - quantity
         - unit_price
 
@@ -3123,7 +3036,7 @@ components:
           description: Refund amount for the item
           type: number
       required:
-        - Orders_item_id
+        - order_item_id
         - quantity
         - amount
 
@@ -3451,9 +3364,9 @@ components:
         id:
           type: integer
           description: Unique identifier for the attribute
-        name:
+        title:
           type: string
-          description: Attribute name
+          description: Attribute title
 
     VariantAttributeValueResponse:
       type: object
@@ -3487,7 +3400,7 @@ components:
         id:
           type: integer
           description: Unique identifier for the cart
-        customerId:
+        customer_id:
           type: integer
           description: Customer identifier
         items:
@@ -3495,10 +3408,10 @@ components:
           description: List of items in cart
           items:
             $ref: "#/components/schemas/CartItemResponse"
-        totalItems:
+        total_items:
           type: integer
           description: Total number of items
-        totalPrice:
+        total_price:
           type: number
           description: Total price of cart
 
@@ -3509,19 +3422,19 @@ components:
         id:
           type: integer
           description: Unique identifier for the cart item
-        productId:
+        product_id:
           type: integer
           description: Product identifier
-        variantId:
+        variant_id:
           type: integer
           description: Product variant identifier
         quantity:
           type: integer
           description: Quantity in cart
-        unitPrice:
+        unit_price:
           type: number
           description: Unit price
-        totalPrice:
+        total_price:
           type: number
           description: Total price
 
@@ -3648,7 +3561,7 @@ components:
         reason:
           description: Reason for the refund
           type: string
-        createdAt:
+        created_at:
           description: Timestamp when the refund was created
           type: string
           format: date-time
@@ -3661,7 +3574,7 @@ components:
     OrderTrackResponse:
       type: object
       properties:
-        orderNumber:
+        order_number:
           description: Order number assigned to the order
           type: string
         status:
@@ -3670,11 +3583,11 @@ components:
         total:
           description: Total amount of the order
           type: number
-        createdAt:
+        created_at:
           description: Timestamp when the order was created
           type: string
           format: date-time
-        statusHistory:
+        status_history:
           description: List of status changes for the order
           type: array
           items:
