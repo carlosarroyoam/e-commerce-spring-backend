@@ -13,6 +13,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Carga usuarios staff desde {@link UserRepository} y los expone como {@link AuthPrincipal} para
+ * la autenticación de Spring Security.
+ */
 @Service("staffDetailsService")
 public class StaffDetailsService implements UserDetailsService {
   private final UserRepository userRepository;
@@ -21,6 +25,13 @@ public class StaffDetailsService implements UserDetailsService {
     this.userRepository = userRepository;
   }
 
+  /**
+   * Busca un usuario staff por su email.
+   *
+   * @param email el email del usuario
+   * @return el {@link AuthPrincipal} correspondiente
+   * @throws UsernameNotFoundException si no existe un usuario con ese email
+   */
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -30,6 +41,13 @@ public class StaffDetailsService implements UserDetailsService {
         .orElseThrow(() -> new UsernameNotFoundException("User not found: " + email));
   }
 
+  /**
+   * Busca un usuario staff por su id.
+   *
+   * @param userId el id del usuario
+   * @return el {@link AuthPrincipal} correspondiente
+   * @throws UsernameNotFoundException si no existe un usuario con ese id
+   */
   @Transactional(readOnly = true)
   public UserDetails loadUserById(Long userId) throws UsernameNotFoundException {
     return userRepository
@@ -38,6 +56,13 @@ public class StaffDetailsService implements UserDetailsService {
         .orElseThrow(() -> new UsernameNotFoundException("User not found: " + userId));
   }
 
+  /**
+   * Convierte una entidad {@link User} en un {@link AuthPrincipal} de tipo STAFF, incluyendo sus
+   * roles.
+   *
+   * @param user la entidad de usuario staff a convertir
+   * @return el {@link AuthPrincipal} resultante
+   */
   private AuthPrincipal mapStaff(User user) {
     Set<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toSet());
 

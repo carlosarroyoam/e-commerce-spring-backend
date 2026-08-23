@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/** Expone los endpoints REST de consulta de productos bajo {@code /products}. */
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -22,6 +23,13 @@ public class ProductController {
     this.productService = productService;
   }
 
+  /**
+   * Lista los productos de forma paginada y filtrable.
+   *
+   * @param productSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de productos y el estado 200 OK
+   */
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<ProductResponse>> findAll(
       @Valid @ModelAttribute ProductSpecs productSpecs,
@@ -30,6 +38,12 @@ public class ProductController {
     return ResponseEntity.ok(products);
   }
 
+  /**
+   * Obtiene un producto por su id.
+   *
+   * @param productId el id del producto
+   * @return el producto encontrado y el estado 200 OK
+   */
   @GetMapping(value = "/{productId}", produces = "application/json")
   public ResponseEntity<ProductResponse> findById(@PathVariable Long productId) {
     ProductResponse productById = productService.findById(productId);

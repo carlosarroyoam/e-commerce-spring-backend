@@ -13,6 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa una propiedad de producto (p. ej. material, marca) persistida en la
+ * tabla {@code properties}.
+ */
 @Entity
 @Table(name = "properties")
 @Getter

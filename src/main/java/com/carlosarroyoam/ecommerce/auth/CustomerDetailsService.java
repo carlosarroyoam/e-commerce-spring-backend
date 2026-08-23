@@ -11,6 +11,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Carga clientes desde {@link CustomerRepository} y los expone como {@link AuthPrincipal} para la
+ * autenticación de Spring Security.
+ */
 @Service("customerDetailsService")
 public class CustomerDetailsService implements UserDetailsService {
   private final CustomerRepository customerRepository;
@@ -19,6 +23,13 @@ public class CustomerDetailsService implements UserDetailsService {
     this.customerRepository = customerRepository;
   }
 
+  /**
+   * Busca un cliente por su email.
+   *
+   * @param email el email del cliente
+   * @return el {@link AuthPrincipal} correspondiente
+   * @throws UsernameNotFoundException si no existe un cliente con ese email
+   */
   @Override
   @Transactional(readOnly = true)
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -28,6 +39,13 @@ public class CustomerDetailsService implements UserDetailsService {
         .orElseThrow(() -> new UsernameNotFoundException("Customer not found: " + email));
   }
 
+  /**
+   * Busca un cliente por su id.
+   *
+   * @param customerId el id del cliente
+   * @return el {@link AuthPrincipal} correspondiente
+   * @throws UsernameNotFoundException si no existe un cliente con ese id
+   */
   @Transactional(readOnly = true)
   public UserDetails loadUserById(Long customerId) throws UsernameNotFoundException {
     return customerRepository
@@ -36,6 +54,13 @@ public class CustomerDetailsService implements UserDetailsService {
         .orElseThrow(() -> new UsernameNotFoundException("Customer not found: " + customerId));
   }
 
+  /**
+   * Convierte una entidad {@link Customer} en un {@link AuthPrincipal} de tipo CUSTOMER, con el
+   * rol fijo {@code CUSTOMER}.
+   *
+   * @param customer la entidad de cliente a convertir
+   * @return el {@link AuthPrincipal} resultante
+   */
   private AuthPrincipal mapCustomer(Customer customer) {
     return AuthPrincipal.builder()
         .id(customer.getId())

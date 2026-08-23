@@ -18,6 +18,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa un ítem de una {@link Order}, persistido en la tabla
+ * {@code order_items}: el {@link Product} y {@link Variant} comprados, cantidad y precios.
+ */
 @Entity
 @Table(name = "order_items")
 @Getter

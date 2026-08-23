@@ -17,6 +17,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa el envío de una {@link Order} persistido en la tabla
+ * {@code shipments}: transportista asignado, número de seguimiento y fechas de envío/entrega.
+ */
 @Entity
 @Table(name = "shipments")
 @Getter

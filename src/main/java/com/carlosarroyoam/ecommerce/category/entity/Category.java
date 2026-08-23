@@ -18,6 +18,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa una categoría de producto persistida en la tabla {@code categories}.
+ */
 @Entity
 @Table(name = "categories")
 @Getter

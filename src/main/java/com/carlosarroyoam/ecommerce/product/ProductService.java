@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Lógica de negocio para consultar productos ({@link Product}). */
 @Service
 public class ProductService {
   private static final Logger log = LoggerFactory.getLogger(ProductService.class);
@@ -30,6 +31,13 @@ public class ProductService {
     this.productRepository = productRepository;
   }
 
+  /**
+   * Obtiene una página de productos que cumplen los filtros indicados.
+   *
+   * @param productSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de {@link ProductResponse} resultante
+   */
   @Transactional(readOnly = true)
   public PagedResponse<ProductResponse> findAll(ProductSpecs productSpecs, Pageable pageable) {
     Specification<Product> spec =
@@ -53,12 +61,26 @@ public class ProductService {
         products.map(ProductResponseMapper.INSTANCE::toDto));
   }
 
+  /**
+   * Busca un producto por su id.
+   *
+   * @param productId el id del producto
+   * @return el {@link ProductResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe un producto con ese id
+   */
   @Transactional(readOnly = true)
   public ProductResponse findById(Long productId) {
     Product productById = findProductByIdOrFail(productId);
     return ProductResponseMapper.INSTANCE.toDto(productById);
   }
 
+  /**
+   * Busca un producto por su id o lanza una excepción si no existe.
+   *
+   * @param productId el id del producto
+   * @return el {@link Product} encontrado
+   * @throws ResponseStatusException con 404 si no existe un producto con ese id
+   */
   private Product findProductByIdOrFail(Long productId) {
     return productRepository
         .findById(productId)

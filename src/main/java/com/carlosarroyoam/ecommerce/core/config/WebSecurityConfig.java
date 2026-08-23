@@ -39,10 +39,24 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * Configuración central de Spring Security: cadena de filtros HTTP, CSRF con cookie de doble
+ * envío, CORS, política de sesión sin estado, autenticación como recurso OAuth2 (JWT propio) y los
+ * {@link AuthenticationProvider} de STAFF y CUSTOMER combinados en un único
+ * {@link AuthenticationManager}.
+ */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
+  /**
+   * Define la cadena de filtros de seguridad HTTP: habilita CSRF de doble envío (excepto en
+   * {@code /auth/login}), CORS, cabeceras same-origin, sesiones sin estado, autenticación como
+   * recurso OAuth2 vía JWT, manejadores personalizados de errores de autenticación/autorización, y
+   * permite sin autenticación las rutas {@code /auth/**} y {@code /actuator/**}.
+   *
+   * @return la {@link SecurityFilterChain} configurada
+   */
   @Bean
   SecurityFilterChain securityFilterChain(
       HttpSecurity http,
@@ -90,18 +104,36 @@ public class WebSecurityConfig {
     return http.build();
   }
 
+  /**
+   * Codificador de contraseñas usado para las credenciales de acceso de STAFF y CUSTOMER.
+   *
+   * @return un {@link BCryptPasswordEncoder} con factor de coste 12
+   */
   @Bean
   @Primary
   PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder(12);
   }
 
+  /**
+   * Codificador de bajo coste usado solo para el hash de refresh tokens, donde la comparación se
+   * hace en cada petición y un coste alto sería innecesariamente lento.
+   *
+   * @return un {@link BCryptPasswordEncoder} con factor de coste 4
+   */
   @Bean
   @Qualifier("refreshTokenPasswordEncoder")
   PasswordEncoder refreshTokenPasswordEncoder() {
     return new BCryptPasswordEncoder(4);
   }
 
+  /**
+   * Proveedor de autenticación para el principal STAFF.
+   *
+   * @param staffDetailsService el {@link UserDetailsService} de STAFF
+   * @param passwordEncoder el codificador de contraseñas a usar
+   * @return el {@link AuthenticationProvider} configurado
+   */
   @Bean
   AuthenticationProvider staffAuthenticationProvider(
       UserDetailsService staffDetailsService, PasswordEncoder passwordEncoder) {
@@ -111,6 +143,13 @@ public class WebSecurityConfig {
     return authenticationProvider;
   }
 
+  /**
+   * Proveedor de autenticación para el principal CUSTOMER.
+   *
+   * @param customerDetailsService el {@link UserDetailsService} de CUSTOMER
+   * @param passwordEncoder el codificador de contraseñas a usar
+   * @return el {@link AuthenticationProvider} configurado
+   */
   @Bean
   AuthenticationProvider customerAuthenticationProvider(
       UserDetailsService customerDetailsService, PasswordEncoder passwordEncoder) {
@@ -120,11 +159,25 @@ public class WebSecurityConfig {
     return authenticationProvider;
   }
 
+  /**
+   * Combina los proveedores de autenticación de STAFF y CUSTOMER en un único
+   * {@link AuthenticationManager}.
+   *
+   * @param providers los proveedores de autenticación registrados
+   * @return el {@link AuthenticationManager} resultante
+   */
   @Bean
   AuthenticationManager authenticationManager(List<AuthenticationProvider> providers) {
     return new ProviderManager(providers);
   }
 
+  /**
+   * Convierte un {@link Jwt} validado en un {@link AuthPrincipalAuthenticationToken}, mapeando sus
+   * claims al {@link AuthPrincipal} correspondiente.
+   *
+   * @param mapper el mapeador de JWT a {@link AuthPrincipal}
+   * @return el {@link Converter} usado por el recurso OAuth2
+   */
   @Bean
   Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter(
       AuthPrincipalMapper mapper) {
@@ -134,6 +187,14 @@ public class WebSecurityConfig {
     };
   }
 
+  /**
+   * Repositorio de tokens CSRF basado en cookie ({@code XSRF-TOKEN}, no {@code HttpOnly}), con el
+   * mismo tiempo de vida que el refresh token para que un refresh silencioso tras reabrir el
+   * navegador no sea rechazado por falta de cookie CSRF.
+   *
+   * @param jwtProps propiedades de JWT, usadas para el tiempo de vida de la cookie
+   * @return el {@link CookieCsrfTokenRepository} configurado
+   */
   @Bean
   CookieCsrfTokenRepository csrfTokenRepository(JwtProps jwtProps) {
     CookieCsrfTokenRepository cookieCsrfTokenRepository =
@@ -147,6 +208,12 @@ public class WebSecurityConfig {
     return cookieCsrfTokenRepository;
   }
 
+  /**
+   * Construye la configuración CORS aplicada a todas las rutas a partir de {@link CorsProps}.
+   *
+   * @param corsProps propiedades de configuración CORS
+   * @return el {@link CorsConfigurationSource} resultante
+   */
   @Bean
   CorsConfigurationSource corsConfigurationSource(CorsProps corsProps) {
     CorsConfiguration configuration = new CorsConfiguration();

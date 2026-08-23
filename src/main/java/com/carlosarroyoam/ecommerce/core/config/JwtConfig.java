@@ -13,8 +13,19 @@ import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
+/**
+ * Configuración de codificación y decodificación de JWT (RS256) usando el par de llaves RSA de
+ * {@link RsaKeyProps}, para el esquema de autenticación autoemitida y autoválidada (sin IdP
+ * externo).
+ */
 @Configuration
 public class JwtConfig {
+  /**
+   * Codificador de JWT usado para emitir access tokens firmados con la llave privada RSA.
+   *
+   * @param rsaKeyProps el par de llaves RSA configurado
+   * @return el {@link JwtEncoder} resultante
+   */
   @Bean
   JwtEncoder jwtEncoder(RsaKeyProps rsaKeyProps) {
     RSAKey rsaKey =
@@ -27,6 +38,13 @@ public class JwtConfig {
     return new NimbusJwtEncoder(immutableJWKSet);
   }
 
+  /**
+   * Decodificador de JWT usado por el recurso OAuth2 para verificar los access tokens con la
+   * llave pública RSA, validando además el emisor ({@code self}).
+   *
+   * @param rsaKeyProps el par de llaves RSA configurado
+   * @return el {@link JwtDecoder} resultante
+   */
   @Bean
   JwtDecoder jwtDecoder(RsaKeyProps rsaKeyProps) {
     NimbusJwtDecoder jwtDecoder =

@@ -17,6 +17,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa un refresh token persistido en la tabla {@code refresh_tokens}:
+ * hash del token, dispositivo y principal asociados, y sus fechas de expiración/uso.
+ */
 @Entity
 @Table(name = "refresh_tokens")
 @Getter

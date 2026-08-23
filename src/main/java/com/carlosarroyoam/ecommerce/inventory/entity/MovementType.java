@@ -12,6 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa el tipo de un movimiento de inventario (p. ej. entrada o salida)
+ * persistido en la tabla {@code movement_types}.
+ */
 @Entity
 @Table(name = "movement_types")
 @Getter

@@ -13,6 +13,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa un atributo de variante (p. ej. color, talla) persistido en la tabla
+ * {@code attributes}.
+ */
 @Entity
 @Table(name = "attributes")
 @Getter

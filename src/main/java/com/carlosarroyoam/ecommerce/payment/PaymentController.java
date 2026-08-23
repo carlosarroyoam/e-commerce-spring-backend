@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/** Expone los endpoints REST de consulta de pagos bajo {@code /payments}. */
 @RestController
 @RequestMapping("/payments")
 public class PaymentController {
@@ -22,6 +23,13 @@ public class PaymentController {
     this.paymentService = paymentService;
   }
 
+  /**
+   * Lista los pagos de forma paginada y filtrable.
+   *
+   * @param paymentSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de pagos y el estado 200 OK
+   */
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<PaymentResponse>> findAll(
       @Valid @ModelAttribute PaymentSpecs paymentSpecs,
@@ -30,6 +38,12 @@ public class PaymentController {
     return ResponseEntity.ok(payments);
   }
 
+  /**
+   * Obtiene un pago por su id.
+   *
+   * @param paymentId el id del pago
+   * @return el pago encontrado y el estado 200 OK
+   */
   @GetMapping(value = "/{paymentId}", produces = "application/json")
   public ResponseEntity<PaymentResponse> findById(@PathVariable Long paymentId) {
     PaymentResponse paymentById = paymentService.findById(paymentId);

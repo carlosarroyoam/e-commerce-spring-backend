@@ -18,6 +18,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Expone los endpoints REST de administración de usuarios STAFF bajo {@code /users}, restringidos
+ * al rol {@code ADMIN}.
+ */
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -27,6 +31,13 @@ public class UserController {
     this.userService = userService;
   }
 
+  /**
+   * Lista los usuarios STAFF de forma paginada y filtrable.
+   *
+   * @param userSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de usuarios y el estado 200 OK
+   */
   @GetMapping(produces = "application/json")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<PagedResponse<UserResponse>> findAll(
@@ -36,6 +47,12 @@ public class UserController {
     return ResponseEntity.ok(users);
   }
 
+  /**
+   * Obtiene un usuario STAFF por su id.
+   *
+   * @param userId el id del usuario
+   * @return el usuario encontrado y el estado 200 OK
+   */
   @GetMapping(value = "/{userId}", produces = "application/json")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<UserResponse> findById(@PathVariable Long userId) {
@@ -43,6 +60,14 @@ public class UserController {
     return ResponseEntity.ok(userById);
   }
 
+  /**
+   * Elimina (baja lógica) un usuario STAFF por su id. Un usuario STAFF no puede eliminarse a sí
+   * mismo.
+   *
+   * @param userId el id del usuario a eliminar
+   * @param principal el principal autenticado que realiza la petición
+   * @return estado 204 No Content
+   */
   @DeleteMapping("/{userId}")
   @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> deleteById(

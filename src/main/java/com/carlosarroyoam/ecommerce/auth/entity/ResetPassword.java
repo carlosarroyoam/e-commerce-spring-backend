@@ -17,6 +17,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa un token de reseteo de contraseña en la tabla {@code
+ * reset_password}: hash del token, principal asociado y su fecha de expiración. Preparada para la
+ * funcionalidad de recuperación/reseteo de contraseña, aún no implementada (ver {@link
+ * com.carlosarroyoam.ecommerce.auth.AuthService#forgotPassword} y {@link
+ * com.carlosarroyoam.ecommerce.auth.AuthService#resetPassword}).
+ */
 @Entity
 @Table(name = "reset_password")
 @Getter

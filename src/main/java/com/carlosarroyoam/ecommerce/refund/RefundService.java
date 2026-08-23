@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Lógica de negocio para consultar reembolsos ({@link Refund}). */
 @Service
 public class RefundService {
   private static final Logger log = LoggerFactory.getLogger(RefundService.class);
@@ -29,6 +30,13 @@ public class RefundService {
     this.refundRepository = refundRepository;
   }
 
+  /**
+   * Obtiene una página de reembolsos que cumplen los filtros indicados.
+   *
+   * @param refundSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de {@link RefundResponse} resultante
+   */
   @Transactional(readOnly = true)
   public PagedResponse<RefundResponse> findAll(RefundSpecs refundSpecs, Pageable pageable) {
     Specification<Refund> spec =
@@ -43,18 +51,39 @@ public class RefundService {
         refunds.map(RefundResponseMapper.INSTANCE::toDto));
   }
 
+  /**
+   * Busca un reembolso por su id.
+   *
+   * @param refundId el id del reembolso
+   * @return el {@link RefundResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe un reembolso con ese id
+   */
   @Transactional(readOnly = true)
   public RefundResponse findById(Long refundId) {
     Refund refundById = findRefundByIdOrFail(refundId);
     return RefundResponseMapper.INSTANCE.toDto(refundById);
   }
 
+  /**
+   * Busca el reembolso asociado a una orden.
+   *
+   * @param orderId el id de la orden
+   * @return el {@link RefundResponse} correspondiente
+   * @throws ResponseStatusException con 404 si la orden no tiene un reembolso asociado
+   */
   @Transactional(readOnly = true)
   public RefundResponse findByOrderId(Long orderId) {
     Refund refundByOrderId = findRefundByOrderIdOrFail(orderId);
     return RefundResponseMapper.INSTANCE.toDto(refundByOrderId);
   }
 
+  /**
+   * Busca un reembolso por su id o lanza una excepción si no existe.
+   *
+   * @param refundId el id del reembolso
+   * @return el {@link Refund} encontrado
+   * @throws ResponseStatusException con 404 si no existe un reembolso con ese id
+   */
   private Refund findRefundByIdOrFail(Long refundId) {
     return refundRepository
         .findById(refundId)
@@ -66,6 +95,13 @@ public class RefundService {
             });
   }
 
+  /**
+   * Busca el reembolso asociado a una orden o lanza una excepción si no existe.
+   *
+   * @param orderId el id de la orden
+   * @return el {@link Refund} encontrado
+   * @throws ResponseStatusException con 404 si la orden no tiene un reembolso asociado
+   */
   private Refund findRefundByOrderIdOrFail(Long orderId) {
     return refundRepository
         .findByOrderId(orderId)

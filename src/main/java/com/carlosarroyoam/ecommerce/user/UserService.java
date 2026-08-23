@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Lógica de negocio para consultar y eliminar usuarios STAFF ({@link User}). */
 @Service
 public class UserService {
   private static final Logger log = LoggerFactory.getLogger(UserService.class);
@@ -32,6 +33,13 @@ public class UserService {
     this.userRepository = userRepository;
   }
 
+  /**
+   * Obtiene una página de usuarios STAFF que cumplen los filtros indicados.
+   *
+   * @param userSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de {@link UserResponse} resultante
+   */
   @Transactional(readOnly = true)
   public PagedResponse<UserResponse> findAll(UserSpecs userSpecs, Pageable pageable) {
     Specification<User> spec =
@@ -53,12 +61,28 @@ public class UserService {
         users.map(UserResponseMapper.INSTANCE::toDto));
   }
 
+  /**
+   * Busca un usuario STAFF por su id.
+   *
+   * @param userId el id del usuario
+   * @return el {@link UserResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe un usuario con ese id
+   */
   @Transactional(readOnly = true)
   public UserResponse findById(Long userId) {
     User userById = findUserByIdOrFail(userId);
     return UserResponseMapper.INSTANCE.toDto(userById);
   }
 
+  /**
+   * Marca como eliminado (baja lógica) el usuario STAFF indicado.
+   *
+   * @param userId el id del usuario a eliminar
+   * @param currentUserId el id del principal STAFF autenticado que realiza la petición, o
+   *     {@code null} si el principal autenticado es un CUSTOMER
+   * @throws ResponseStatusException con 422 si {@code userId} coincide con {@code currentUserId}
+   *     o si el usuario ya está eliminado; con 404 si no existe un usuario con ese id
+   */
   @Transactional
   public void deleteById(Long userId, Long currentUserId) {
     if (userId.equals(currentUserId)) {
@@ -81,6 +105,13 @@ public class UserService {
     userRepository.save(userById);
   }
 
+  /**
+   * Busca un usuario staff por su id o lanza una excepción si no existe.
+   *
+   * @param userId el id del usuario
+   * @return el {@link User} encontrado
+   * @throws ResponseStatusException con 404 si no existe un usuario con ese id
+   */
   private User findUserByIdOrFail(Long userId) {
     return userRepository
         .findById(userId)

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Lógica de negocio para consultar y cancelar órdenes ({@link Order}). */
 @Service
 public class OrderService {
   private static final Logger log = LoggerFactory.getLogger(OrderService.class);
@@ -34,6 +35,13 @@ public class OrderService {
     this.orderRepository = orderRepository;
   }
 
+  /**
+   * Obtiene una página de órdenes que cumplen los filtros indicados.
+   *
+   * @param orderSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de {@link OrderResponse} resultante
+   */
   @Transactional(readOnly = true)
   public PagedResponse<OrderResponse> findAll(OrderSpecs orderSpecs, Pageable pageable) {
     Specification<Order> spec =
@@ -54,12 +62,26 @@ public class OrderService {
         orders.map(OrderResponseMapper.INSTANCE::toDto));
   }
 
+  /**
+   * Busca una orden por su id.
+   *
+   * @param orderId el id de la orden
+   * @return el {@link OrderResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe una orden con ese id
+   */
   @Transactional(readOnly = true)
   public OrderResponse findById(Long orderId) {
     Order orderByIdOrFail = findOrderByIdOrFail(orderId);
     return OrderResponseMapper.INSTANCE.toDto(orderByIdOrFail);
   }
 
+  /**
+   * Busca el resumen de seguimiento público de una orden por su número de orden.
+   *
+   * @param orderNumber el número de la orden
+   * @return el {@link OrderTrackResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe una orden con ese número
+   */
   @Transactional(readOnly = true)
   public OrderTrackResponse findByOrderNumber(String orderNumber) {
     Order orderByOrderNumber =
@@ -75,6 +97,14 @@ public class OrderService {
     return OrderTrackResponseMapper.INSTANCE.toDto(orderByOrderNumber);
   }
 
+  /**
+   * Cancela una orden y añade una entrada al historial de estados. Solo puede cancelarse una
+   * orden en estado {@code PENDING}, {@code CONFIRMED} o {@code PROCESSING}.
+   *
+   * @param orderId el id de la orden a cancelar
+   * @throws ResponseStatusException con 404 si no existe una orden con ese id; con 422 si su
+   *     estado actual no permite la cancelación
+   */
   @Transactional
   public void cancel(Long orderId) {
     Order orderById = findOrderByIdOrFail(orderId);
@@ -98,12 +128,25 @@ public class OrderService {
     orderRepository.save(orderById);
   }
 
+  /**
+   * Indica si una orden en el estado dado puede cancelarse.
+   *
+   * @param orderStatus el estado actual de la orden
+   * @return {@code true} si el estado es {@code PENDING}, {@code CONFIRMED} o {@code PROCESSING}
+   */
   private boolean canBeCancelled(OrderStatus orderStatus) {
     return orderStatus == OrderStatus.PENDING
         || orderStatus == OrderStatus.CONFIRMED
         || orderStatus == OrderStatus.PROCESSING;
   }
 
+  /**
+   * Busca una orden por su id o lanza una excepción si no existe.
+   *
+   * @param orderId el id de la orden
+   * @return la {@link Order} encontrada
+   * @throws ResponseStatusException con 404 si no existe una orden con ese id
+   */
   private Order findOrderByIdOrFail(Long orderId) {
     return orderRepository
         .findById(orderId)

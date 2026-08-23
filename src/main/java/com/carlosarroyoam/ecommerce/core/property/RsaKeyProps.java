@@ -8,6 +8,10 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * Propiedades de configuración del par de llaves RSA bajo el prefijo {@code application.rsa},
+ * usadas para firmar y verificar los JWT emitidos por la API.
+ */
 @Component
 @ConfigurationProperties(prefix = "application.rsa")
 @Getter

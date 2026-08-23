@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Lógica de negocio para consultar clientes ({@link Customer}). */
 @Service
 public class CustomerService {
   private static final Logger log = LoggerFactory.getLogger(CustomerService.class);
@@ -28,6 +29,13 @@ public class CustomerService {
     this.customerRepository = customerRepository;
   }
 
+  /**
+   * Obtiene una página de clientes que cumplen los filtros indicados.
+   *
+   * @param customerSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de {@link CustomerResponse} resultante
+   */
   @Transactional(readOnly = true)
   public PagedResponse<CustomerResponse> findAll(CustomerSpecs customerSpecs, Pageable pageable) {
     Specification<Customer> spec =
@@ -48,12 +56,26 @@ public class CustomerService {
         customers.map(CustomerResponseMapper.INSTANCE::toDto));
   }
 
+  /**
+   * Busca un cliente por su id.
+   *
+   * @param customerId el id del cliente
+   * @return el {@link CustomerResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe un cliente con ese id
+   */
   @Transactional(readOnly = true)
   public CustomerResponse findById(Long customerId) {
     Customer customerById = findCustomerByIdOrFail(customerId);
     return CustomerResponseMapper.INSTANCE.toDto(customerById);
   }
 
+  /**
+   * Busca un cliente por su id o lanza una excepción si no existe.
+   *
+   * @param customerId el id del cliente
+   * @return el {@link Customer} encontrado
+   * @throws ResponseStatusException con 404 si no existe un cliente con ese id
+   */
   private Customer findCustomerByIdOrFail(Long customerId) {
     return customerRepository
         .findById(customerId)

@@ -15,6 +15,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa un motivo de movimiento de inventario (p. ej. entrada, venta,
+ * devolución) persistido en la tabla {@code movements}, asociado a un {@link MovementType}.
+ */
 @Entity
 @Table(name = "movements")
 @Getter

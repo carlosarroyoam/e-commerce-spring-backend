@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/** Expone los endpoints REST de consulta de clientes bajo {@code /customers}. */
 @RestController
 @RequestMapping("/customers")
 public class CustomerController {
@@ -22,6 +23,13 @@ public class CustomerController {
     this.customerService = customerService;
   }
 
+  /**
+   * Lista los clientes de forma paginada y filtrable.
+   *
+   * @param customerSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de clientes y el estado 200 OK
+   */
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<CustomerResponse>> findAll(
       @Valid @ModelAttribute CustomerSpecs customerSpecs,
@@ -30,6 +38,12 @@ public class CustomerController {
     return ResponseEntity.ok(customers);
   }
 
+  /**
+   * Obtiene un cliente por su id.
+   *
+   * @param customerId el id del cliente
+   * @return el cliente encontrado y el estado 200 OK
+   */
   @GetMapping(value = "/{customerId}", produces = "application/json")
   public ResponseEntity<CustomerResponse> findById(@PathVariable Long customerId) {
     CustomerResponse customerById = customerService.findById(customerId);

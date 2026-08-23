@@ -28,6 +28,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa una orden de compra persistida en la tabla {@code orders}: totales,
+ * cliente y dirección de envío, y sus {@link OrderItem items}, {@link Payment pagos},
+ * {@link Shipment envíos}, {@link Refund reembolsos} e {@link OrderStatusHistory historial de
+ * estados} asociados.
+ */
 @Entity
 @Table(name = "orders")
 @Getter

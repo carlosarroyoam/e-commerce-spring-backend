@@ -11,6 +11,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Representa al principal autenticado (staff o customer) de forma unificada para Spring
+ * Security, independientemente de su tabla de origen.
+ */
 @Getter
 @Setter
 @Builder
@@ -26,6 +30,12 @@ public class AuthPrincipal implements UserDetails {
   private final PrincipalType principalType;
   private final Set<String> roles;
 
+  /**
+   * Convierte los roles del principal en authorities de Spring Security, prefijando cada uno con
+   * {@code ROLE_}.
+   *
+   * @return las authorities del principal
+   */
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
     return roles.stream()
@@ -34,16 +44,32 @@ public class AuthPrincipal implements UserDetails {
         .collect(Collectors.toSet());
   }
 
+  /**
+   * Devuelve el nombre de usuario de Spring Security, que en este proyecto es el email.
+   *
+   * @return el email del principal
+   */
   @Override
   public String getUsername() {
     return email;
   }
 
+  /**
+   * Devuelve el hash de la contraseña del principal, usado por Spring Security para validar
+   * credenciales.
+   *
+   * @return el hash de la contraseña
+   */
   @Override
   public String getPassword() {
     return passwordHash;
   }
 
+  /**
+   * Indica si el principal está habilitado para autenticarse.
+   *
+   * @return {@code true} si el estado del principal es {@code ACTIVE}
+   */
   @Override
   public boolean isEnabled() {
     return "ACTIVE".equals(status);

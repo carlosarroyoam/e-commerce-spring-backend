@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Lógica de negocio para consultar direcciones de clientes ({@link CustomerAddress}). */
 @Service
 public class CustomerAddressService {
   private static final Logger log = LoggerFactory.getLogger(CustomerAddressService.class);
@@ -25,6 +26,13 @@ public class CustomerAddressService {
     this.customerAddressRepository = customerAddressRepository;
   }
 
+  /**
+   * Lista todas las direcciones de un cliente.
+   *
+   * @param customerId el id del cliente
+   * @return la lista de {@link CustomerAddressResponse}
+   * @throws ResponseStatusException con 404 si no existe un cliente con ese id
+   */
   @Transactional(readOnly = true)
   public List<CustomerAddressResponse> findAllByCustomerId(Long customerId) {
     validateCustomerExists(customerId);
@@ -34,6 +42,14 @@ public class CustomerAddressService {
     return CustomerAddressResponseMapper.INSTANCE.toDtos(addresses);
   }
 
+  /**
+   * Busca una dirección de un cliente por su id.
+   *
+   * @param customerId el id del cliente
+   * @param addressId el id de la dirección
+   * @return el {@link CustomerAddressResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe el cliente o la dirección
+   */
   @Transactional(readOnly = true)
   public CustomerAddressResponse findById(Long customerId, Long addressId) {
     validateCustomerExists(customerId);
@@ -43,6 +59,12 @@ public class CustomerAddressService {
     return CustomerAddressResponseMapper.INSTANCE.toDto(customerAddressById);
   }
 
+  /**
+   * Verifica que exista un cliente con el id indicado.
+   *
+   * @param customerId el id del cliente
+   * @throws ResponseStatusException con 404 si no existe un cliente con ese id
+   */
   private void validateCustomerExists(Long customerId) {
     if (!customerRepository.existsById(customerId)) {
       log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
@@ -51,6 +73,14 @@ public class CustomerAddressService {
     }
   }
 
+  /**
+   * Busca una dirección de un cliente por su id o lanza una excepción si no existe.
+   *
+   * @param customerId el id del cliente
+   * @param addressId el id de la dirección
+   * @return la {@link CustomerAddress} encontrada
+   * @throws ResponseStatusException con 404 si no existe una dirección con ese id para ese cliente
+   */
   private CustomerAddress findCustomerAddressByIdOrFail(Long customerId, Long addressId) {
     return customerAddressRepository
         .findByIdAndCustomerId(addressId, customerId)

@@ -20,6 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
+/**
+ * Orquesta el flujo de autenticación: autentica credenciales, emite y rota tokens, revoca
+ * sesiones, y expone (sin implementar todavía) la recuperación y reseteo de contraseña.
+ */
 @Service
 public class AuthService {
   private static final Logger log = LoggerFactory.getLogger(AuthService.class);
@@ -42,6 +46,15 @@ public class AuthService {
     this.tokenService = tokenService;
   }
 
+  /**
+   * Autentica al usuario (staff o customer) con email y contraseña, y crea un nuevo par de
+   * access/refresh token asociado al dispositivo indicado.
+   *
+   * @param request credenciales de acceso y el identificador del dispositivo
+   * @return la respuesta de autenticación con el access token y el refresh token generados
+   * @throws org.springframework.security.core.AuthenticationException si las credenciales no son
+   *     válidas
+   */
   public AuthResponse login(LoginRequest request) {
     Authentication auth =
         authenticationManager.authenticate(
@@ -57,6 +70,17 @@ public class AuthService {
     return buildAuthResponse(principal, accessToken, createdRefreshToken, refreshToken);
   }
 
+  /**
+   * Valida el refresh token recibido, carga al principal asociado, y rota tanto el access token
+   * como el refresh token.
+   *
+   * @param rawRefreshTokenCookie valor crudo de la cookie {@code refresh_token} (formato
+   *     {@code id.rawToken}), puede ser nulo o vacío
+   * @return la respuesta de autenticación con el access token y el refresh token renovados
+   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el
+   *     token no está presente, tiene formato inválido, no existe o pertenece a un principal que
+   *     ya no existe
+   */
   public AuthResponse refreshToken(String rawRefreshTokenCookie) {
     if (!StringUtils.hasText(rawRefreshTokenCookie)) {
       log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
@@ -86,6 +110,13 @@ public class AuthService {
     return buildAuthResponse(principal, accessToken, createdRefreshToken, refreshToken);
   }
 
+  /**
+   * Revoca (elimina) el refresh token asociado a la cookie recibida, si es válida. Si la cookie
+   * es nula, vacía o tiene formato inválido, no hace nada.
+   *
+   * @param rawRefreshTokenCookie valor crudo de la cookie {@code refresh_token} (formato
+   *     {@code id.rawToken}), puede ser nulo o vacío
+   */
   public void revoke(String rawRefreshTokenCookie) {
     parseRefreshTokenCookie(rawRefreshTokenCookie)
         .ifPresent(
@@ -94,16 +125,37 @@ public class AuthService {
                     refreshTokenCookie.getId(), refreshTokenCookie.getRawToken()));
   }
 
+  /**
+   * Funcionalidad aún no implementada. Siempre lanza 501 Not Implemented.
+   *
+   * @param request email del usuario que solicita el reseteo
+   * @throws org.springframework.web.server.ResponseStatusException con 501 Not Implemented
+   */
   public void forgotPassword(ForgotPasswordRequest request) {
     throw new ResponseStatusException(
         HttpStatus.NOT_IMPLEMENTED, AppMessages.FEATURE_NOT_IMPLEMENTED_EXCEPTION);
   }
 
+  /**
+   * Funcionalidad aún no implementada. Siempre lanza 501 Not Implemented.
+   *
+   * @param request nueva contraseña y su confirmación
+   * @throws org.springframework.web.server.ResponseStatusException con 501 Not Implemented
+   */
   public void resetPassword(ResetPasswordRequest request) {
     throw new ResponseStatusException(
         HttpStatus.NOT_IMPLEMENTED, AppMessages.FEATURE_NOT_IMPLEMENTED_EXCEPTION);
   }
 
+  /**
+   * Resuelve el {@link AuthPrincipal} (staff o customer) dueño del refresh token, según su tipo
+   * de principal.
+   *
+   * @param refreshTokenById el refresh token del cual obtener el principal
+   * @return el principal autenticado correspondiente
+   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el
+   *     principal ya no existe
+   */
   private AuthPrincipal loadPrincipal(RefreshToken refreshTokenById) {
     try {
       return switch (refreshTokenById.getPrincipalType()) {
@@ -119,6 +171,14 @@ public class AuthService {
     }
   }
 
+  /**
+   * Parsea el valor crudo de la cookie {@code refresh_token} (formato {@code id.rawToken}) en un
+   * {@link RefreshTokenCookie}.
+   *
+   * @param rawRefreshTokenCookie valor crudo de la cookie, puede ser nulo o vacío
+   * @return el refresh token parseado, o {@link Optional#empty()} si es nulo, vacío, no tiene el
+   *     formato esperado, o el id no es un UUID válido
+   */
   private Optional<RefreshTokenCookie> parseRefreshTokenCookie(String rawRefreshTokenCookie) {
     if (!StringUtils.hasText(rawRefreshTokenCookie)) {
       return Optional.empty();
@@ -140,6 +200,16 @@ public class AuthService {
     }
   }
 
+  /**
+   * Construye el DTO de respuesta de autenticación a partir del principal y los tokens recién
+   * generados.
+   *
+   * @param principal el principal autenticado
+   * @param accessToken el access token JWT generado
+   * @param createdRefreshToken la entidad de refresh token persistida
+   * @param refreshToken el valor sin hashear del refresh token generado
+   * @return el DTO {@link AuthResponse} listo para devolver al cliente
+   */
   private AuthResponse buildAuthResponse(
       AuthPrincipal principal,
       String accessToken,

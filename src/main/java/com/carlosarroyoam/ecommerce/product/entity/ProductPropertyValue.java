@@ -15,6 +15,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa el valor de una {@link Property propiedad} para un {@link Product
+ * producto}, persistido en la tabla {@code product_property_values}.
+ */
 @Entity
 @Table(name = "product_property_values")
 @Getter

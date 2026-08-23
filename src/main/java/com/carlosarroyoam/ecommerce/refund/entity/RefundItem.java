@@ -17,6 +17,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa un ítem reembolsado dentro de un {@link Refund}, persistido en la
+ * tabla {@code refund_items} y ligado al {@link OrderItem} original.
+ */
 @Entity
 @Table(name = "refund_items")
 @Getter

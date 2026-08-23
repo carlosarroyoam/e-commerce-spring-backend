@@ -16,6 +16,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa un movimiento de inventario persistido en la tabla
+ * {@code inventory_movements}: la cantidad afectada de una {@link Variant} y el {@link Movement}
+ * (motivo) asociado.
+ */
 @Entity
 @Table(name = "inventory_movements")
 @Getter

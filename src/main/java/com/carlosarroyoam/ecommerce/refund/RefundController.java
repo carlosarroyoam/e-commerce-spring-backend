@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/** Expone los endpoints REST de consulta de reembolsos bajo {@code /refunds}. */
 @RestController
 @RequestMapping("/refunds")
 public class RefundController {
@@ -22,6 +23,13 @@ public class RefundController {
     this.refundService = refundService;
   }
 
+  /**
+   * Lista los reembolsos de forma paginada y filtrable.
+   *
+   * @param refundSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de reembolsos y el estado 200 OK
+   */
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<RefundResponse>> findAll(
       @Valid @ModelAttribute RefundSpecs refundSpecs,
@@ -30,12 +38,24 @@ public class RefundController {
     return ResponseEntity.ok(refunds);
   }
 
+  /**
+   * Obtiene un reembolso por su id.
+   *
+   * @param refundId el id del reembolso
+   * @return el reembolso encontrado y el estado 200 OK
+   */
   @GetMapping(value = "/{refundId}", produces = "application/json")
   public ResponseEntity<RefundResponse> findById(@PathVariable Long refundId) {
     RefundResponse refundById = refundService.findById(refundId);
     return ResponseEntity.ok(refundById);
   }
 
+  /**
+   * Obtiene el reembolso asociado a una orden.
+   *
+   * @param orderId el id de la orden
+   * @return el reembolso encontrado y el estado 200 OK
+   */
   @GetMapping(value = "/order/{orderId}", produces = "application/json")
   public ResponseEntity<RefundResponse> findByOrderId(@PathVariable Long orderId) {
     RefundResponse refundByOrderId = refundService.findByOrderId(orderId);

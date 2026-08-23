@@ -15,6 +15,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa una imagen asociada a una {@link Variant variante}, persistida en la
+ * tabla {@code variant_images}.
+ */
 @Entity
 @Table(name = "variant_images")
 @Getter

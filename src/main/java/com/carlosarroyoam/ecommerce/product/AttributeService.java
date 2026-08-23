@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Lógica de negocio para consultar atributos de producto ({@link Attribute}). */
 @Service
 public class AttributeService {
   private static final Logger log = LoggerFactory.getLogger(AttributeService.class);
@@ -24,6 +25,12 @@ public class AttributeService {
     this.attributeRepository = attributeRepository;
   }
 
+  /**
+   * Obtiene una página de atributos.
+   *
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de {@link AttributeResponse} resultante
+   */
   @Transactional(readOnly = true)
   public PagedResponse<AttributeResponse> findAll(Pageable pageable) {
     Page<Attribute> attributes = attributeRepository.findAll(pageable);
@@ -32,12 +39,26 @@ public class AttributeService {
         attributes.map(AttributeResponseMapper.INSTANCE::toDto));
   }
 
+  /**
+   * Busca un atributo por su id.
+   *
+   * @param attributeId el id del atributo
+   * @return el {@link AttributeResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe un atributo con ese id
+   */
   @Transactional(readOnly = true)
   public AttributeResponse findById(Long attributeId) {
     Attribute attributeById = findAttributeByIdOrFail(attributeId);
     return AttributeResponseMapper.INSTANCE.toDto(attributeById);
   }
 
+  /**
+   * Busca un atributo por su id o lanza una excepción si no existe.
+   *
+   * @param attributeId el id del atributo
+   * @return el {@link Attribute} encontrado
+   * @throws ResponseStatusException con 404 si no existe un atributo con ese id
+   */
   private Attribute findAttributeByIdOrFail(Long attributeId) {
     return attributeRepository
         .findById(attributeId)

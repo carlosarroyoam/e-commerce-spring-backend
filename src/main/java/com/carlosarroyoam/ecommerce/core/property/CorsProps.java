@@ -8,6 +8,10 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
+/**
+ * Propiedades de configuración CORS bajo el prefijo {@code application.cors}: orígenes, métodos y
+ * cabeceras permitidos/expuestos, y si se permiten credenciales.
+ */
 @Component
 @ConfigurationProperties(prefix = "application.cors")
 @Getter

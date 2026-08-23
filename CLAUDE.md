@@ -95,3 +95,15 @@ Two independent principal types share the same JWT-based auth, not a single `use
 ### Database
 
 `src/main/resources/schema.sql` is the source of truth for table structure (MySQL, `InnoDB`/`utf8mb4`); status-like columns are plain `VARCHAR` with `CHECK (... IN (...))` constraints rather than lookup tables (e.g. `orders.status`, `payments.status`, `payments.method`) — keep enum values in `schema.sql`, JPA entities, and `api-docs.yaml` in sync when adding/renaming a status. `data.sql` holds seed data loaded on top of it.
+
+### Documentation convention
+
+Javadoc on classes and their methods (public and private) is an explicit, deliberate exception to the general "no comments unless the WHY is non-obvious" rule — it documents the WHAT/responsibility of the public surface, not implementation reasoning. Inline comments inside method bodies stay off-limits unless they explain a genuinely non-obvious WHY. The `auth` package is the style reference; write new Javadoc in Spanish, matching its tone (e.g. `CustomerDetailsService`, `AuthController`):
+
+- **Class-level** (every public class/interface): 1-3 sentences describing its responsibility, using `{@link}` for related types.
+- **Controllers/Services**: Javadoc on both public methods (endpoints / business operations) and private helper methods, with `@param`/`@return` where meaningful.
+- **Repositories**: Javadoc only on custom query methods, not on methods inherited from `JpaRepository`/`JpaSpecificationExecutor`; the interface itself gets a class-level Javadoc naming the entity it manages.
+- **DTOs**: not documented — skip Javadoc entirely on request/response/`*Specs` DTOs.
+- **Entities**: class-level Javadoc only (what it represents); no per-field comments unless a field's semantics are non-obvious.
+- **Nested MapStruct mappers** (`XResponseMapper`): no method-level Javadoc (`toDto`/`toDtos` are self-explanatory); a short class-level Javadoc is optional.
+- **`core/*`** (config, security, filter, specification, util): class-level and method Javadoc (public and private), since this cross-cutting code is less self-evident than feature classes.

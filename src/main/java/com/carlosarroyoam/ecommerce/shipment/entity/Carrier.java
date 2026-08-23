@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/** Entidad JPA que representa un transportista persistido en la tabla {@code carriers}. */
 @Entity
 @Table(name = "carriers")
 @Getter

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Lógica de negocio para consultar pagos ({@link Payment}). */
 @Service
 public class PaymentService {
   private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
@@ -27,6 +28,13 @@ public class PaymentService {
     this.paymentRepository = paymentRepository;
   }
 
+  /**
+   * Obtiene una página de pagos que cumplen los filtros indicados.
+   *
+   * @param paymentSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de {@link PaymentResponse} resultante
+   */
   @Transactional(readOnly = true)
   public PagedResponse<PaymentResponse> findAll(PaymentSpecs paymentSpecs, Pageable pageable) {
     Specification<Payment> spec =
@@ -47,12 +55,26 @@ public class PaymentService {
         payments.map(PaymentResponseMapper.INSTANCE::toDto));
   }
 
+  /**
+   * Busca un pago por su id.
+   *
+   * @param paymentId el id del pago
+   * @return el {@link PaymentResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe un pago con ese id
+   */
   @Transactional(readOnly = true)
   public PaymentResponse findById(Long paymentId) {
     Payment paymentById = findPaymentByIdOrFail(paymentId);
     return PaymentResponseMapper.INSTANCE.toDto(paymentById);
   }
 
+  /**
+   * Busca un pago por su id o lanza una excepción si no existe.
+   *
+   * @param paymentId el id del pago
+   * @return el {@link Payment} encontrado
+   * @throws ResponseStatusException con 404 si no existe un pago con ese id
+   */
   private Payment findPaymentByIdOrFail(Long paymentId) {
     return paymentRepository
         .findById(paymentId)

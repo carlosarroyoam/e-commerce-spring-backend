@@ -20,6 +20,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa el pago de una {@link Order} persistido en la tabla
+ * {@code payments}: monto, referencia, método y estado del pago.
+ */
 @Entity
 @Table(name = "payments")
 @Getter

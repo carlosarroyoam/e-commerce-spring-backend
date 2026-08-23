@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+/** Lógica de negocio para consultar envíos ({@link Shipment}) y transportistas ({@link Carrier}). */
 @Service
 public class ShipmentService {
   private static final Logger log = LoggerFactory.getLogger(ShipmentService.class);
@@ -36,6 +37,13 @@ public class ShipmentService {
     this.carrierRepository = carrierRepository;
   }
 
+  /**
+   * Obtiene una página de envíos que cumplen los filtros indicados.
+   *
+   * @param shipmentSpecs los filtros de búsqueda
+   * @param pageable la paginación y el orden a aplicar
+   * @return la página de {@link ShipmentResponse} resultante
+   */
   @Transactional(readOnly = true)
   public PagedResponse<ShipmentResponse> findAll(ShipmentSpecs shipmentSpecs, Pageable pageable) {
     Specification<Shipment> spec =
@@ -50,24 +58,50 @@ public class ShipmentService {
         shipments.map(ShipmentResponseMapper.INSTANCE::toDto));
   }
 
+  /**
+   * Busca un envío por su id.
+   *
+   * @param shipmentId el id del envío
+   * @return el {@link ShipmentResponse} correspondiente
+   * @throws ResponseStatusException con 404 si no existe un envío con ese id
+   */
   @Transactional(readOnly = true)
   public ShipmentResponse findById(Long shipmentId) {
     Shipment shipmentById = findShipmentByIdOrFail(shipmentId);
     return ShipmentResponseMapper.INSTANCE.toDto(shipmentById);
   }
 
+  /**
+   * Busca el envío asociado a una orden.
+   *
+   * @param orderId el id de la orden
+   * @return el {@link ShipmentResponse} correspondiente
+   * @throws ResponseStatusException con 404 si la orden no tiene un envío asociado
+   */
   @Transactional(readOnly = true)
   public ShipmentResponse findByOrderId(Long orderId) {
     Shipment shipmentByOrderId = findShipmentByOrderIdOrFail(orderId);
     return ShipmentResponseMapper.INSTANCE.toDto(shipmentByOrderId);
   }
 
+  /**
+   * Lista todos los transportistas disponibles.
+   *
+   * @return la lista de {@link CarrierResponse}
+   */
   @Transactional(readOnly = true)
   public List<CarrierResponse> findAllActiveCarriers() {
     List<Carrier> carriers = carrierRepository.findAll();
     return CarrierResponseMapper.INSTANCE.toDtos(carriers);
   }
 
+  /**
+   * Busca un envío por su id o lanza una excepción si no existe.
+   *
+   * @param shipmentId el id del envío
+   * @return el {@link Shipment} encontrado
+   * @throws ResponseStatusException con 404 si no existe un envío con ese id
+   */
   private Shipment findShipmentByIdOrFail(Long shipmentId) {
     return shipmentRepository
         .findById(shipmentId)
@@ -79,6 +113,13 @@ public class ShipmentService {
             });
   }
 
+  /**
+   * Busca el envío asociado a una orden o lanza una excepción si no existe.
+   *
+   * @param orderId el id de la orden
+   * @return el {@link Shipment} encontrado
+   * @throws ResponseStatusException con 404 si la orden no tiene un envío asociado
+   */
   private Shipment findShipmentByOrderIdOrFail(Long orderId) {
     return shipmentRepository
         .findByOrderId(orderId)

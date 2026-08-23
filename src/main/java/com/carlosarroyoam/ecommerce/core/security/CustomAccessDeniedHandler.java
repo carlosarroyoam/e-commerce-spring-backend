@@ -12,6 +12,11 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
 
+/**
+ * Traduce un {@link AccessDeniedException} de Spring Security al mismo formato de error JSON
+ * ({@link AppExceptionResponse}) que usa el resto de la API, en vez de la respuesta por defecto de
+ * Spring Security.
+ */
 @Component
 public class CustomAccessDeniedHandler implements AccessDeniedHandler {
   private final ApiExceptionResponseFactory apiExceptionResponseFactory;
@@ -23,6 +28,13 @@ public class CustomAccessDeniedHandler implements AccessDeniedHandler {
     this.mapper = mapper;
   }
 
+  /**
+   * Escribe la respuesta 403 Forbidden con el cuerpo de error uniforme.
+   *
+   * @param request la petición HTTP que originó el acceso denegado
+   * @param response la respuesta HTTP donde se escribe el error
+   * @param ex la excepción de acceso denegado capturada
+   */
   @Override
   public void handle(
       HttpServletRequest request, HttpServletResponse response, AccessDeniedException ex)

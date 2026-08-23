@@ -12,6 +12,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/** Entidad JPA que representa un rol de usuario STAFF persistido en la tabla {@code roles}. */
 @Entity
 @Table(name = "roles")
 @Getter

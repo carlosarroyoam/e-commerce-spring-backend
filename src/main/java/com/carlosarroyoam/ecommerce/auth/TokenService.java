@@ -10,6 +10,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+/** Genera los access tokens JWT (firmados con RSA) y los valores crudos de refresh token. */
 @Service
 public class TokenService {
   private final long accessTokenTtlMs;
@@ -20,6 +21,13 @@ public class TokenService {
     this.jwtEncoder = jwtEncoder;
   }
 
+  /**
+   * Genera un access token JWT firmado con RSA para el principal dado, incluyendo sus datos
+   * básicos y roles como claims.
+   *
+   * @param principal el principal autenticado para el cual emitir el token
+   * @return el access token JWT codificado
+   */
   public String generateAccessToken(AuthPrincipal principal) {
     Instant now = Instant.now();
     JwtClaimsSet claims =
@@ -39,6 +47,11 @@ public class TokenService {
     return this.jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
   }
 
+  /**
+   * Genera un nuevo valor de refresh token sin hashear (un UUID aleatorio).
+   *
+   * @return el valor crudo del refresh token
+   */
   public String generateRefreshToken() {
     return UUID.randomUUID().toString();
   }

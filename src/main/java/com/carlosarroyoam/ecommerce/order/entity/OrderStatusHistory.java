@@ -16,6 +16,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa una entrada del historial de cambios de estado de una {@link Order},
+ * persistida en la tabla {@code order_status_history}.
+ */
 @Entity
 @Table(name = "order_status_history")
 @Getter

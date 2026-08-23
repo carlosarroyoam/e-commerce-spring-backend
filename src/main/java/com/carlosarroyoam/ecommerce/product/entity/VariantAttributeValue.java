@@ -15,6 +15,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Entidad JPA que representa el valor de un {@link Attribute atributo} para una {@link Variant
+ * variante}, persistido en la tabla {@code variant_attribute_values}.
+ */
 @Entity
 @Table(name = "variant_attribute_values")
 @Getter
