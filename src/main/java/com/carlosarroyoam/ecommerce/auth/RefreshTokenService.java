@@ -9,6 +9,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class RefreshTokenService {
   private final JwtProps jwtProps;
 
   public RefreshTokenService(
-      PasswordEncoder passwordEncoder,
+      @Qualifier("refreshTokenPasswordEncoder") PasswordEncoder passwordEncoder,
       JwtProps jwtProps,
       RefreshTokenRepository refreshTokenRepository) {
     this.passwordEncoder = passwordEncoder;
@@ -39,7 +40,8 @@ public class RefreshTokenService {
 
     RefreshToken refreshTokenById =
         refreshTokenRepository
-            .findByDeviceIdAndPrincipalType(deviceId, principal.getPrincipalType())
+            .findByDeviceIdAndPrincipalTypeAndPrincipalId(
+                deviceId, principal.getPrincipalType(), principal.getId())
             .orElse(
                 RefreshToken.builder()
                     .deviceId(deviceId)
@@ -73,16 +75,32 @@ public class RefreshTokenService {
     return refreshTokenRepository.save(refreshTokenById);
   }
 
-  public void revoke(UUID refreshTokenId) {
-    refreshTokenRepository.findById(refreshTokenId).ifPresent(refreshTokenRepository::delete);
+  public void revoke(UUID refreshTokenId, String rawToken) {
+    refreshTokenRepository
+        .findById(refreshTokenId)
+        .filter(refreshToken -> passwordEncoder.matches(rawToken, refreshToken.getTokenHash()))
+        .ifPresent(refreshTokenRepository::delete);
   }
 
   private void validateRefreshToken(String currentRefreshToken, RefreshToken refreshToken) {
-    if (LocalDateTime.now().isAfter(refreshToken.getExpiresOn())
-        || !passwordEncoder.matches(currentRefreshToken, refreshToken.getTokenHash())) {
-      log.warn(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+    LocalDateTime now = LocalDateTime.now();
+    boolean sessionExpired =
+        now.isAfter(
+            refreshToken
+                .getCreatedAt()
+                .plus(jwtProps.getRefreshTokenMaxLifetimeMs(), ChronoUnit.MILLIS));
+    boolean tokenExpired = now.isAfter(refreshToken.getExpiresOn());
+    boolean hashMismatch =
+        !passwordEncoder.matches(currentRefreshToken, refreshToken.getTokenHash());
+
+    if (sessionExpired || hashMismatch) {
+      refreshTokenRepository.delete(refreshToken);
+    }
+
+    if (sessionExpired || tokenExpired || hashMismatch) {
+      log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
       throw new ResponseStatusException(
-          HttpStatus.UNAUTHORIZED, AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+          HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
     }
   }
 
@@ -91,9 +109,9 @@ public class RefreshTokenService {
         .findById(refreshTokenId)
         .orElseThrow(
             () -> {
-              log.warn(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+              log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
               return new ResponseStatusException(
-                  HttpStatus.UNAUTHORIZED, AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
+                  HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
             });
   }
 }

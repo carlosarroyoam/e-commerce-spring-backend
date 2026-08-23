@@ -5,9 +5,13 @@ import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipalAuthenticationTo
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipalMapper;
 import com.carlosarroyoam.ecommerce.core.filter.CsrfCookieFilter;
 import com.carlosarroyoam.ecommerce.core.property.CorsProps;
+import com.carlosarroyoam.ecommerce.core.property.JwtProps;
+import java.time.Duration;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -87,8 +91,15 @@ public class WebSecurityConfig {
   }
 
   @Bean
+  @Primary
   PasswordEncoder passwordEncoder() {
     return new BCryptPasswordEncoder(12);
+  }
+
+  @Bean
+  @Qualifier("refreshTokenPasswordEncoder")
+  PasswordEncoder refreshTokenPasswordEncoder() {
+    return new BCryptPasswordEncoder(4);
   }
 
   @Bean
@@ -124,11 +135,15 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  CookieCsrfTokenRepository csrfTokenRepository() {
+  CookieCsrfTokenRepository csrfTokenRepository(JwtProps jwtProps) {
     CookieCsrfTokenRepository cookieCsrfTokenRepository =
         CookieCsrfTokenRepository.withHttpOnlyFalse();
     cookieCsrfTokenRepository.setCookiePath("/");
     cookieCsrfTokenRepository.setHeaderName("X-XSRF-TOKEN");
+    // Match the refresh_token cookie's lifetime so a silent refresh after the browser was
+    // closed and reopened isn't rejected for lacking a (session-lived) CSRF cookie.
+    cookieCsrfTokenRepository.setCookieCustomizer(
+        cookie -> cookie.maxAge(Duration.ofMillis(jwtProps.getRefreshTokenTtlMs())));
     return cookieCsrfTokenRepository;
   }
 

@@ -7,9 +7,6 @@ import com.carlosarroyoam.ecommerce.auth.dto.ResetPasswordRequest;
 import com.carlosarroyoam.ecommerce.auth.entity.RefreshToken;
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -18,7 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -61,64 +58,100 @@ public class AuthService {
   }
 
   public AuthResponse refreshToken(String rawRefreshTokenCookie) {
-    List<String> refreshTokenParts =
-        Optional.ofNullable(rawRefreshTokenCookie)
-            .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
-            .orElse(Collections.emptyList());
-
-    if (refreshTokenParts.isEmpty()) {
+    if (!StringUtils.hasText(rawRefreshTokenCookie)) {
       log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
       throw new ResponseStatusException(
           HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
     }
 
-    UUID refreshTokenId = UUID.fromString(refreshTokenParts.get(0));
-    String currentRefreshToken = refreshTokenParts.get(1);
+    RefreshTokenCookie refreshTokenCookie =
+        parseRefreshTokenCookie(rawRefreshTokenCookie)
+            .orElseThrow(
+                () -> {
+                  log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+                  return new ResponseStatusException(
+                      HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+                });
 
-    RefreshToken refreshTokenById = refreshTokenService.findById(refreshTokenId);
-    AuthPrincipal principal =
-        switch (refreshTokenById.getPrincipalType()) {
-          case STAFF ->
-              (AuthPrincipal) staffDetailsService.loadUserById(refreshTokenById.getPrincipalId());
-          case CUSTOMER ->
-              (AuthPrincipal)
-                  customerDetailsService.loadUserById(refreshTokenById.getPrincipalId());
-        };
+    RefreshToken refreshTokenById = refreshTokenService.findById(refreshTokenCookie.getId());
+    AuthPrincipal principal = loadPrincipal(refreshTokenById);
 
     String accessToken = tokenService.generateAccessToken(principal);
     String refreshToken = tokenService.generateRefreshToken();
 
     RefreshToken createdRefreshToken =
-        refreshTokenService.rotate(refreshTokenId, currentRefreshToken, refreshToken);
+        refreshTokenService.rotate(
+            refreshTokenCookie.getId(), refreshTokenCookie.getRawToken(), refreshToken);
 
     return buildAuthResponse(principal, accessToken, createdRefreshToken, refreshToken);
   }
 
   public void revoke(String rawRefreshTokenCookie) {
-    List<String> refreshTokenParts =
-        Optional.ofNullable(rawRefreshTokenCookie)
-            .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
-            .orElse(Collections.emptyList());
+    parseRefreshTokenCookie(rawRefreshTokenCookie)
+        .ifPresent(
+            refreshTokenCookie ->
+                refreshTokenService.revoke(
+                    refreshTokenCookie.getId(), refreshTokenCookie.getRawToken()));
+  }
 
-    if (!refreshTokenParts.isEmpty()) {
-      UUID refreshTokenId = UUID.fromString(refreshTokenParts.get(0));
-      refreshTokenService.revoke(refreshTokenId);
+  public void forgotPassword(ForgotPasswordRequest request) {
+    throw new ResponseStatusException(
+        HttpStatus.NOT_IMPLEMENTED, AppMessages.FEATURE_NOT_IMPLEMENTED_EXCEPTION);
+  }
+
+  public void resetPassword(ResetPasswordRequest request) {
+    throw new ResponseStatusException(
+        HttpStatus.NOT_IMPLEMENTED, AppMessages.FEATURE_NOT_IMPLEMENTED_EXCEPTION);
+  }
+
+  private AuthPrincipal loadPrincipal(RefreshToken refreshTokenById) {
+    try {
+      return switch (refreshTokenById.getPrincipalType()) {
+        case STAFF ->
+            (AuthPrincipal) staffDetailsService.loadUserById(refreshTokenById.getPrincipalId());
+        case CUSTOMER ->
+            (AuthPrincipal) customerDetailsService.loadUserById(refreshTokenById.getPrincipalId());
+      };
+    } catch (UsernameNotFoundException ex) {
+      log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+      throw new ResponseStatusException(
+          HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
     }
   }
 
-  public void forgotPassword(ForgotPasswordRequest request) {}
+  private Optional<RefreshTokenCookie> parseRefreshTokenCookie(String rawRefreshTokenCookie) {
+    if (!StringUtils.hasText(rawRefreshTokenCookie)) {
+      return Optional.empty();
+    }
 
-  public void resetPassword(ResetPasswordRequest request) {}
+    String[] refreshTokenParts = rawRefreshTokenCookie.split("\\.", 2);
+    if (refreshTokenParts.length != 2) {
+      return Optional.empty();
+    }
+
+    try {
+      return Optional.of(
+          RefreshTokenCookie.builder()
+              .id(UUID.fromString(refreshTokenParts[0]))
+              .rawToken(refreshTokenParts[1])
+              .build());
+    } catch (IllegalArgumentException ex) {
+      return Optional.empty();
+    }
+  }
 
   private AuthResponse buildAuthResponse(
-      AuthPrincipal principal, String accessToken, RefreshToken createdRefreshToken, String refreshToken) {
+      AuthPrincipal principal,
+      String accessToken,
+      RefreshToken createdRefreshToken,
+      String refreshToken) {
     return AuthResponse.builder()
         .id(principal.getId())
         .fullName(principal.getFullName())
         .firstName(principal.getFirstName())
         .lastName(principal.getLastName())
         .email(principal.getEmail())
-        .roles(principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+        .roles(principal.getRoles().stream().sorted().toList())
         .accessToken(accessToken)
         .refreshToken(createdRefreshToken.getId() + "." + refreshToken)
         .build();

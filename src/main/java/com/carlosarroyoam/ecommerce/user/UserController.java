@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -27,6 +28,7 @@ public class UserController {
   }
 
   @GetMapping(produces = "application/json")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<PagedResponse<UserResponse>> findAll(
       @Valid @ModelAttribute UserSpecs userSpecs,
       @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
@@ -35,12 +37,14 @@ public class UserController {
   }
 
   @GetMapping(value = "/{userId}", produces = "application/json")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<UserResponse> findById(@PathVariable Long userId) {
     UserResponse userById = userService.findById(userId);
     return ResponseEntity.ok(userById);
   }
 
   @DeleteMapping("/{userId}")
+  @PreAuthorize("hasRole('ADMIN')")
   public ResponseEntity<Void> deleteById(
       @PathVariable Long userId, @AuthenticationPrincipal AuthPrincipal principal) {
     Long currentUserId =

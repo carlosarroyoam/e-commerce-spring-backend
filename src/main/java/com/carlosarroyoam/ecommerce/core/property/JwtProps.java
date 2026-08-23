@@ -16,4 +16,7 @@ public class JwtProps {
 
   @NotNull(message = "refresh-token-ttl-ms must not be null")
   private long refreshTokenTtlMs;
+
+  @NotNull(message = "refresh-token-max-lifetime-ms must not be null")
+  private long refreshTokenMaxLifetimeMs;
 }

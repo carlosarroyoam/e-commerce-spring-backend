@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 
@@ -28,6 +29,9 @@ public class JwtConfig {
 
   @Bean
   JwtDecoder jwtDecoder(RsaKeyProps rsaKeyProps) {
-    return NimbusJwtDecoder.withPublicKey(rsaKeyProps.getPublicKey()).build();
+    NimbusJwtDecoder jwtDecoder =
+        NimbusJwtDecoder.withPublicKey(rsaKeyProps.getPublicKey()).build();
+    jwtDecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer("self"));
+    return jwtDecoder;
   }
 }

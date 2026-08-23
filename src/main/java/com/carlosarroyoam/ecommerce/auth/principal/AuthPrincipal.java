@@ -46,6 +46,6 @@ public class AuthPrincipal implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return status.equals("ACTIVE");
+    return "ACTIVE".equals(status);
   }
 }

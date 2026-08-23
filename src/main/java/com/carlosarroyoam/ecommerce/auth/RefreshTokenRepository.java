@@ -7,6 +7,6 @@ import java.util.UUID;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID> {
-  Optional<RefreshToken> findByDeviceIdAndPrincipalType(
-      String deviceId, PrincipalType principalType);
+  Optional<RefreshToken> findByDeviceIdAndPrincipalTypeAndPrincipalId(
+      String deviceId, PrincipalType principalType, Long principalId);
 }

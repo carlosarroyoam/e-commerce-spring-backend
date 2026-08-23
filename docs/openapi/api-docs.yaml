@@ -96,20 +96,13 @@ paths:
       tags:
         - Auth
       summary: Revokes a refresh token
+      description: >-
+        Always succeeds, whether or not a valid refresh_token cookie is present, so that logout
+        is idempotent.
       operationId: logout
       responses:
         "204":
           $ref: "#/components/responses/NoContent"
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-        "403":
-          $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "422":
-          $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
 
@@ -140,6 +133,7 @@ paths:
       tags:
         - Auth
       summary: Requests a user password reset
+      description: Not yet implemented; always responds 501.
       operationId: forgotPassword
       requestBody:
         description: User credentials object that will be reset
@@ -157,12 +151,15 @@ paths:
           $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "501":
+          $ref: "#/components/responses/NotImplemented"
 
   /auth/reset-password:
     post:
       tags:
         - Auth
       summary: Resets a user password
+      description: Not yet implemented; always responds 501.
       operationId: resetPassword
       parameters:
         - name: token
@@ -186,6 +183,8 @@ paths:
           $ref: "#/components/responses/UnprocessableEntity"
         "500":
           $ref: "#/components/responses/InternalServerError"
+        "501":
+          $ref: "#/components/responses/NotImplemented"
 
   /users:
     get:
@@ -2523,6 +2522,7 @@ components:
         device_id:
           description: Unique identifier for the client device
           type: string
+          maxLength: 36
       required:
         - email
         - password
@@ -3071,7 +3071,9 @@ components:
 
     AuthResponse:
       type: object
-      description: Authentication response with user information and tokens
+      description: >-
+        Authentication response with user information and an access token. The refresh token is
+        not included in the body; it is set as an HttpOnly refresh_token cookie on the response.
       properties:
         id:
           type: integer
@@ -3096,9 +3098,6 @@ components:
         access_token:
           type: string
           description: Access token
-        refresh_token:
-          type: string
-          description: Refresh token
 
     RoleResponse:
       type: object
@@ -3830,6 +3829,13 @@ components:
 
     InternalServerError:
       description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AppExceptionResponse"
+
+    NotImplemented:
+      description: Not implemented
       content:
         application/json:
           schema:

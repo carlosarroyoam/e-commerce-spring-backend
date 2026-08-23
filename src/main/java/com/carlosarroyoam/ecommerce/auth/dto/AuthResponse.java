@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.auth.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.util.List;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,5 +17,5 @@ public class AuthResponse {
   private String email;
   private List<String> roles;
   private String accessToken;
-  private String refreshToken;
+  @JsonIgnore private String refreshToken;
 }
