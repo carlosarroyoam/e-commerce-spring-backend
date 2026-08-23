@@ -81,7 +81,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/LoginResponse"
+                $ref: "#/components/schemas/AuthResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -120,8 +120,12 @@ paths:
       summary: Rotates a user's tokens
       operationId: refreshToken
       responses:
-        "204":
-          $ref: "#/components/responses/NoContent"
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
@@ -3065,13 +3069,16 @@ components:
       required:
         - carrier_id
 
-    LoginResponse:
+    AuthResponse:
       type: object
-      description: Login response with user information
+      description: Authentication response with user information and tokens
       properties:
         id:
           type: integer
           description: Unique identifier for the user
+        full_name:
+          type: string
+          description: User's full name
         first_name:
           type: string
           description: User's first name
@@ -3085,7 +3092,7 @@ components:
           type: array
           description: Roles assigned to the user
           items:
-            $ref: "#/components/schemas/RoleResponse"
+            type: string
         access_token:
           type: string
           description: Access token

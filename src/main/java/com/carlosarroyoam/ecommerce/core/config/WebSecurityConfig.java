@@ -1,10 +1,15 @@
 package com.carlosarroyoam.ecommerce.core.config;
 
+import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
+import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipalAuthenticationToken;
+import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipalMapper;
 import com.carlosarroyoam.ecommerce.core.filter.CsrfCookieFilter;
 import com.carlosarroyoam.ecommerce.core.property.CorsProps;
 import java.util.List;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.ProviderManager;
@@ -17,9 +22,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
-import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -41,7 +45,7 @@ public class WebSecurityConfig {
       CsrfTokenRepository csrfTokenRepository,
       CorsConfigurationSource corsConfigurationSource,
       JwtDecoder jwtDecoder,
-      JwtAuthenticationConverter jwtAuthenticationConverter,
+      Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter,
       AuthenticationEntryPoint authenticationEntryPoint,
       AccessDeniedHandler accessDeniedHandler)
       throws Exception {
@@ -111,14 +115,12 @@ public class WebSecurityConfig {
   }
 
   @Bean
-  JwtAuthenticationConverter jwtAuthenticationConverter() {
-    JwtGrantedAuthoritiesConverter authoritiesConverter = new JwtGrantedAuthoritiesConverter();
-    authoritiesConverter.setAuthoritiesClaimName("roles");
-    authoritiesConverter.setAuthorityPrefix("ROLE_");
-
-    JwtAuthenticationConverter converter = new JwtAuthenticationConverter();
-    converter.setJwtGrantedAuthoritiesConverter(authoritiesConverter);
-    return converter;
+  Converter<Jwt, AbstractAuthenticationToken> jwtAuthenticationConverter(
+      AuthPrincipalMapper mapper) {
+    return jwt -> {
+      AuthPrincipal principal = mapper.map(jwt);
+      return new AuthPrincipalAuthenticationToken(jwt, principal, principal.getAuthorities());
+    };
   }
 
   @Bean

@@ -1,9 +1,8 @@
 package com.carlosarroyoam.ecommerce.auth;
 
+import com.carlosarroyoam.ecommerce.auth.dto.AuthResponse;
 import com.carlosarroyoam.ecommerce.auth.dto.ForgotPasswordRequest;
 import com.carlosarroyoam.ecommerce.auth.dto.LoginRequest;
-import com.carlosarroyoam.ecommerce.auth.dto.LoginResponse;
-import com.carlosarroyoam.ecommerce.auth.dto.RefreshTokenResponse;
 import com.carlosarroyoam.ecommerce.auth.dto.ResetPasswordRequest;
 import com.carlosarroyoam.ecommerce.auth.entity.RefreshToken;
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
@@ -46,7 +45,7 @@ public class AuthService {
     this.tokenService = tokenService;
   }
 
-  public LoginResponse login(LoginRequest request) {
+  public AuthResponse login(LoginRequest request) {
     Authentication auth =
         authenticationManager.authenticate(
             new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
@@ -58,28 +57,19 @@ public class AuthService {
     RefreshToken createdRefreshToken =
         refreshTokenService.save(principal, request.getDeviceId(), refreshToken);
 
-    return LoginResponse.builder()
-        .id(principal.getId())
-        .fullName(principal.getFullName())
-        .firstName(principal.getFirstName())
-        .lastName(principal.getLastName())
-        .email(principal.getEmail())
-        .roles(principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
-        .accessToken(accessToken)
-        .refreshToken(createdRefreshToken.getId() + "." + refreshToken)
-        .build();
+    return buildAuthResponse(principal, accessToken, createdRefreshToken, refreshToken);
   }
 
-  public RefreshTokenResponse refreshToken(String rawRefreshTokenCookie) {
+  public AuthResponse refreshToken(String rawRefreshTokenCookie) {
     List<String> refreshTokenParts =
         Optional.ofNullable(rawRefreshTokenCookie)
             .map(str -> Arrays.asList(StringUtils.tokenizeToStringArray(str, "\\.")))
             .orElse(Collections.emptyList());
 
     if (refreshTokenParts.isEmpty()) {
-      log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+      log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
       throw new ResponseStatusException(
-          HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+          HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
     }
 
     UUID refreshTokenId = UUID.fromString(refreshTokenParts.get(0));
@@ -101,16 +91,7 @@ public class AuthService {
     RefreshToken createdRefreshToken =
         refreshTokenService.rotate(refreshTokenId, currentRefreshToken, refreshToken);
 
-    return RefreshTokenResponse.builder()
-        .id(principal.getId())
-        .fullName(principal.getFullName())
-        .firstName(principal.getFirstName())
-        .lastName(principal.getLastName())
-        .email(principal.getEmail())
-        .roles(principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
-        .accessToken(accessToken)
-        .refreshToken(createdRefreshToken.getId() + "." + refreshToken)
-        .build();
+    return buildAuthResponse(principal, accessToken, createdRefreshToken, refreshToken);
   }
 
   public void revoke(String rawRefreshTokenCookie) {
@@ -128,4 +109,18 @@ public class AuthService {
   public void forgotPassword(ForgotPasswordRequest request) {}
 
   public void resetPassword(ResetPasswordRequest request) {}
+
+  private AuthResponse buildAuthResponse(
+      AuthPrincipal principal, String accessToken, RefreshToken createdRefreshToken, String refreshToken) {
+    return AuthResponse.builder()
+        .id(principal.getId())
+        .fullName(principal.getFullName())
+        .firstName(principal.getFirstName())
+        .lastName(principal.getLastName())
+        .email(principal.getEmail())
+        .roles(principal.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList())
+        .accessToken(accessToken)
+        .refreshToken(createdRefreshToken.getId() + "." + refreshToken)
+        .build();
+  }
 }

@@ -1,9 +1,8 @@
 package com.carlosarroyoam.ecommerce.auth;
 
+import com.carlosarroyoam.ecommerce.auth.dto.AuthResponse;
 import com.carlosarroyoam.ecommerce.auth.dto.ForgotPasswordRequest;
 import com.carlosarroyoam.ecommerce.auth.dto.LoginRequest;
-import com.carlosarroyoam.ecommerce.auth.dto.LoginResponse;
-import com.carlosarroyoam.ecommerce.auth.dto.RefreshTokenResponse;
 import com.carlosarroyoam.ecommerce.auth.dto.ResetPasswordRequest;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
 import com.carlosarroyoam.ecommerce.core.util.CookieUtils;
@@ -34,9 +33,9 @@ public class AuthController {
   }
 
   @PostMapping("/login")
-  public ResponseEntity<LoginResponse> login(
+  public ResponseEntity<AuthResponse> login(
       @Valid @RequestBody LoginRequest request, HttpServletResponse response) {
-    LoginResponse loginResponse = authService.login(request);
+    AuthResponse loginResponse = authService.login(request);
 
     ResponseCookie refreshTokenCookie =
         cookieUtils.createCookie(
@@ -49,10 +48,10 @@ public class AuthController {
   }
 
   @PostMapping("/refresh-token")
-  public ResponseEntity<RefreshTokenResponse> refreshToken(
+  public ResponseEntity<AuthResponse> refreshToken(
       @CookieValue(name = "refresh_token", required = false) String rawRefreshTokenCookie,
       HttpServletResponse response) {
-    RefreshTokenResponse refreshTokenResponse = authService.refreshToken(rawRefreshTokenCookie);
+    AuthResponse refreshTokenResponse = authService.refreshToken(rawRefreshTokenCookie);
 
     ResponseCookie refreshTokenCookie =
         cookieUtils.createCookie(

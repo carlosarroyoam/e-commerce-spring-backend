@@ -1,7 +1,6 @@
 package com.carlosarroyoam.ecommerce.auth;
 
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
-import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
 import java.time.Instant;
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.jwt.BadJwtException;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
@@ -70,15 +68,5 @@ public class TokenService {
       log.error(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
       throw new BadJwtException(AppMessages.JWT_AUTHORIZATION_TOKEN_IS_NOT_VALID);
     }
-  }
-
-  public PrincipalType extractPrincipalType(String token) {
-    Jwt jwtToken = jwtDecoder.decode(token);
-    return PrincipalType.valueOf(jwtToken.getClaim("principal_type"));
-  }
-
-  public String extractEmail(String token) {
-    Jwt jwtToken = jwtDecoder.decode(token);
-    return jwtToken.getClaimAsString("email");
   }
 }
