@@ -25,7 +25,7 @@ public class CustomerController {
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<CustomerResponse>> findAll(
       @Valid @ModelAttribute CustomerSpecs customerSpecs,
-      @PageableDefault(page = 0, size = 25, sort = "id") Pageable pageable) {
+      @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
     PagedResponse<CustomerResponse> customers = customerService.findAll(customerSpecs, pageable);
     return ResponseEntity.ok(customers);
   }

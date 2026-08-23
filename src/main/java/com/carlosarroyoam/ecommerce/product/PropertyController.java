@@ -21,7 +21,7 @@ public class PropertyController {
 
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<PropertyResponse>> findAll(
-      @PageableDefault(page = 0, size = 25, sort = "id") Pageable pageable) {
+      @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
     PagedResponse<PropertyResponse> properties = propertyService.findAll(pageable);
     return ResponseEntity.ok(properties);
   }

@@ -21,7 +21,7 @@ public class CategoryController {
 
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<CategoryResponse>> findAll(
-      @PageableDefault(page = 0, size = 25, sort = "id") Pageable pageable) {
+      @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
     PagedResponse<CategoryResponse> categories = categoryService.findAll(pageable);
     return ResponseEntity.ok(categories);
   }

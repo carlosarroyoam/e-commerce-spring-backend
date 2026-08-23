@@ -25,7 +25,7 @@ public class RefundController {
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<RefundResponse>> findAll(
       @Valid @ModelAttribute RefundSpecs refundSpecs,
-      @PageableDefault(page = 0, size = 25, sort = "id") Pageable pageable) {
+      @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
     PagedResponse<RefundResponse> refunds = refundService.findAll(refundSpecs, pageable);
     return ResponseEntity.ok(refunds);
   }

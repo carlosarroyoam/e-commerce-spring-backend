@@ -29,7 +29,7 @@ public class UserController {
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<UserResponse>> findAll(
       @Valid @ModelAttribute UserSpecs userSpecs,
-      @PageableDefault(page = 0, size = 25, sort = "id") Pageable pageable) {
+      @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
     PagedResponse<UserResponse> users = userService.findAll(userSpecs, pageable);
     return ResponseEntity.ok(users);
   }

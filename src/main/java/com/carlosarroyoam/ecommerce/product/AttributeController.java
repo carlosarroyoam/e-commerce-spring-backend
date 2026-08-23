@@ -21,7 +21,7 @@ public class AttributeController {
 
   @GetMapping(produces = "application/json")
   public ResponseEntity<PagedResponse<AttributeResponse>> findAll(
-      @PageableDefault(page = 0, size = 25, sort = "id") Pageable pageable) {
+      @PageableDefault(page = 0, size = 10, sort = "id") Pageable pageable) {
     PagedResponse<AttributeResponse> attributes = attributeService.findAll(pageable);
     return ResponseEntity.ok(attributes);
   }
