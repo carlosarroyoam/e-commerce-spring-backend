@@ -40,20 +40,19 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 /**
- * Configuración central de Spring Security: cadena de filtros HTTP, CSRF con cookie de doble
- * envío, CORS, política de sesión sin estado, autenticación como recurso OAuth2 (JWT propio) y los
- * {@link AuthenticationProvider} de STAFF y CUSTOMER combinados en un único
- * {@link AuthenticationManager}.
+ * Configuración central de Spring Security: cadena de filtros HTTP, CSRF con cookie de doble envío,
+ * CORS, política de sesión sin estado, autenticación como recurso OAuth2 (JWT propio) y los {@link
+ * AuthenticationProvider} de STAFF y CUSTOMER combinados en un único {@link AuthenticationManager}.
  */
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class WebSecurityConfig {
   /**
-   * Define la cadena de filtros de seguridad HTTP: habilita CSRF de doble envío (excepto en
-   * {@code /auth/login}), CORS, cabeceras same-origin, sesiones sin estado, autenticación como
-   * recurso OAuth2 vía JWT, manejadores personalizados de errores de autenticación/autorización, y
-   * permite sin autenticación las rutas {@code /auth/**} y {@code /actuator/**}.
+   * Define la cadena de filtros de seguridad HTTP: habilita CSRF de doble envío (excepto en {@code
+   * /auth/login}), CORS, cabeceras same-origin, sesiones sin estado, autenticación como recurso
+   * OAuth2 vía JWT, manejadores personalizados de errores de autenticación/autorización, y permite
+   * sin autenticación las rutas {@code /auth/**} y {@code /actuator/**}.
    *
    * @return la {@link SecurityFilterChain} configurada
    */
@@ -160,8 +159,8 @@ public class WebSecurityConfig {
   }
 
   /**
-   * Combina los proveedores de autenticación de STAFF y CUSTOMER en un único
-   * {@link AuthenticationManager}.
+   * Combina los proveedores de autenticación de STAFF y CUSTOMER en un único {@link
+   * AuthenticationManager}.
    *
    * @param providers los proveedores de autenticación registrados
    * @return el {@link AuthenticationManager} resultante

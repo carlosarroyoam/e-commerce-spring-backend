@@ -22,8 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad JPA que representa un usuario STAFF persistido en la tabla {@code users}, con sus
- * {@link Role roles} asociados.
+ * Entidad JPA que representa un usuario STAFF persistido en la tabla {@code users}, con sus {@link
+ * Role roles} asociados.
  */
 @Entity
 @Table(name = "users")

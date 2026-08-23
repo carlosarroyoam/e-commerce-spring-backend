@@ -21,8 +21,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Orquesta el flujo de autenticación: autentica credenciales, emite y rota tokens, revoca
- * sesiones, y expone (sin implementar todavía) la recuperación y reseteo de contraseña.
+ * Orquesta el flujo de autenticación: autentica credenciales, emite y rota tokens, revoca sesiones,
+ * y expone (sin implementar todavía) la recuperación y reseteo de contraseña.
  */
 @Service
 public class AuthService {
@@ -74,12 +74,12 @@ public class AuthService {
    * Valida el refresh token recibido, carga al principal asociado, y rota tanto el access token
    * como el refresh token.
    *
-   * @param rawRefreshTokenCookie valor crudo de la cookie {@code refresh_token} (formato
-   *     {@code id.rawToken}), puede ser nulo o vacío
+   * @param rawRefreshTokenCookie valor crudo de la cookie {@code refresh_token} (formato {@code
+   *     id.rawToken}), puede ser nulo o vacío
    * @return la respuesta de autenticación con el access token y el refresh token renovados
-   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el
-   *     token no está presente, tiene formato inválido, no existe o pertenece a un principal que
-   *     ya no existe
+   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el token
+   *     no está presente, tiene formato inválido, no existe o pertenece a un principal que ya no
+   *     existe
    */
   public AuthResponse refreshToken(String rawRefreshTokenCookie) {
     if (!StringUtils.hasText(rawRefreshTokenCookie)) {
@@ -111,11 +111,11 @@ public class AuthService {
   }
 
   /**
-   * Revoca (elimina) el refresh token asociado a la cookie recibida, si es válida. Si la cookie
-   * es nula, vacía o tiene formato inválido, no hace nada.
+   * Revoca (elimina) el refresh token asociado a la cookie recibida, si es válida. Si la cookie es
+   * nula, vacía o tiene formato inválido, no hace nada.
    *
-   * @param rawRefreshTokenCookie valor crudo de la cookie {@code refresh_token} (formato
-   *     {@code id.rawToken}), puede ser nulo o vacío
+   * @param rawRefreshTokenCookie valor crudo de la cookie {@code refresh_token} (formato {@code
+   *     id.rawToken}), puede ser nulo o vacío
    */
   public void revoke(String rawRefreshTokenCookie) {
     parseRefreshTokenCookie(rawRefreshTokenCookie)
@@ -148,8 +148,8 @@ public class AuthService {
   }
 
   /**
-   * Resuelve el {@link AuthPrincipal} (staff o customer) dueño del refresh token, según su tipo
-   * de principal.
+   * Resuelve el {@link AuthPrincipal} (staff o customer) dueño del refresh token, según su tipo de
+   * principal.
    *
    * @param refreshTokenById el refresh token del cual obtener el principal
    * @return el principal autenticado correspondiente

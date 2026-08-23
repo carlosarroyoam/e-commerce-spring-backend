@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Expone los endpoints REST de consulta de direcciones de un cliente bajo
- * {@code /customers/{customerId}/addresses}.
+ * Expone los endpoints REST de consulta de direcciones de un cliente bajo {@code
+ * /customers/{customerId}/addresses}.
  */
 @RestController
 @RequestMapping("/customers/{customerId}/addresses")

@@ -9,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 /**
- * Construye instancias de {@link AppExceptionResponse} con el formato uniforme usado por
- * {@link GlobalExceptionHandler} para todas las respuestas de error de la API.
+ * Construye instancias de {@link AppExceptionResponse} con el formato uniforme usado por {@link
+ * GlobalExceptionHandler} para todas las respuestas de error de la API.
  */
 @Component
 public class ApiExceptionResponseFactory {

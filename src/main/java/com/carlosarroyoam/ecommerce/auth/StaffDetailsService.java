@@ -14,8 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Carga usuarios staff desde {@link UserRepository} y los expone como {@link AuthPrincipal} para
- * la autenticación de Spring Security.
+ * Carga usuarios staff desde {@link UserRepository} y los expone como {@link AuthPrincipal} para la
+ * autenticación de Spring Security.
  */
 @Service("staffDetailsService")
 public class StaffDetailsService implements UserDetailsService {

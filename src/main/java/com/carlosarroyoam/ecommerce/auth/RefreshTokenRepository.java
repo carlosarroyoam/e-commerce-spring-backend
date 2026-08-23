@@ -9,7 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 /** Acceso a datos para la entidad {@link RefreshToken}. */
 public interface RefreshTokenRepository extends JpaRepository<RefreshToken, UUID> {
   /**
-   * Busca el refresh token existente para un dispositivo y principal específicos.
+   * Busca el refresh token existente para un dispositivo y principal específico.
    *
    * @param deviceId el identificador del dispositivo
    * @param principalType el tipo de principal (STAFF o CUSTOMER)

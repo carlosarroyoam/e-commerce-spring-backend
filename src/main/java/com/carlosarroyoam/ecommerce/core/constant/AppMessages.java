@@ -2,8 +2,7 @@ package com.carlosarroyoam.ecommerce.core.constant;
 
 /**
  * Constantes centralizadas con los mensajes de error usados en las excepciones de la API,
- * reutilizadas entre los distintos servicios para mantener consistencia en las respuestas de
- * error.
+ * reutilizadas entre los distintos servicios para mantener consistencia en las respuestas de error.
  */
 public class AppMessages {
   public static final String ILLEGAL_ACCESS_EXCEPTION = "Illegal access to utility class";

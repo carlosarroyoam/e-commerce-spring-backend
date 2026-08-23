@@ -22,10 +22,10 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
- * Punto único de traducción de excepciones a respuestas HTTP: captura cada tipo de excepción de
- * la aplicación (validación, autenticación/autorización, 404, método no soportado, genéricas) y
- * las convierte en un {@link AppExceptionResponse} uniforme mediante
- * {@link ApiExceptionResponseFactory}.
+ * Punto único de traducción de excepciones a respuestas HTTP: captura cada tipo de excepción de la
+ * aplicación (validación, autenticación/autorización, 404, método no soportado, genéricas) y las
+ * convierte en un {@link AppExceptionResponse} uniforme mediante {@link
+ * ApiExceptionResponseFactory}.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

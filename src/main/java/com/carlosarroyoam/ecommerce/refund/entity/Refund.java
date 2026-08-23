@@ -22,8 +22,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad JPA que representa el reembolso de una {@link Order} persistido en la tabla
- * {@code refunds}: monto total, motivo y sus {@link RefundItem items} reembolsados.
+ * Entidad JPA que representa el reembolso de una {@link Order} persistido en la tabla {@code
+ * refunds}: monto total, motivo y sus {@link RefundItem items} reembolsados.
  */
 @Entity
 @Table(name = "refunds")

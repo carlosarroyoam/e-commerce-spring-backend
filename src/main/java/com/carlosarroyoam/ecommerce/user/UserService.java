@@ -78,10 +78,10 @@ public class UserService {
    * Marca como eliminado (baja lógica) el usuario STAFF indicado.
    *
    * @param userId el id del usuario a eliminar
-   * @param currentUserId el id del principal STAFF autenticado que realiza la petición, o
-   *     {@code null} si el principal autenticado es un CUSTOMER
-   * @throws ResponseStatusException con 422 si {@code userId} coincide con {@code currentUserId}
-   *     o si el usuario ya está eliminado; con 404 si no existe un usuario con ese id
+   * @param currentUserId el id del principal STAFF autenticado que realiza la petición, o {@code
+   *     null} si el principal autenticado es un CUSTOMER
+   * @throws ResponseStatusException con 422 si {@code userId} coincide con {@code currentUserId} o
+   *     si el usuario ya está eliminado; con 404 si no existe un usuario con ese id
    */
   @Transactional
   public void deleteById(Long userId, Long currentUserId) {

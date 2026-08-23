@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 /**
- * Persiste, rota y revoca los refresh tokens, validando su expiración y el hash del token
- * recibido antes de aceptarlos.
+ * Persiste, rota y revoca los refresh tokens, validando su expiración y el hash del token recibido
+ * antes de aceptarlos.
  */
 @Service
 public class RefreshTokenService {
@@ -53,8 +53,7 @@ public class RefreshTokenService {
    *
    * @param principal el principal (staff o customer) dueño del token
    * @param deviceId el identificador del dispositivo que solicita el token
-   * @param newRefreshToken el valor crudo del nuevo refresh token, que se hashea antes de
-   *     persistir
+   * @param newRefreshToken el valor crudo del nuevo refresh token, que se hashea antes de persistir
    * @return la entidad {@link RefreshToken} guardada
    */
   public RefreshToken save(AuthPrincipal principal, String deviceId, String newRefreshToken) {
@@ -91,8 +90,8 @@ public class RefreshTokenService {
    * @param currentRefreshToken el valor crudo del refresh token actual, para validar su hash
    * @param newRefreshToken el valor crudo del nuevo refresh token
    * @return la entidad {@link RefreshToken} actualizada
-   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el
-   *     token no existe, expiró, la sesión superó su vida máxima, o el hash no coincide
+   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el token
+   *     no existe, expiró, la sesión superó su vida máxima, o el hash no coincide
    */
   public RefreshToken rotate(
       UUID refreshTokenId, String currentRefreshToken, String newRefreshToken) {
@@ -109,8 +108,8 @@ public class RefreshTokenService {
   }
 
   /**
-   * Elimina el refresh token si existe y su hash coincide con el valor crudo recibido. Si no
-   * existe o el hash no coincide, no hace nada.
+   * Elimina el refresh token si existe y su hash coincide con el valor crudo recibido. Si no existe
+   * o el hash no coincide, no hace nada.
    *
    * @param refreshTokenId el id del refresh token a revocar
    * @param rawToken el valor crudo del refresh token, para validar su hash antes de eliminar
@@ -123,14 +122,14 @@ public class RefreshTokenService {
   }
 
   /**
-   * Valida que el refresh token no haya expirado, que la sesión no haya superado su vida máxima,
-   * y que el hash del valor crudo recibido coincida con el almacenado. Si la sesión expiró o el
-   * hash no coincide, elimina el token de la base de datos.
+   * Valida que el refresh token no haya expirado, que la sesión no haya superado su vida máxima, y
+   * que el hash del valor crudo recibido coincida con el almacenado. Si la sesión expiró o el hash
+   * no coincide, elimina el token de la base de datos.
    *
    * @param currentRefreshToken el valor crudo del refresh token a validar
    * @param refreshToken la entidad {@link RefreshToken} contra la cual validar
-   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el
-   *     token no es válido por cualquiera de los motivos anteriores
+   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el token
+   *     no es válido por cualquiera de los motivos anteriores
    */
   private void validateRefreshToken(String currentRefreshToken, RefreshToken refreshToken) {
     LocalDateTime now = LocalDateTime.now();

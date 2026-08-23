@@ -12,8 +12,7 @@ import org.springframework.security.oauth2.server.resource.authentication.Abstra
  * {@link AuthPrincipal} reconstruido a partir de sus claims.
  */
 public class AuthPrincipalAuthenticationToken extends AbstractOAuth2TokenAuthenticationToken<Jwt> {
-  @Serial
-  private static final long serialVersionUID = 262645319780897810L;
+  @Serial private static final long serialVersionUID = 262645319780897810L;
 
   /**
    * Crea el token de autenticación ya marcado como autenticado.

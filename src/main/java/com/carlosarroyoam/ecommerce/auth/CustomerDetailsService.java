@@ -55,8 +55,8 @@ public class CustomerDetailsService implements UserDetailsService {
   }
 
   /**
-   * Convierte una entidad {@link Customer} en un {@link AuthPrincipal} de tipo CUSTOMER, con el
-   * rol fijo {@code CUSTOMER}.
+   * Convierte una entidad {@link Customer} en un {@link AuthPrincipal} de tipo CUSTOMER, con el rol
+   * fijo {@code CUSTOMER}.
    *
    * @param customer la entidad de cliente a convertir
    * @return el {@link AuthPrincipal} resultante

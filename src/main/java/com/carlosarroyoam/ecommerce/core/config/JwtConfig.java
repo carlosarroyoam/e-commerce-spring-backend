@@ -39,8 +39,8 @@ public class JwtConfig {
   }
 
   /**
-   * Decodificador de JWT usado por el recurso OAuth2 para verificar los access tokens con la
-   * llave pública RSA, validando además el emisor ({@code self}).
+   * Decodificador de JWT usado por el recurso OAuth2 para verificar los access tokens con la llave
+   * pública RSA, validando además el emisor ({@code self}).
    *
    * @param rsaKeyProps el par de llaves RSA configurado
    * @return el {@link JwtDecoder} resultante

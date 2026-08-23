@@ -21,9 +21,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad JPA que representa un producto persistido en la tabla {@code products}, con su
- * {@link Category categoría}, {@link ProductPropertyValue propiedades} y {@link Variant
- * variantes}.
+ * Entidad JPA que representa un producto persistido en la tabla {@code products}, con su {@link
+ * Category categoría}, {@link ProductPropertyValue propiedades} y {@link Variant variantes}.
  */
 @Entity
 @Table(name = "products")

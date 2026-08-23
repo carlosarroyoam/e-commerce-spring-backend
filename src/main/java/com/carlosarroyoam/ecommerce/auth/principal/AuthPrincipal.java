@@ -12,8 +12,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 /**
- * Representa al principal autenticado (staff o customer) de forma unificada para Spring
- * Security, independientemente de su tabla de origen.
+ * Representa al principal autenticado (staff o customer) de forma unificada para Spring Security,
+ * independientemente de su tabla de origen.
  */
 @Getter
 @Setter

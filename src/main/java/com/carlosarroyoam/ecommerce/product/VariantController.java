@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Expone los endpoints REST de consulta de variantes de un producto bajo
- * {@code /products/{productId}/variants}.
+ * Expone los endpoints REST de consulta de variantes de un producto bajo {@code
+ * /products/{productId}/variants}.
  */
 @RestController
 @RequestMapping("/products/{productId}/variants")

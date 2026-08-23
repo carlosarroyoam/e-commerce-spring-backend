@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad JPA que representa un cliente persistido en la tabla {@code customers}, con sus
- * {@link CustomerAddress direcciones} asociadas.
+ * Entidad JPA que representa un cliente persistido en la tabla {@code customers}, con sus {@link
+ * CustomerAddress direcciones} asociadas.
  */
 @Entity
 @Table(name = "customers")

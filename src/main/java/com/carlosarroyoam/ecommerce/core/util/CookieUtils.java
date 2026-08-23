@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Utilidades para crear y eliminar cookies HTTP con los atributos de seguridad estándar de la
- * aplicación ({@code HttpOnly}, {@code SameSite=Strict}, y {@code Secure} según
- * {@link CookieProps}).
+ * aplicación ({@code HttpOnly}, {@code SameSite=Strict}, y {@code Secure} según {@link
+ * CookieProps}).
  */
 @Component
 public class CookieUtils {

@@ -24,7 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
-/** Lógica de negocio para consultar envíos ({@link Shipment}) y transportistas ({@link Carrier}). */
+/**
+ * Lógica de negocio para consultar envíos ({@link Shipment}) y transportistas ({@link Carrier}).
+ */
 @Service
 public class ShipmentService {
   private static final Logger log = LoggerFactory.getLogger(ShipmentService.class);

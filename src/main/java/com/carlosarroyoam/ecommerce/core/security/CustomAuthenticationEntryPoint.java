@@ -13,9 +13,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 /**
- * Traduce un fallo de autenticación de Spring Security al mismo formato de error JSON
- * ({@link AppExceptionResponse}) que usa el resto de la API, en vez de la respuesta por defecto de
- * Spring Security.
+ * Traduce un fallo de autenticación de Spring Security al mismo formato de error JSON ({@link
+ * AppExceptionResponse}) que usa el resto de la API, en vez de la respuesta por defecto de Spring
+ * Security.
  */
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {

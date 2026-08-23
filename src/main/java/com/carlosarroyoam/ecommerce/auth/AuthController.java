@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * Expone los endpoints REST del flujo de autenticación bajo {@code /auth}: login, renovación de
- * token, logout, y las operaciones (aún no implementadas) de recuperación y reseteo de
- * contraseña.
+ * token, logout, y las operaciones (aún no implementadas) de recuperación y reseteo de contraseña.
  */
 @RestController
 @RequestMapping("/auth")
@@ -38,8 +37,8 @@ public class AuthController {
   }
 
   /**
-   * Autentica al usuario con email y contraseña y establece la cookie {@code refresh_token} en
-   * la respuesta.
+   * Autentica al usuario con email y contraseña y establece la cookie {@code refresh_token} en la
+   * respuesta.
    *
    * @param request credenciales de acceso y el identificador del dispositivo
    * @param response respuesta HTTP donde se añade la cookie de refresh token
@@ -61,8 +60,8 @@ public class AuthController {
   }
 
   /**
-   * Rota el refresh token recibido en la cookie {@code refresh_token} y emite un nuevo access
-   * token junto con un nuevo refresh token en la respuesta.
+   * Rota el refresh token recibido en la cookie {@code refresh_token} y emite un nuevo access token
+   * junto con un nuevo refresh token en la respuesta.
    *
    * @param rawRefreshTokenCookie valor crudo de la cookie {@code refresh_token}, puede ser nulo
    * @param response respuesta HTTP donde se añade la cookie con el refresh token renovado

@@ -11,8 +11,8 @@ import org.springframework.data.jpa.domain.Specification;
 
 /**
  * Constructor fluido y null-safe de {@link Specification} de Criteria API para los endpoints de
- * listado con filtros por query params: cada método {@code *IfPresent} añade una condición solo
- * si el valor recibido está presente (no nulo, o no vacío/en blanco según el caso).
+ * listado con filtros por query params: cada método {@code *IfPresent} añade una condición solo si
+ * el valor recibido está presente (no nulo, o no vacío/en blanco según el caso).
  *
  * @param <T> el tipo de entidad sobre el que se construye la especificación
  */
@@ -54,8 +54,8 @@ public class SpecificationBuilder<T> {
   }
 
   /**
-   * Añade una condición {@code LIKE} (insensible a mayúsculas) si {@code value} no es nulo ni
-   * está en blanco.
+   * Añade una condición {@code LIKE} (insensible a mayúsculas) si {@code value} no es nulo ni está
+   * en blanco.
    *
    * @param path función que resuelve el {@link Path} del atributo sobre el {@link Root}
    * @param value el texto a buscar, puede ser nulo o vacío
@@ -71,8 +71,8 @@ public class SpecificationBuilder<T> {
   }
 
   /**
-   * Añade una condición de rango: entre {@code min} y {@code max} si ambos están presentes, o
-   * solo el límite correspondiente si únicamente uno de ellos lo está.
+   * Añade una condición de rango: entre {@code min} y {@code max} si ambos están presentes, o solo
+   * el límite correspondiente si únicamente uno de ellos lo está.
    *
    * @param path función que resuelve el {@link Path} del atributo sobre el {@link Root}
    * @param min el valor mínimo (inclusive), puede ser nulo
@@ -92,11 +92,11 @@ public class SpecificationBuilder<T> {
   }
 
   /**
-   * Añade una condición de rango de fechas: desde el inicio del día de {@code start} hasta el
-   * final del día de {@code end}, cada límite solo si está presente.
+   * Añade una condición de rango de fechas: desde el inicio del día de {@code start} hasta el final
+   * del día de {@code end}, cada límite solo si está presente.
    *
-   * @param path función que resuelve el {@link Path} del atributo de fecha/hora sobre el
-   *     {@link Root}
+   * @param path función que resuelve el {@link Path} del atributo de fecha/hora sobre el {@link
+   *     Root}
    * @param start la fecha mínima (inclusive), puede ser nula
    * @param end la fecha máxima (inclusive), puede ser nula
    * @return este mismo builder, para encadenar llamadas

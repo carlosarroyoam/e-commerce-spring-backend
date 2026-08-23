@@ -98,12 +98,12 @@ public class OrderService {
   }
 
   /**
-   * Cancela una orden y añade una entrada al historial de estados. Solo puede cancelarse una
-   * orden en estado {@code PENDING}, {@code CONFIRMED} o {@code PROCESSING}.
+   * Cancela una orden y añade una entrada al historial de estados. Solo puede cancelarse una orden
+   * en estado {@code PENDING}, {@code CONFIRMED} o {@code PROCESSING}.
    *
    * @param orderId el id de la orden a cancelar
-   * @throws ResponseStatusException con 404 si no existe una orden con ese id; con 422 si su
-   *     estado actual no permite la cancelación
+   * @throws ResponseStatusException con 404 si no existe una orden con ese id; con 422 si su estado
+   *     actual no permite la cancelación
    */
   @Transactional
   public void cancel(Long orderId) {

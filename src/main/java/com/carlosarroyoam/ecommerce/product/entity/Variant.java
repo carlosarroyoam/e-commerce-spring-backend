@@ -21,8 +21,8 @@ import lombok.Setter;
 
 /**
  * Entidad JPA que representa una variante comprable de un {@link Product producto} (SKU, precio,
- * stock) persistida en la tabla {@code variants}, con sus {@link VariantAttributeValue atributos}
- * e {@link VariantImage imágenes}.
+ * stock) persistida en la tabla {@code variants}, con sus {@link VariantAttributeValue atributos} e
+ * {@link VariantImage imágenes}.
  */
 @Entity
 @Table(name = "variants")

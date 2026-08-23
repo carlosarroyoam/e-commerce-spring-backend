@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Entidad JPA que representa una dirección de envío de un {@link Customer}, persistida en la
- * tabla {@code customer_addresses}.
+ * Entidad JPA que representa una dirección de envío de un {@link Customer}, persistida en la tabla
+ * {@code customer_addresses}.
  */
 @Entity
 @Table(name = "customer_addresses")

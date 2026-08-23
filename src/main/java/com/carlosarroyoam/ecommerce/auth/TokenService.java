@@ -22,8 +22,8 @@ public class TokenService {
   }
 
   /**
-   * Genera un access token JWT firmado con RSA para el principal dado, incluyendo sus datos
-   * básicos y roles como claims.
+   * Genera un access token JWT firmado con RSA para el principal dado, incluyendo sus datos básicos
+   * y roles como claims.
    *
    * @param principal el principal autenticado para el cual emitir el token
    * @return el access token JWT codificado
