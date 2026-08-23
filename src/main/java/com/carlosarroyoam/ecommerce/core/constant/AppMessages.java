@@ -10,6 +10,8 @@ public class AppMessages {
       "The provided refresh token is not valid or has expired";
 
   public static final String USER_NOT_FOUND_EXCEPTION = "User not found";
+  public static final String USER_CANNOT_DELETE_ITSELF_EXCEPTION = "User cannot delete itself";
+  public static final String USER_CANNOT_BE_DELETED_EXCEPTION = "User cannot be deleted";
 
   public static final String CUSTOMER_NOT_FOUND_EXCEPTION = "Customer not found";
 

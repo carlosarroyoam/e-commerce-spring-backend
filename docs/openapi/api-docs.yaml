@@ -1920,7 +1920,7 @@ paths:
       parameters:
         - name: orderId
           in: path
-          description: ID of order to calcel
+          description: ID of order to cancel
           required: true
           schema:
             type: integer

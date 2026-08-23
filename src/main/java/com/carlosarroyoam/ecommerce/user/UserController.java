@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.user;
 
+import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
 import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
@@ -7,6 +8,9 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -34,5 +38,16 @@ public class UserController {
   public ResponseEntity<UserResponse> findById(@PathVariable Long userId) {
     UserResponse userById = userService.findById(userId);
     return ResponseEntity.ok(userById);
+  }
+
+  @DeleteMapping("/{userId}")
+  public ResponseEntity<Void> deleteById(
+      @PathVariable Long userId, @AuthenticationPrincipal Jwt jwt) {
+    PrincipalType principalType = PrincipalType.valueOf(jwt.getClaimAsString("principal_type"));
+    Long currentUserId =
+        principalType == PrincipalType.STAFF ? Long.valueOf(jwt.getSubject()) : null;
+
+    userService.deleteById(userId, currentUserId);
+    return ResponseEntity.noContent().build();
   }
 }

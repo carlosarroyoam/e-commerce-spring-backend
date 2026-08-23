@@ -9,8 +9,10 @@ import com.carlosarroyoam.ecommerce.user.dto.UserResponse.UserResponseMapper;
 import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
 import com.carlosarroyoam.ecommerce.user.entity.Role_;
 import com.carlosarroyoam.ecommerce.user.entity.User;
+import com.carlosarroyoam.ecommerce.user.entity.UserStatus;
 import com.carlosarroyoam.ecommerce.user.entity.User_;
 import jakarta.persistence.criteria.JoinType;
+import java.time.LocalDateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -55,6 +57,28 @@ public class UserService {
   public UserResponse findById(Long userId) {
     User userById = findUserByIdOrFail(userId);
     return UserResponseMapper.INSTANCE.toDto(userById);
+  }
+
+  @Transactional
+  public void deleteById(Long userId, Long currentUserId) {
+    if (userId.equals(currentUserId)) {
+      log.warn(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
+      throw new ResponseStatusException(
+          HttpStatus.UNPROCESSABLE_ENTITY, AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
+    }
+
+    User userById = findUserByIdOrFail(userId);
+
+    if (userById.getStatus() == UserStatus.DELETED) {
+      log.warn(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
+      throw new ResponseStatusException(
+          HttpStatus.UNPROCESSABLE_ENTITY, AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
+    }
+
+    userById.setStatus(UserStatus.DELETED);
+    userById.setDeletedAt(LocalDateTime.now());
+    userById.setUpdatedAt(LocalDateTime.now());
+    userRepository.save(userById);
   }
 
   private User findUserByIdOrFail(Long userId) {
