@@ -1,0 +1,8 @@
+{
+  "id": 1,
+  "first_name": "Carlos Alberto",
+  "last_name": "Arroyo Martínez",
+  "email": "carlos.arroyo@e-commerce.com",
+  "status": "ACTIVE",
+  "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+}

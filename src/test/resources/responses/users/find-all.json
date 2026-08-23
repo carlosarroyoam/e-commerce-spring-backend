@@ -1,0 +1,90 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "first_name": "Carlos Alberto",
+      "last_name": "Arroyo Martínez",
+      "email": "carlos.arroyo@e-commerce.com",
+      "status": "ACTIVE",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 2,
+      "first_name": "Cathy Stefania",
+      "last_name": "Guido Rojas",
+      "email": "cathy.guido@e-commerce.com",
+      "status": "ACTIVE",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 3,
+      "first_name": "José Luis",
+      "last_name": "Hernández García",
+      "email": "jose.hernandez@e-comerce.com",
+      "status": "ACTIVE",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 4,
+      "first_name": "Ana Sofía",
+      "last_name": "Rodríguez Sánchez",
+      "email": "ana.rodriguez@e-comerce.com",
+      "status": "INACTIVE",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 5,
+      "first_name": "Miguel Ángel",
+      "last_name": "Ramírez Torres",
+      "email": "miguel.ramirez@e-comerce.com",
+      "status": "ACTIVE",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 6,
+      "first_name": "Guadalupe",
+      "last_name": "Flores Rivera",
+      "email": "guadalupe.flores@e-comerce.com",
+      "status": "DELETED",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 7,
+      "first_name": "Luis Fernando",
+      "last_name": "Gómez Díaz",
+      "email": "luis.gomez@e-comerce.com",
+      "status": "ACTIVE",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 8,
+      "first_name": "Ximena",
+      "last_name": "Cruz Morales",
+      "email": "ximena.cruz@e-comerce.com",
+      "status": "ACTIVE",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 9,
+      "first_name": "Carlos Eduardo",
+      "last_name": "Reyes Ortiz",
+      "email": "carlos.reyes@e-comerce.com",
+      "status": "INACTIVE",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 10,
+      "first_name": "Valeria",
+      "last_name": "Gutiérrez Chávez",
+      "email": "valeria.gutierrez@e-comerce.com",
+      "status": "ACTIVE",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    }
+  ],
+  "pagination": {
+    "page": 0,
+    "size": 10,
+    "total_items": 50,
+    "total_pages": 5
+  }
+}

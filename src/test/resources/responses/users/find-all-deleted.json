@@ -1,0 +1,42 @@
+{
+  "items": [
+    {
+      "id": 6,
+      "first_name": "Guadalupe",
+      "last_name": "Flores Rivera",
+      "email": "guadalupe.flores@e-comerce.com",
+      "status": "DELETED",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 32,
+      "first_name": "Fátima",
+      "last_name": "Cervantes Tapia",
+      "email": "fatima.cervantes@e-comerce.com",
+      "status": "DELETED",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 33,
+      "first_name": "Marco Antonio",
+      "last_name": "Mejía Villanueva",
+      "email": "marco.mejia@e-comerce.com",
+      "status": "DELETED",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    },
+    {
+      "id": 40,
+      "first_name": "Mónica",
+      "last_name": "Zúñiga Montoya",
+      "email": "monica.zuniga@e-comerce.com",
+      "status": "DELETED",
+      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+    }
+  ],
+  "pagination": {
+    "page": 0,
+    "size": 10,
+    "total_items": 4,
+    "total_pages": 1
+  }
+}
