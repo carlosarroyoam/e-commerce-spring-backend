@@ -7,8 +7,6 @@ import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Lógica de negocio para consultar {@link Category}. */
 @Service
 public class CategoryService {
-  private static final Logger log = LoggerFactory.getLogger(CategoryService.class);
   private final CategoryRepository categoryRepository;
 
   public CategoryService(final CategoryRepository categoryRepository) {
@@ -61,10 +58,6 @@ public class CategoryService {
   private Category findCategoryByIdOrFail(Byte categoryId) {
     return categoryRepository
         .findById(categoryId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.CATEGORY_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.CATEGORY_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.CATEGORY_NOT_FOUND_EXCEPTION));
   }
 }

@@ -17,14 +17,9 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 public class FixedAuthPrincipalArgumentResolver implements HandlerMethodArgumentResolver {
   private final AuthPrincipal fixedPrincipal;
 
-  public FixedAuthPrincipalArgumentResolver(
-      long id, PrincipalType principalType, String... roles) {
+  public FixedAuthPrincipalArgumentResolver(long id, PrincipalType principalType, String... roles) {
     this.fixedPrincipal =
-        AuthPrincipal.builder()
-            .id(id)
-            .principalType(principalType)
-            .roles(Set.of(roles))
-            .build();
+        AuthPrincipal.builder().id(id).principalType(principalType).roles(Set.of(roles)).build();
   }
 
   @Override

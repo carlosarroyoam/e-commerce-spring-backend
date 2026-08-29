@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.core.security;
 
+import com.carlosarroyoam.ecommerce.core.exception.ExceptionLogger;
 import com.carlosarroyoam.ecommerce.core.exception.ProblemDetailFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,17 +15,21 @@ import org.springframework.stereotype.Component;
 
 /**
  * Traduce un fallo de autenticación de Spring Security al mismo formato de error {@link
- * ProblemDetail} (RFC 9457) que usa el resto de la API, en vez de la respuesta por defecto de Spring
- * Security.
+ * ProblemDetail} (RFC 9457) que usa el resto de la API, en vez de la respuesta por defecto de
+ * Spring Security.
  */
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
   private final ProblemDetailFactory problemDetailFactory;
+  private final ExceptionLogger exceptionLogger;
   private final ObjectMapper mapper;
 
   public CustomAuthenticationEntryPoint(
-      ProblemDetailFactory problemDetailFactory, ObjectMapper mapper) {
+      ProblemDetailFactory problemDetailFactory,
+      ExceptionLogger exceptionLogger,
+      ObjectMapper mapper) {
     this.problemDetailFactory = problemDetailFactory;
+    this.exceptionLogger = exceptionLogger;
     this.mapper = mapper;
   }
 
@@ -41,6 +46,7 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
       throws IOException {
     HttpStatus status = HttpStatus.UNAUTHORIZED;
     ProblemDetail problemDetail = problemDetailFactory.build(status, ex.getMessage(), request);
+    exceptionLogger.log(status, ex.getMessage(), request, ex);
 
     response.setStatus(status.value());
     response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);

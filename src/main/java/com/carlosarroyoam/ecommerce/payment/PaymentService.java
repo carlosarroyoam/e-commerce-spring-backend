@@ -9,8 +9,6 @@ import com.carlosarroyoam.ecommerce.payment.dto.PaymentResponse;
 import com.carlosarroyoam.ecommerce.payment.dto.PaymentResponse.PaymentResponseMapper;
 import com.carlosarroyoam.ecommerce.payment.dto.PaymentSpecs;
 import com.carlosarroyoam.ecommerce.payment.entity.Payment;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -20,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Lógica de negocio para consultar pagos ({@link Payment}). */
 @Service
 public class PaymentService {
-  private static final Logger log = LoggerFactory.getLogger(PaymentService.class);
   private final PaymentRepository paymentRepository;
 
   public PaymentService(final PaymentRepository paymentRepository) {
@@ -77,10 +74,6 @@ public class PaymentService {
   private Payment findPaymentByIdOrFail(Long paymentId) {
     return paymentRepository
         .findById(paymentId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION));
   }
 }

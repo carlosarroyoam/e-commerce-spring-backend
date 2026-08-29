@@ -15,8 +15,6 @@ import com.carlosarroyoam.ecommerce.shipment.entity.Carrier;
 import com.carlosarroyoam.ecommerce.shipment.entity.Shipment;
 import com.carlosarroyoam.ecommerce.shipment.entity.Shipment_;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class ShipmentService {
-  private static final Logger log = LoggerFactory.getLogger(ShipmentService.class);
   private final ShipmentRepository shipmentRepository;
   private final CarrierRepository carrierRepository;
 
@@ -106,11 +103,7 @@ public class ShipmentService {
   private Shipment findShipmentByIdOrFail(Long shipmentId) {
     return shipmentRepository
         .findById(shipmentId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION));
   }
 
   /**
@@ -123,10 +116,6 @@ public class ShipmentService {
   private Shipment findShipmentByOrderIdOrFail(Long orderId) {
     return shipmentRepository
         .findByOrderId(orderId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION));
   }
 }

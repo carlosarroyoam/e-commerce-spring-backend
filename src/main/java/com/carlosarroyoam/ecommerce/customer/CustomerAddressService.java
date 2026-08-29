@@ -6,15 +6,12 @@ import com.carlosarroyoam.ecommerce.customer.dto.CustomerAddressResponse;
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerAddressResponse.CustomerAddressResponseMapper;
 import com.carlosarroyoam.ecommerce.customer.entity.CustomerAddress;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Lógica de negocio para consultar direcciones de clientes ({@link CustomerAddress}). */
 @Service
 public class CustomerAddressService {
-  private static final Logger log = LoggerFactory.getLogger(CustomerAddressService.class);
   private final CustomerRepository customerRepository;
   private final CustomerAddressRepository customerAddressRepository;
 
@@ -66,7 +63,6 @@ public class CustomerAddressService {
    */
   private void validateCustomerExists(Long customerId) {
     if (!customerRepository.existsById(customerId)) {
-      log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
       throw new ResourceNotFoundException(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
     }
   }
@@ -77,15 +73,13 @@ public class CustomerAddressService {
    * @param customerId el id del cliente
    * @param addressId el id de la dirección
    * @return la {@link CustomerAddress} encontrada
-   * @throws ResourceNotFoundException con 404 si no existe una dirección con ese id para ese cliente
+   * @throws ResourceNotFoundException con 404 si no existe una dirección con ese id para ese
+   *     cliente
    */
   private CustomerAddress findCustomerAddressByIdOrFail(Long customerId, Long addressId) {
     return customerAddressRepository
         .findByIdAndCustomerId(addressId, customerId)
         .orElseThrow(
-            () -> {
-              log.warn(AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
-            });
+            () -> new ResourceNotFoundException(AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION));
   }
 }

@@ -15,8 +15,6 @@ import com.carlosarroyoam.ecommerce.user.entity.UserStatus;
 import com.carlosarroyoam.ecommerce.user.entity.User_;
 import jakarta.persistence.criteria.JoinType;
 import java.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,7 +24,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Lógica de negocio para consultar y eliminar usuarios STAFF ({@link User}). */
 @Service
 public class UserService {
-  private static final Logger log = LoggerFactory.getLogger(UserService.class);
   private final UserRepository userRepository;
 
   public UserService(UserRepository userRepository) {
@@ -87,14 +84,12 @@ public class UserService {
   @Transactional
   public void deleteById(Long userId, Long currentUserId) {
     if (userId.equals(currentUserId)) {
-      log.warn(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
       throw new BusinessException(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
     }
 
     User userById = findUserByIdOrFail(userId);
 
     if (userById.getStatus() == UserStatus.DELETED) {
-      log.warn(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
       throw new BusinessException(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
     }
 
@@ -114,10 +109,6 @@ public class UserService {
   private User findUserByIdOrFail(Long userId) {
     return userRepository
         .findById(userId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.USER_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.USER_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.USER_NOT_FOUND_EXCEPTION));
   }
 }

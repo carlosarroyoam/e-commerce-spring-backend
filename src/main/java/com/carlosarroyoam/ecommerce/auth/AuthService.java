@@ -10,8 +10,6 @@ import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
 import com.carlosarroyoam.ecommerce.core.exception.UnauthorizedException;
 import java.util.Optional;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,7 +25,6 @@ import org.springframework.web.server.ResponseStatusException;
  */
 @Service
 public class AuthService {
-  private static final Logger log = LoggerFactory.getLogger(AuthService.class);
   private final AuthenticationManager authenticationManager;
   private final StaffDetailsService staffDetailsService;
   private final CustomerDetailsService customerDetailsService;
@@ -83,17 +80,13 @@ public class AuthService {
    */
   public AuthResponse refreshToken(String rawRefreshTokenCookie) {
     if (!StringUtils.hasText(rawRefreshTokenCookie)) {
-      log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
       throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
     }
 
     RefreshTokenCookie refreshTokenCookie =
         parseRefreshTokenCookie(rawRefreshTokenCookie)
             .orElseThrow(
-                () -> {
-                  log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
-                  return new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
-                });
+                () -> new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID));
 
     RefreshToken refreshTokenById = refreshTokenService.findById(refreshTokenCookie.getId());
     AuthPrincipal principal = loadPrincipal(refreshTokenById);
@@ -162,7 +155,6 @@ public class AuthService {
             (AuthPrincipal) customerDetailsService.loadUserById(refreshTokenById.getPrincipalId());
       };
     } catch (UsernameNotFoundException ex) {
-      log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
       throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
     }
   }

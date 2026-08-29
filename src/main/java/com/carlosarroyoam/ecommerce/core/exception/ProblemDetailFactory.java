@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 /**
  * Construye instancias de {@link ProblemDetail} (RFC 9457, {@code application/problem+json}) con el
- * formato uniforme usado por {@link GlobalExceptionHandler} para todas las respuestas de error de la
- * API.
+ * formato uniforme usado por {@link GlobalExceptionHandler} para todas las respuestas de error de
+ * la API.
  */
 @Component
 public class ProblemDetailFactory {

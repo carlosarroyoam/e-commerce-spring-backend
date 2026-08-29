@@ -7,8 +7,6 @@ import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseM
 import com.carlosarroyoam.ecommerce.product.dto.PropertyResponse;
 import com.carlosarroyoam.ecommerce.product.dto.PropertyResponse.PropertyResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Property;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -17,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Lógica de negocio para consultar propiedades de producto ({@link Property}). */
 @Service
 public class PropertyService {
-  private static final Logger log = LoggerFactory.getLogger(PropertyService.class);
   private final PropertyRepository propertyRepository;
 
   public PropertyService(final PropertyRepository propertyRepository) {
@@ -61,10 +58,6 @@ public class PropertyService {
   private Property findPropertyByIdOrFail(Long propertyId) {
     return propertyRepository
         .findById(propertyId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION));
   }
 }

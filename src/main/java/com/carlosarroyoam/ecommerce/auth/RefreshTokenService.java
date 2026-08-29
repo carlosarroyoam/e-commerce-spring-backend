@@ -8,8 +8,6 @@ import com.carlosarroyoam.ecommerce.core.property.JwtProps;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,7 +18,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class RefreshTokenService {
-  private static final Logger log = LoggerFactory.getLogger(RefreshTokenService.class);
   private final PasswordEncoder passwordEncoder;
   private final RefreshTokenRepository refreshTokenRepository;
   private final JwtProps jwtProps;
@@ -145,7 +142,6 @@ public class RefreshTokenService {
     }
 
     if (sessionExpired || tokenExpired || hashMismatch) {
-      log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
       throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
     }
   }
@@ -160,10 +156,6 @@ public class RefreshTokenService {
   private RefreshToken findRefreshTokenByIdOrFail(UUID refreshTokenId) {
     return refreshTokenRepository
         .findById(refreshTokenId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
-              return new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
-            });
+        .orElseThrow(() -> new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID));
   }
 }

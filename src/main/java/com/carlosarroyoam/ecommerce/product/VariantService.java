@@ -6,15 +6,12 @@ import com.carlosarroyoam.ecommerce.product.dto.VariantResponse;
 import com.carlosarroyoam.ecommerce.product.dto.VariantResponse.VariantResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Variant;
 import java.util.List;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /** Lógica de negocio para consultar variantes de producto ({@link Variant}). */
 @Service
 public class VariantService {
-  private static final Logger log = LoggerFactory.getLogger(VariantService.class);
   private final ProductRepository productRepository;
   private final VariantRepository variantRepository;
 
@@ -54,11 +51,8 @@ public class VariantService {
         variantRepository
             .findByIdAndProductId(variantId, productId)
             .orElseThrow(
-                () -> {
-                  log.warn(AppMessages.PRODUCT_VARIANT_NOT_FOUND_EXCEPTION);
-                  return new ResourceNotFoundException(
-                      AppMessages.PRODUCT_VARIANT_NOT_FOUND_EXCEPTION);
-                });
+                () ->
+                    new ResourceNotFoundException(AppMessages.PRODUCT_VARIANT_NOT_FOUND_EXCEPTION));
 
     return VariantResponseMapper.INSTANCE.toDto(variantById);
   }
@@ -71,7 +65,6 @@ public class VariantService {
    */
   private void validateProductExists(Long productId) {
     if (!productRepository.existsById(productId)) {
-      log.warn(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
       throw new ResourceNotFoundException(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
     }
   }

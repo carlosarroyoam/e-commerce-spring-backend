@@ -13,12 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
-import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
-import com.carlosarroyoam.ecommerce.core.pagination.PaginationResponse;
 import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
+import com.carlosarroyoam.ecommerce.core.exception.ExceptionLogger;
 import com.carlosarroyoam.ecommerce.core.exception.GlobalExceptionHandler;
 import com.carlosarroyoam.ecommerce.core.exception.ProblemDetailFactory;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PaginationResponse;
 import com.carlosarroyoam.ecommerce.support.security.FixedAuthPrincipalArgumentResolver;
 import com.carlosarroyoam.ecommerce.support.testutils.TestObjectMappers;
 import com.carlosarroyoam.ecommerce.user.dto.RoleResponse;
@@ -73,7 +74,8 @@ class UserControllerTest {
 
     mockMvc =
         MockMvcBuilders.standaloneSetup(userController)
-            .setControllerAdvice(new GlobalExceptionHandler(new ProblemDetailFactory()))
+            .setControllerAdvice(
+                new GlobalExceptionHandler(new ProblemDetailFactory(), new ExceptionLogger()))
             .setCustomArgumentResolvers(
                 new PageableHandlerMethodArgumentResolver(), authPrincipalResolver)
             .setMessageConverters(
@@ -135,10 +137,8 @@ class UserControllerTest {
   }
 
   @Test
-  @DisplayName(
-      "Given a non existing user id, when find by id, then returns 404")
-  void givenNonExistingUserId_whenFindById_thenReturns404()
-      throws Exception {
+  @DisplayName("Given a non existing user id, when find by id, then returns 404")
+  void givenNonExistingUserId_whenFindById_thenReturns404() throws Exception {
     given(userService.findById(999L))
         .willThrow(new ResourceNotFoundException(AppMessages.USER_NOT_FOUND_EXCEPTION));
 
@@ -153,8 +153,7 @@ class UserControllerTest {
   }
 
   @Test
-  @DisplayName(
-      "Given a user id, when delete by id, then returns 204")
+  @DisplayName("Given a user id, when delete by id, then returns 204")
   void givenUserId_whenDeleteById_thenReturns204AndDelegatesWithCurrentUserId() throws Exception {
     mockMvc.perform(delete("/users/5")).andExpect(status().isNoContent());
 
@@ -162,8 +161,7 @@ class UserControllerTest {
   }
 
   @Test
-  @DisplayName(
-      "Given the service throws unprocessable entity, when delete by id, then returns 422")
+  @DisplayName("Given the service throws unprocessable entity, when delete by id, then returns 422")
   void
       givenServiceThrowsUnprocessableEntity_whenDeleteById_thenReturns422ViaGlobalExceptionHandler()
           throws Exception {

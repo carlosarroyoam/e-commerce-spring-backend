@@ -11,8 +11,6 @@ import com.carlosarroyoam.ecommerce.refund.dto.RefundResponse.RefundResponseMapp
 import com.carlosarroyoam.ecommerce.refund.dto.RefundSpecs;
 import com.carlosarroyoam.ecommerce.refund.entity.Refund;
 import com.carlosarroyoam.ecommerce.refund.entity.Refund_;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -22,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Lógica de negocio para consultar reembolsos ({@link Refund}). */
 @Service
 public class RefundService {
-  private static final Logger log = LoggerFactory.getLogger(RefundService.class);
   private final RefundRepository refundRepository;
 
   public RefundService(final RefundRepository refundRepository) {
@@ -86,11 +83,7 @@ public class RefundService {
   private Refund findRefundByIdOrFail(Long refundId) {
     return refundRepository
         .findById(refundId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION));
   }
 
   /**
@@ -103,10 +96,6 @@ public class RefundService {
   private Refund findRefundByOrderIdOrFail(Long orderId) {
     return refundRepository
         .findByOrderId(orderId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION));
   }
 }

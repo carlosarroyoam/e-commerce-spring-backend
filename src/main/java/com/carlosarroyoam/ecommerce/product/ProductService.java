@@ -12,8 +12,6 @@ import com.carlosarroyoam.ecommerce.product.dto.ProductSpecs;
 import com.carlosarroyoam.ecommerce.product.entity.Product;
 import com.carlosarroyoam.ecommerce.product.entity.Product_;
 import jakarta.persistence.criteria.JoinType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -23,7 +21,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Lógica de negocio para consultar productos ({@link Product}). */
 @Service
 public class ProductService {
-  private static final Logger log = LoggerFactory.getLogger(ProductService.class);
   private final ProductRepository productRepository;
 
   public ProductService(final ProductRepository productRepository) {
@@ -83,10 +80,6 @@ public class ProductService {
   private Product findProductByIdOrFail(Long productId) {
     return productRepository
         .findById(productId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION));
   }
 }

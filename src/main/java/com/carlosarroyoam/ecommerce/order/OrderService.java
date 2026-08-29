@@ -17,8 +17,6 @@ import com.carlosarroyoam.ecommerce.order.entity.OrderStatus;
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatusHistory;
 import com.carlosarroyoam.ecommerce.order.entity.Order_;
 import java.time.LocalDateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -28,7 +26,6 @@ import org.springframework.transaction.annotation.Transactional;
 /** Lógica de negocio para consultar y cancelar órdenes ({@link Order}). */
 @Service
 public class OrderService {
-  private static final Logger log = LoggerFactory.getLogger(OrderService.class);
   private final OrderRepository orderRepository;
 
   public OrderService(final OrderRepository orderRepository) {
@@ -88,10 +85,7 @@ public class OrderService {
         orderRepository
             .findByOrderNumber(orderNumber)
             .orElseThrow(
-                () -> {
-                  log.warn(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-                  return new ResourceNotFoundException(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-                });
+                () -> new ResourceNotFoundException(AppMessages.ORDER_NOT_FOUND_EXCEPTION));
 
     return OrderTrackResponseMapper.INSTANCE.toDto(orderByOrderNumber);
   }
@@ -109,7 +103,6 @@ public class OrderService {
     Order orderById = findOrderByIdOrFail(orderId);
 
     if (!canBeCancelled(orderById.getStatus())) {
-      log.warn(AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
       throw new BusinessException(AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
     }
 
@@ -148,10 +141,6 @@ public class OrderService {
   private Order findOrderByIdOrFail(Long orderId) {
     return orderRepository
         .findById(orderId)
-        .orElseThrow(
-            () -> {
-              log.warn(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-              return new ResourceNotFoundException(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-            });
+        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.ORDER_NOT_FOUND_EXCEPTION));
   }
 }

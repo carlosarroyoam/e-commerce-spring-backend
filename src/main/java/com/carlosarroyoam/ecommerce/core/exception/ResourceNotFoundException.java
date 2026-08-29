@@ -2,9 +2,7 @@ package com.carlosarroyoam.ecommerce.core.exception;
 
 import org.springframework.http.HttpStatus;
 
-/**
- * Se lanza cuando no existe el recurso solicitado. Se traduce a 404 Not Found.
- */
+/** Se lanza cuando no existe el recurso solicitado. Se traduce a 404 Not Found. */
 public class ResourceNotFoundException extends ApplicationException {
   /**
    * Crea la excepción con el mensaje descriptivo indicado.
