@@ -41,6 +41,7 @@ public class AppMessages {
 
   public static final String REFUND_NOT_FOUND_EXCEPTION = "Refund not found";
 
+  /** Constructor privado que impide instanciar la clase. */
   private AppMessages() {
     throw new IllegalAccessError(ILLEGAL_ACCESS_EXCEPTION);
   }

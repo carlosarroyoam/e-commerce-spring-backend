@@ -16,7 +16,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -42,17 +41,6 @@ public class GlobalExceptionHandler {
   public ProblemDetail handleApplicationException(
       ApplicationException ex, HttpServletRequest request) {
     return problemDetailFactory.build(ex.getStatus(), ex.getMessage(), request);
-  }
-
-  /**
-   * Traduce una {@link ResponseStatusException} al estado HTTP que ella misma indica. Se conserva
-   * como red de seguridad para los casos que todavía la lanzan (p. ej. la funcionalidad de
-   * recuperación de contraseña aún no implementada).
-   */
-  @ExceptionHandler({ResponseStatusException.class})
-  public ProblemDetail handleResponseStatus(
-      ResponseStatusException ex, HttpServletRequest request) {
-    return problemDetailFactory.build(ex.getStatusCode(), ex.getReason(), request);
   }
 
   /** Mapea un cuerpo de petición ilegible o malformado a 400 Bad Request. */
