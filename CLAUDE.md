@@ -78,6 +78,15 @@ Services signal failures with a domain exception from `core/exception`: the abst
 
 Exception **logging** is centralized in `ExceptionLogger` (`core/exception`, a `@Component`): it is the only place that logs an exception being translated to an HTTP error response, with a uniform format (`METHOD /path -> status detail`) and a fixed severity policy — 4xx client errors at `WARN` without a stack trace, 5xx at `ERROR` with the stack trace. It is called by every `@ExceptionHandler` in `GlobalExceptionHandler` and by both Spring Security handlers. Services and controllers must **not** log exceptions themselves — throw the domain exception and let `ExceptionLogger` record it once.
 
+### Logging / MDC
+
+Every log line emitted while a request is being processed carries an MDC block `[requestId principalType:userId]`, rendered right before the logger name. Two filters in `core/filter` populate it and clear their keys in a `finally`:
+
+- `CorrelationIdFilter` — `@Component` at `Ordered.HIGHEST_PRECEDENCE` (runs outside the Spring Security chain, wrapping everything). Sets MDC key `requestId` from the incoming `X-Request-Id` header or a fresh UUID, and echoes it back in the `X-Request-Id` response header.
+- `MdcUserContextFilter` — **not** a `@Component`; added to the security chain in `WebSecurityConfig` via `addFilterAfter(new MdcUserContextFilter(), BearerTokenAuthenticationFilter.class)`, so the JWT is already authenticated. Sets MDC keys `userId` (the `AuthPrincipal` id) and `principalType` (`STAFF`/`CUSTOMER`). Unauthenticated requests render as `anonymous:anonymous`; a 401 for a missing/invalid token is handled by `BearerTokenAuthenticationFilter` before this filter, so that one line has `requestId` but no user.
+
+The log pattern lives in `src/main/resources/logback-spring.xml`, which reuses Spring Boot's default console config and only fills the correlation slot (`LOG_CORRELATION_PATTERN`). That slot is wrapped in `%replace(...)` so that when there is no `requestId` (startup, background threads — anything outside an HTTP request) the whole `[...]` block disappears from the line instead of showing empty. Nothing else logs the user or writes to the MDC — filters only.
+
 ### Auth model
 
 Two independent principal types share the same JWT-based auth, not a single `users` table:

@@ -4,6 +4,7 @@ import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipalAuthenticationToken;
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipalMapper;
 import com.carlosarroyoam.ecommerce.core.filter.CsrfCookieFilter;
+import com.carlosarroyoam.ecommerce.core.filter.MdcUserContextFilter;
 import com.carlosarroyoam.ecommerce.core.property.CorsProps;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
 import java.time.Duration;
@@ -28,6 +29,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
@@ -52,7 +54,9 @@ public class WebSecurityConfig {
    * Define la cadena de filtros de seguridad HTTP: habilita CSRF de doble envío (excepto en {@code
    * /auth/login}), CORS, cabeceras same-origin, sesiones sin estado, autenticación como recurso
    * OAuth2 vía JWT, manejadores personalizados de errores de autenticación/autorización, y permite
-   * sin autenticación las rutas {@code /auth/**} y {@code /actuator/**}.
+   * sin autenticación las rutas {@code /auth/**} y {@code /actuator/**}. Añade además el {@link
+   * MdcUserContextFilter} tras la autenticación del JWT para exponer la identidad del principal en
+   * el MDC.
    *
    * @return la {@link SecurityFilterChain} configurada
    */
@@ -89,7 +93,8 @@ public class WebSecurityConfig {
               ex.authenticationEntryPoint(authenticationEntryPoint);
               ex.accessDeniedHandler(accessDeniedHandler);
             })
-        .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class);
+        .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
+        .addFilterAfter(new MdcUserContextFilter(), BearerTokenAuthenticationFilter.class);
 
     http.authorizeHttpRequests(
         auth ->
