@@ -3733,31 +3733,37 @@ components:
           type: integer
           description: Total number of pages available
 
-    AppExceptionResponse:
+    ProblemDetail:
       type: object
-      description: Standard error response returned when an application exception occurs
+      description: >-
+        RFC 9457 (Problem Details for HTTP APIs) error response, served as
+        application/problem+json. Produced by Spring's org.springframework.http.ProblemDetail.
       properties:
-        message:
+        type:
           type: string
-          description: Human-readable error message
-        error:
+          format: uri
+          default: about:blank
+          description: A URI reference that identifies the problem type
+        title:
           type: string
-          description: Short error identifier or error type
+          description: A short, human-readable summary of the problem type (the HTTP status reason phrase)
         status:
           type: integer
           description: HTTP status code associated with the error
-        details:
+        detail:
+          type: string
+          description: A human-readable explanation specific to this occurrence of the problem
+        instance:
+          type: string
+          format: uri
+          description: A URI reference that identifies the specific occurrence of the problem (the request path)
+        errors:
           type: object
-          description: Additional validation or error details
+          description: >-
+            Extension member present only on 422 responses: a map of field name to
+            validation error message
           additionalProperties:
             type: string
-        path:
-          type: string
-          description: API endpoint path where the error occurred
-        timestamp:
-          type: string
-          format: date-time
-          description: Timestamp when the error was generated
 
   parameters:
     SizeParam:
@@ -3795,51 +3801,51 @@ components:
     NotFound:
       description: Not found
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: "#/components/schemas/AppExceptionResponse"
+            $ref: "#/components/schemas/ProblemDetail"
 
     BadRequest:
       description: Bad request
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: "#/components/schemas/AppExceptionResponse"
+            $ref: "#/components/schemas/ProblemDetail"
 
     UnprocessableEntity:
       description: Unprocessable entity
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: "#/components/schemas/AppExceptionResponse"
+            $ref: "#/components/schemas/ProblemDetail"
 
     Unauthorized:
       description: Unauthorized
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: "#/components/schemas/AppExceptionResponse"
+            $ref: "#/components/schemas/ProblemDetail"
 
     Forbidden:
       description: Forbidden
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: "#/components/schemas/AppExceptionResponse"
+            $ref: "#/components/schemas/ProblemDetail"
 
     InternalServerError:
       description: Internal server error
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: "#/components/schemas/AppExceptionResponse"
+            $ref: "#/components/schemas/ProblemDetail"
 
     NotImplemented:
       description: Not implemented
       content:
-        application/json:
+        application/problem+json:
           schema:
-            $ref: "#/components/schemas/AppExceptionResponse"
+            $ref: "#/components/schemas/ProblemDetail"
 
   securitySchemes:
     BearerAuth:

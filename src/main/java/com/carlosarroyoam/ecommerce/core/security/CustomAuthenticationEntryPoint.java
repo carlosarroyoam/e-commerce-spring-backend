@@ -1,30 +1,30 @@
 package com.carlosarroyoam.ecommerce.core.security;
 
-import com.carlosarroyoam.ecommerce.core.exception.ApiExceptionResponseFactory;
-import com.carlosarroyoam.ecommerce.core.exception.dto.AppExceptionResponse;
+import com.carlosarroyoam.ecommerce.core.exception.ProblemDetailFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ProblemDetail;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 /**
- * Traduce un fallo de autenticación de Spring Security al mismo formato de error JSON ({@link
- * AppExceptionResponse}) que usa el resto de la API, en vez de la respuesta por defecto de Spring
+ * Traduce un fallo de autenticación de Spring Security al mismo formato de error {@link
+ * ProblemDetail} (RFC 9457) que usa el resto de la API, en vez de la respuesta por defecto de Spring
  * Security.
  */
 @Component
 public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint {
-  private final ApiExceptionResponseFactory apiExceptionResponseFactory;
+  private final ProblemDetailFactory problemDetailFactory;
   private final ObjectMapper mapper;
 
   public CustomAuthenticationEntryPoint(
-      ApiExceptionResponseFactory apiExceptionResponseFactory, ObjectMapper mapper) {
-    this.apiExceptionResponseFactory = apiExceptionResponseFactory;
+      ProblemDetailFactory problemDetailFactory, ObjectMapper mapper) {
+    this.problemDetailFactory = problemDetailFactory;
     this.mapper = mapper;
   }
 
@@ -40,11 +40,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
       HttpServletRequest request, HttpServletResponse response, AuthenticationException ex)
       throws IOException {
     HttpStatus status = HttpStatus.UNAUTHORIZED;
-    AppExceptionResponse appExceptionResponse =
-        apiExceptionResponseFactory.build(status, ex.getMessage(), request);
+    ProblemDetail problemDetail = problemDetailFactory.build(status, ex.getMessage(), request);
 
     response.setStatus(status.value());
-    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    mapper.writeValue(response.getOutputStream(), appExceptionResponse);
+    response.setContentType(MediaType.APPLICATION_PROBLEM_JSON_VALUE);
+    mapper.writeValue(response.getOutputStream(), problemDetail);
   }
 }

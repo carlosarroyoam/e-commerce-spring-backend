@@ -7,6 +7,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -14,8 +15,8 @@ import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
 import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.dto.PaginationResponse;
-import com.carlosarroyoam.ecommerce.core.exception.ApiExceptionResponseFactory;
 import com.carlosarroyoam.ecommerce.core.exception.GlobalExceptionHandler;
+import com.carlosarroyoam.ecommerce.core.exception.ProblemDetailFactory;
 import com.carlosarroyoam.ecommerce.support.security.FixedAuthPrincipalArgumentResolver;
 import com.carlosarroyoam.ecommerce.support.testutils.TestObjectMappers;
 import com.carlosarroyoam.ecommerce.user.dto.RoleResponse;
@@ -30,6 +31,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -71,7 +73,7 @@ class UserControllerTest {
 
     mockMvc =
         MockMvcBuilders.standaloneSetup(userController)
-            .setControllerAdvice(new GlobalExceptionHandler(new ApiExceptionResponseFactory()))
+            .setControllerAdvice(new GlobalExceptionHandler(new ProblemDetailFactory()))
             .setCustomArgumentResolvers(
                 new PageableHandlerMethodArgumentResolver(), authPrincipalResolver)
             .setMessageConverters(
@@ -145,8 +147,11 @@ class UserControllerTest {
     mockMvc
         .perform(get("/users/999"))
         .andExpect(status().isNotFound())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
         .andExpect(jsonPath("$.status").value(404))
-        .andExpect(jsonPath("$.message").value(AppMessages.USER_NOT_FOUND_EXCEPTION));
+        .andExpect(jsonPath("$.title").value("Not Found"))
+        .andExpect(jsonPath("$.instance").value("/users/999"))
+        .andExpect(jsonPath("$.detail").value(AppMessages.USER_NOT_FOUND_EXCEPTION));
   }
 
   @Test
@@ -173,6 +178,7 @@ class UserControllerTest {
     mockMvc
         .perform(delete("/users/1"))
         .andExpect(status().isUnprocessableEntity())
-        .andExpect(jsonPath("$.message").value(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION));
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.detail").value(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION));
   }
 }

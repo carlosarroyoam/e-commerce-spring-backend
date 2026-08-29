@@ -74,7 +74,7 @@ List endpoints bind query params to a `*Specs` DTO via `@ModelAttribute`, then b
 
 ### Error handling
 
-Services signal failures with `ResponseStatusException(HttpStatus, AppMessages.SOME_CONSTANT)`. `GlobalExceptionHandler` (`@RestControllerAdvice`) is the single place that turns all exception types (validation, auth, 404s, method-not-allowed, generic) into a uniform `AppExceptionResponse` body (`message`, `error`, `status`, `details`, `path`, `timestamp`). Bean validation failures (`MethodArgumentNotValidException`) map to **422**, not 400. Add new user-facing error strings to `AppMessages` rather than inlining them.
+Services signal failures with `ResponseStatusException(HttpStatus, AppMessages.SOME_CONSTANT)`. `GlobalExceptionHandler` (`@RestControllerAdvice`) is the single place that turns all exception types (validation, auth, 404s, method-not-allowed, generic) into a Spring `ProblemDetail` (RFC 9457, `application/problem+json`) built by `ProblemDetailFactory` — a uniform body of `type`, `title`, `status`, `detail`, `instance` (the request path), plus an `errors` extension member (field → message map) on **422** validation failures. `@ExceptionHandler` methods return the `ProblemDetail` directly (Spring infers the status from it). The two Spring Security handlers that bypass the advice (`CustomAuthenticationEntryPoint`, `CustomAccessDeniedHandler`) serialize the same `ProblemDetail` with the injected `ObjectMapper`. Bean validation failures (`MethodArgumentNotValidException`) map to **422**, not 400. Add new user-facing error strings to `AppMessages` rather than inlining them.
 
 ### Auth model
 

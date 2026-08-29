@@ -2,6 +2,7 @@ package com.carlosarroyoam.ecommerce.user;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -19,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -109,8 +111,11 @@ class UserControllerIT extends AbstractIntegrationTest {
     mockMvc
         .perform(get("/users/999999"))
         .andExpect(status().isNotFound())
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
         .andExpect(jsonPath("$.status").value(404))
-        .andExpect(jsonPath("$.message").value("User not found"));
+        .andExpect(jsonPath("$.title").value("Not Found"))
+        .andExpect(jsonPath("$.instance").value("/users/999999"))
+        .andExpect(jsonPath("$.detail").value("User not found"));
   }
 
   @Test
@@ -120,7 +125,8 @@ class UserControllerIT extends AbstractIntegrationTest {
     mockMvc
         .perform(delete("/users/" + ADMIN_STAFF_ID))
         .andExpect(status().isUnprocessableEntity())
-        .andExpect(jsonPath("$.message").value("User cannot delete itself"));
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.detail").value("User cannot delete itself"));
   }
 
   @Test
@@ -130,7 +136,8 @@ class UserControllerIT extends AbstractIntegrationTest {
     mockMvc
         .perform(delete("/users/6"))
         .andExpect(status().isUnprocessableEntity())
-        .andExpect(jsonPath("$.message").value("User cannot be deleted"));
+        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.detail").value("User cannot be deleted"));
   }
 
   @Test
