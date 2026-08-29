@@ -1,6 +1,8 @@
 package com.carlosarroyoam.ecommerce.user;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
@@ -18,10 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /** Lógica de negocio para consultar y eliminar usuarios STAFF ({@link User}). */
 @Service
@@ -66,7 +66,7 @@ public class UserService {
    *
    * @param userId el id del usuario
    * @return el {@link UserResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe un usuario con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un usuario con ese id
    */
   @Transactional(readOnly = true)
   public UserResponse findById(Long userId) {
@@ -80,23 +80,22 @@ public class UserService {
    * @param userId el id del usuario a eliminar
    * @param currentUserId el id del principal STAFF autenticado que realiza la petición, o {@code
    *     null} si el principal autenticado es un CUSTOMER
-   * @throws ResponseStatusException con 422 si {@code userId} coincide con {@code currentUserId} o
-   *     si el usuario ya está eliminado; con 404 si no existe un usuario con ese id
+   * @throws BusinessException con 422 si {@code userId} coincide con {@code currentUserId} o si el
+   *     usuario ya está eliminado
+   * @throws ResourceNotFoundException con 404 si no existe un usuario con ese id
    */
   @Transactional
   public void deleteById(Long userId, Long currentUserId) {
     if (userId.equals(currentUserId)) {
       log.warn(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
-      throw new ResponseStatusException(
-          HttpStatus.UNPROCESSABLE_ENTITY, AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
+      throw new BusinessException(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
     }
 
     User userById = findUserByIdOrFail(userId);
 
     if (userById.getStatus() == UserStatus.DELETED) {
       log.warn(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
-      throw new ResponseStatusException(
-          HttpStatus.UNPROCESSABLE_ENTITY, AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
+      throw new BusinessException(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
     }
 
     userById.setStatus(UserStatus.DELETED);
@@ -110,7 +109,7 @@ public class UserService {
    *
    * @param userId el id del usuario
    * @return el {@link User} encontrado
-   * @throws ResponseStatusException con 404 si no existe un usuario con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un usuario con ese id
    */
   private User findUserByIdOrFail(Long userId) {
     return userRepository
@@ -118,8 +117,7 @@ public class UserService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.USER_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.USER_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.USER_NOT_FOUND_EXCEPTION);
             });
   }
 }

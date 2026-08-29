@@ -2,6 +2,7 @@ package com.carlosarroyoam.ecommerce.product;
 
 import com.carlosarroyoam.ecommerce.category.entity.Category_;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
@@ -16,10 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /** Lógica de negocio para consultar productos ({@link Product}). */
 @Service
@@ -66,7 +65,7 @@ public class ProductService {
    *
    * @param productId el id del producto
    * @return el {@link ProductResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe un producto con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un producto con ese id
    */
   @Transactional(readOnly = true)
   public ProductResponse findById(Long productId) {
@@ -79,7 +78,7 @@ public class ProductService {
    *
    * @param productId el id del producto
    * @return el {@link Product} encontrado
-   * @throws ResponseStatusException con 404 si no existe un producto con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un producto con ese id
    */
   private Product findProductByIdOrFail(Long productId) {
     return productRepository
@@ -87,8 +86,7 @@ public class ProductService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
             });
   }
 }

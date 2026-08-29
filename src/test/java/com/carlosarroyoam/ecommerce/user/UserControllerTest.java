@@ -15,8 +15,10 @@ import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PaginationResponse;
+import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
 import com.carlosarroyoam.ecommerce.core.exception.GlobalExceptionHandler;
 import com.carlosarroyoam.ecommerce.core.exception.ProblemDetailFactory;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.support.security.FixedAuthPrincipalArgumentResolver;
 import com.carlosarroyoam.ecommerce.support.testutils.TestObjectMappers;
 import com.carlosarroyoam.ecommerce.user.dto.RoleResponse;
@@ -30,13 +32,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.server.ResponseStatusException;
 
 /** Slice unitario de {@link UserController} via {@code MockMvc.standaloneSetup}. */
 @ExtendWith(MockitoExtension.class)
@@ -140,9 +140,7 @@ class UserControllerTest {
   void givenNonExistingUserId_whenFindById_thenReturns404()
       throws Exception {
     given(userService.findById(999L))
-        .willThrow(
-            new ResponseStatusException(
-                HttpStatus.NOT_FOUND, AppMessages.USER_NOT_FOUND_EXCEPTION));
+        .willThrow(new ResourceNotFoundException(AppMessages.USER_NOT_FOUND_EXCEPTION));
 
     mockMvc
         .perform(get("/users/999"))
@@ -169,9 +167,7 @@ class UserControllerTest {
   void
       givenServiceThrowsUnprocessableEntity_whenDeleteById_thenReturns422ViaGlobalExceptionHandler()
           throws Exception {
-    doThrow(
-            new ResponseStatusException(
-                HttpStatus.UNPROCESSABLE_ENTITY, AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION))
+    doThrow(new BusinessException(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION))
         .when(userService)
         .deleteById(1L, FIXED_STAFF_PRINCIPAL_ID);
 

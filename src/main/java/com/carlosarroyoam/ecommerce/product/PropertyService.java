@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce.product;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.product.dto.PropertyResponse;
@@ -10,10 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /** Lógica de negocio para consultar propiedades de producto ({@link Property}). */
 @Service
@@ -44,7 +43,7 @@ public class PropertyService {
    *
    * @param propertyId el id de la propiedad
    * @return el {@link PropertyResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe una propiedad con ese id
+   * @throws ResourceNotFoundException con 404 si no existe una propiedad con ese id
    */
   @Transactional(readOnly = true)
   public PropertyResponse findById(Long propertyId) {
@@ -57,7 +56,7 @@ public class PropertyService {
    *
    * @param propertyId el id de la propiedad
    * @return la {@link Property} encontrada
-   * @throws ResponseStatusException con 404 si no existe una propiedad con ese id
+   * @throws ResourceNotFoundException con 404 si no existe una propiedad con ese id
    */
   private Property findPropertyByIdOrFail(Long propertyId) {
     return propertyRepository
@@ -65,8 +64,7 @@ public class PropertyService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION);
             });
   }
 }

@@ -3,6 +3,7 @@ package com.carlosarroyoam.ecommerce.auth;
 import com.carlosarroyoam.ecommerce.auth.entity.RefreshToken;
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.UnauthorizedException;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -10,10 +11,8 @@ import java.util.UUID;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Persiste, rota y revoca los refresh tokens, validando su expiración y el hash del token recibido
@@ -40,8 +39,7 @@ public class RefreshTokenService {
    *
    * @param refreshTokenId el id del refresh token
    * @return la entidad {@link RefreshToken} encontrada
-   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si no
-   *     existe
+   * @throws UnauthorizedException con 401 Unauthorized si no existe
    */
   public RefreshToken findById(UUID refreshTokenId) {
     return findRefreshTokenByIdOrFail(refreshTokenId);
@@ -90,8 +88,8 @@ public class RefreshTokenService {
    * @param currentRefreshToken el valor crudo del refresh token actual, para validar su hash
    * @param newRefreshToken el valor crudo del nuevo refresh token
    * @return la entidad {@link RefreshToken} actualizada
-   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el token
-   *     no existe, expiró, la sesión superó su vida máxima, o el hash no coincide
+   * @throws UnauthorizedException con 401 Unauthorized si el token no existe, expiró, la sesión
+   *     superó su vida máxima, o el hash no coincide
    */
   public RefreshToken rotate(
       UUID refreshTokenId, String currentRefreshToken, String newRefreshToken) {
@@ -128,8 +126,8 @@ public class RefreshTokenService {
    *
    * @param currentRefreshToken el valor crudo del refresh token a validar
    * @param refreshToken la entidad {@link RefreshToken} contra la cual validar
-   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el token
-   *     no es válido por cualquiera de los motivos anteriores
+   * @throws UnauthorizedException con 401 Unauthorized si el token no es válido por cualquiera de
+   *     los motivos anteriores
    */
   private void validateRefreshToken(String currentRefreshToken, RefreshToken refreshToken) {
     LocalDateTime now = LocalDateTime.now();
@@ -148,8 +146,7 @@ public class RefreshTokenService {
 
     if (sessionExpired || tokenExpired || hashMismatch) {
       log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
-      throw new ResponseStatusException(
-          HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+      throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
     }
   }
 
@@ -158,8 +155,7 @@ public class RefreshTokenService {
    *
    * @param refreshTokenId el id del refresh token
    * @return la entidad {@link RefreshToken} encontrada
-   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si no
-   *     existe
+   * @throws UnauthorizedException con 401 Unauthorized si no existe
    */
   private RefreshToken findRefreshTokenByIdOrFail(UUID refreshTokenId) {
     return refreshTokenRepository
@@ -167,8 +163,7 @@ public class RefreshTokenService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
-              return new ResponseStatusException(
-                  HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+              return new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
             });
   }
 }

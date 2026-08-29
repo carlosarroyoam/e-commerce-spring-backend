@@ -1,6 +1,8 @@
 package com.carlosarroyoam.ecommerce.order;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
@@ -20,10 +22,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /** Lógica de negocio para consultar y cancelar órdenes ({@link Order}). */
 @Service
@@ -67,7 +67,7 @@ public class OrderService {
    *
    * @param orderId el id de la orden
    * @return el {@link OrderResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe una orden con ese id
+   * @throws ResourceNotFoundException con 404 si no existe una orden con ese id
    */
   @Transactional(readOnly = true)
   public OrderResponse findById(Long orderId) {
@@ -80,7 +80,7 @@ public class OrderService {
    *
    * @param orderNumber el número de la orden
    * @return el {@link OrderTrackResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe una orden con ese número
+   * @throws ResourceNotFoundException con 404 si no existe una orden con ese número
    */
   @Transactional(readOnly = true)
   public OrderTrackResponse findByOrderNumber(String orderNumber) {
@@ -90,8 +90,7 @@ public class OrderService {
             .orElseThrow(
                 () -> {
                   log.warn(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-                  return new ResponseStatusException(
-                      HttpStatus.NOT_FOUND, AppMessages.ORDER_NOT_FOUND_EXCEPTION);
+                  return new ResourceNotFoundException(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
                 });
 
     return OrderTrackResponseMapper.INSTANCE.toDto(orderByOrderNumber);
@@ -102,8 +101,8 @@ public class OrderService {
    * en estado {@code PENDING}, {@code CONFIRMED} o {@code PROCESSING}.
    *
    * @param orderId el id de la orden a cancelar
-   * @throws ResponseStatusException con 404 si no existe una orden con ese id; con 422 si su estado
-   *     actual no permite la cancelación
+   * @throws ResourceNotFoundException con 404 si no existe una orden con ese id
+   * @throws BusinessException con 422 si su estado actual no permite la cancelación
    */
   @Transactional
   public void cancel(Long orderId) {
@@ -111,8 +110,7 @@ public class OrderService {
 
     if (!canBeCancelled(orderById.getStatus())) {
       log.warn(AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
-      throw new ResponseStatusException(
-          HttpStatus.UNPROCESSABLE_ENTITY, AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
+      throw new BusinessException(AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
     }
 
     orderById.setStatus(OrderStatus.CANCELLED);
@@ -145,7 +143,7 @@ public class OrderService {
    *
    * @param orderId el id de la orden
    * @return la {@link Order} encontrada
-   * @throws ResponseStatusException con 404 si no existe una orden con ese id
+   * @throws ResourceNotFoundException con 404 si no existe una orden con ese id
    */
   private Order findOrderByIdOrFail(Long orderId) {
     return orderRepository
@@ -153,8 +151,7 @@ public class OrderService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.ORDER_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.ORDER_NOT_FOUND_EXCEPTION);
             });
   }
 }

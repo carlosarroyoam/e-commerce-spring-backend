@@ -22,8 +22,9 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
  * Punto único de traducción de excepciones a respuestas HTTP: captura cada tipo de excepción de la
- * aplicación (validación, autenticación/autorización, 404, método no soportado, genéricas) y las
- * convierte en un {@link ProblemDetail} uniforme (RFC 9457) mediante {@link ProblemDetailFactory}.
+ * aplicación (las {@link ApplicationException} de dominio, validación, autenticación/autorización,
+ * 404, método no soportado, genéricas) y las convierte en un {@link ProblemDetail} uniforme (RFC
+ * 9457) mediante {@link ProblemDetailFactory}.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -35,8 +36,18 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Traduce una {@link ResponseStatusException} lanzada por los servicios al estado HTTP que ella
-   * misma indica.
+   * Traduce una {@link ApplicationException} de dominio al estado HTTP que ella misma declara.
+   */
+  @ExceptionHandler({ApplicationException.class})
+  public ProblemDetail handleApplicationException(
+      ApplicationException ex, HttpServletRequest request) {
+    return problemDetailFactory.build(ex.getStatus(), ex.getMessage(), request);
+  }
+
+  /**
+   * Traduce una {@link ResponseStatusException} al estado HTTP que ella misma indica. Se conserva
+   * como red de seguridad para los casos que todavía la lanzan (p. ej. la funcionalidad de
+   * recuperación de contraseña aún no implementada).
    */
   @ExceptionHandler({ResponseStatusException.class})
   public ProblemDetail handleResponseStatus(

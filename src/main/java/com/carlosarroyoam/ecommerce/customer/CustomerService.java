@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce.customer;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
@@ -14,10 +15,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /** Lógica de negocio para consultar clientes ({@link Customer}). */
 @Service
@@ -61,7 +60,7 @@ public class CustomerService {
    *
    * @param customerId el id del cliente
    * @return el {@link CustomerResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe un cliente con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un cliente con ese id
    */
   @Transactional(readOnly = true)
   public CustomerResponse findById(Long customerId) {
@@ -74,7 +73,7 @@ public class CustomerService {
    *
    * @param customerId el id del cliente
    * @return el {@link Customer} encontrado
-   * @throws ResponseStatusException con 404 si no existe un cliente con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un cliente con ese id
    */
   private Customer findCustomerByIdOrFail(Long customerId) {
     return customerRepository
@@ -82,8 +81,7 @@ public class CustomerService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
             });
   }
 }

@@ -7,6 +7,7 @@ import com.carlosarroyoam.ecommerce.auth.dto.ResetPasswordRequest;
 import com.carlosarroyoam.ecommerce.auth.entity.RefreshToken;
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.UnauthorizedException;
 import java.util.Optional;
 import java.util.UUID;
 import org.slf4j.Logger;
@@ -77,15 +78,13 @@ public class AuthService {
    * @param rawRefreshTokenCookie valor crudo de la cookie {@code refresh_token} (formato {@code
    *     id.rawToken}), puede ser nulo o vacío
    * @return la respuesta de autenticación con el access token y el refresh token renovados
-   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el token
-   *     no está presente, tiene formato inválido, no existe o pertenece a un principal que ya no
-   *     existe
+   * @throws UnauthorizedException con 401 Unauthorized si el token no está presente, tiene formato
+   *     inválido, no existe o pertenece a un principal que ya no existe
    */
   public AuthResponse refreshToken(String rawRefreshTokenCookie) {
     if (!StringUtils.hasText(rawRefreshTokenCookie)) {
       log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
-      throw new ResponseStatusException(
-          HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
+      throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
     }
 
     RefreshTokenCookie refreshTokenCookie =
@@ -93,8 +92,7 @@ public class AuthService {
             .orElseThrow(
                 () -> {
                   log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
-                  return new ResponseStatusException(
-                      HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+                  return new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
                 });
 
     RefreshToken refreshTokenById = refreshTokenService.findById(refreshTokenCookie.getId());
@@ -153,8 +151,7 @@ public class AuthService {
    *
    * @param refreshTokenById el refresh token del cual obtener el principal
    * @return el principal autenticado correspondiente
-   * @throws org.springframework.web.server.ResponseStatusException con 401 Unauthorized si el
-   *     principal ya no existe
+   * @throws UnauthorizedException con 401 Unauthorized si el principal ya no existe
    */
   private AuthPrincipal loadPrincipal(RefreshToken refreshTokenById) {
     try {
@@ -166,8 +163,7 @@ public class AuthService {
       };
     } catch (UsernameNotFoundException ex) {
       log.warn(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
-      throw new ResponseStatusException(
-          HttpStatus.UNAUTHORIZED, AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+      throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
     }
   }
 

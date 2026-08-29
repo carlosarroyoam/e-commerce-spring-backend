@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce.shipment;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
@@ -19,10 +20,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /**
  * Lógica de negocio para consultar envíos ({@link Shipment}) y transportistas ({@link Carrier}).
@@ -65,7 +64,7 @@ public class ShipmentService {
    *
    * @param shipmentId el id del envío
    * @return el {@link ShipmentResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe un envío con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un envío con ese id
    */
   @Transactional(readOnly = true)
   public ShipmentResponse findById(Long shipmentId) {
@@ -78,7 +77,7 @@ public class ShipmentService {
    *
    * @param orderId el id de la orden
    * @return el {@link ShipmentResponse} correspondiente
-   * @throws ResponseStatusException con 404 si la orden no tiene un envío asociado
+   * @throws ResourceNotFoundException con 404 si la orden no tiene un envío asociado
    */
   @Transactional(readOnly = true)
   public ShipmentResponse findByOrderId(Long orderId) {
@@ -102,7 +101,7 @@ public class ShipmentService {
    *
    * @param shipmentId el id del envío
    * @return el {@link Shipment} encontrado
-   * @throws ResponseStatusException con 404 si no existe un envío con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un envío con ese id
    */
   private Shipment findShipmentByIdOrFail(Long shipmentId) {
     return shipmentRepository
@@ -110,8 +109,7 @@ public class ShipmentService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
             });
   }
 
@@ -120,7 +118,7 @@ public class ShipmentService {
    *
    * @param orderId el id de la orden
    * @return el {@link Shipment} encontrado
-   * @throws ResponseStatusException con 404 si la orden no tiene un envío asociado
+   * @throws ResourceNotFoundException con 404 si la orden no tiene un envío asociado
    */
   private Shipment findShipmentByOrderIdOrFail(Long orderId) {
     return shipmentRepository
@@ -128,8 +126,7 @@ public class ShipmentService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION);
             });
   }
 }

@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce.refund;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
@@ -15,10 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /** Lógica de negocio para consultar reembolsos ({@link Refund}). */
 @Service
@@ -56,7 +55,7 @@ public class RefundService {
    *
    * @param refundId el id del reembolso
    * @return el {@link RefundResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe un reembolso con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un reembolso con ese id
    */
   @Transactional(readOnly = true)
   public RefundResponse findById(Long refundId) {
@@ -69,7 +68,7 @@ public class RefundService {
    *
    * @param orderId el id de la orden
    * @return el {@link RefundResponse} correspondiente
-   * @throws ResponseStatusException con 404 si la orden no tiene un reembolso asociado
+   * @throws ResourceNotFoundException con 404 si la orden no tiene un reembolso asociado
    */
   @Transactional(readOnly = true)
   public RefundResponse findByOrderId(Long orderId) {
@@ -82,7 +81,7 @@ public class RefundService {
    *
    * @param refundId el id del reembolso
    * @return el {@link Refund} encontrado
-   * @throws ResponseStatusException con 404 si no existe un reembolso con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un reembolso con ese id
    */
   private Refund findRefundByIdOrFail(Long refundId) {
     return refundRepository
@@ -90,8 +89,7 @@ public class RefundService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.REFUND_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
             });
   }
 
@@ -100,7 +98,7 @@ public class RefundService {
    *
    * @param orderId el id de la orden
    * @return el {@link Refund} encontrado
-   * @throws ResponseStatusException con 404 si la orden no tiene un reembolso asociado
+   * @throws ResourceNotFoundException con 404 si la orden no tiene un reembolso asociado
    */
   private Refund findRefundByOrderIdOrFail(Long orderId) {
     return refundRepository
@@ -108,8 +106,7 @@ public class RefundService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.REFUND_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION);
             });
   }
 }

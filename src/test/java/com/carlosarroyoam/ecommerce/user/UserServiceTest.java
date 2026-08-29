@@ -9,6 +9,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
@@ -31,8 +33,6 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -89,9 +89,8 @@ class UserServiceTest {
     when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
     assertThatThrownBy(() -> userService.findById(999L))
-        .isInstanceOf(ResponseStatusException.class)
-        .hasMessageContaining(HttpStatus.NOT_FOUND.toString())
-        .hasMessageContaining(AppMessages.USER_NOT_FOUND_EXCEPTION);
+        .isInstanceOf(ResourceNotFoundException.class)
+        .hasMessage(AppMessages.USER_NOT_FOUND_EXCEPTION);
   }
 
   @Test
@@ -99,9 +98,8 @@ class UserServiceTest {
       "Given the user id equals the current user id, when delete by id, then throws cannot delete itself")
   void givenUserIdEqualsCurrentUserId_whenDeleteById_thenThrowsCannotDeleteItself() {
     assertThatThrownBy(() -> userService.deleteById(1L, 1L))
-        .isInstanceOf(ResponseStatusException.class)
-        .hasMessageContaining(HttpStatus.UNPROCESSABLE_ENTITY.toString())
-        .hasMessageContaining(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
+        .isInstanceOf(BusinessException.class)
+        .hasMessage(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
 
     verify(userRepository, never()).findById(any());
   }
@@ -112,9 +110,8 @@ class UserServiceTest {
     when(userRepository.findById(999L)).thenReturn(Optional.empty());
 
     assertThatThrownBy(() -> userService.deleteById(999L, 1L))
-        .isInstanceOf(ResponseStatusException.class)
-        .hasMessageContaining(HttpStatus.NOT_FOUND.toString())
-        .hasMessageContaining(AppMessages.USER_NOT_FOUND_EXCEPTION);
+        .isInstanceOf(ResourceNotFoundException.class)
+        .hasMessage(AppMessages.USER_NOT_FOUND_EXCEPTION);
   }
 
   @Test
@@ -125,9 +122,8 @@ class UserServiceTest {
     when(userRepository.findById(6L)).thenReturn(Optional.of(deletedUser));
 
     assertThatThrownBy(() -> userService.deleteById(6L, 1L))
-        .isInstanceOf(ResponseStatusException.class)
-        .hasMessageContaining(HttpStatus.UNPROCESSABLE_ENTITY.toString())
-        .hasMessageContaining(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
+        .isInstanceOf(BusinessException.class)
+        .hasMessage(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
 
     verify(userRepository, never()).save(any());
   }

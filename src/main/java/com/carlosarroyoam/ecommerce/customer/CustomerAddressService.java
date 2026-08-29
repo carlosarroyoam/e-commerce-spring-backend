@@ -1,16 +1,15 @@
 package com.carlosarroyoam.ecommerce.customer;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerAddressResponse;
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerAddressResponse.CustomerAddressResponseMapper;
 import com.carlosarroyoam.ecommerce.customer.entity.CustomerAddress;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /** Lógica de negocio para consultar direcciones de clientes ({@link CustomerAddress}). */
 @Service
@@ -31,7 +30,7 @@ public class CustomerAddressService {
    *
    * @param customerId el id del cliente
    * @return la lista de {@link CustomerAddressResponse}
-   * @throws ResponseStatusException con 404 si no existe un cliente con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un cliente con ese id
    */
   @Transactional(readOnly = true)
   public List<CustomerAddressResponse> findAllByCustomerId(Long customerId) {
@@ -48,7 +47,7 @@ public class CustomerAddressService {
    * @param customerId el id del cliente
    * @param addressId el id de la dirección
    * @return el {@link CustomerAddressResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe el cliente o la dirección
+   * @throws ResourceNotFoundException con 404 si no existe el cliente o la dirección
    */
   @Transactional(readOnly = true)
   public CustomerAddressResponse findById(Long customerId, Long addressId) {
@@ -63,13 +62,12 @@ public class CustomerAddressService {
    * Verifica que exista un cliente con el id indicado.
    *
    * @param customerId el id del cliente
-   * @throws ResponseStatusException con 404 si no existe un cliente con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un cliente con ese id
    */
   private void validateCustomerExists(Long customerId) {
     if (!customerRepository.existsById(customerId)) {
       log.warn(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
-      throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
+      throw new ResourceNotFoundException(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
     }
   }
 
@@ -79,7 +77,7 @@ public class CustomerAddressService {
    * @param customerId el id del cliente
    * @param addressId el id de la dirección
    * @return la {@link CustomerAddress} encontrada
-   * @throws ResponseStatusException con 404 si no existe una dirección con ese id para ese cliente
+   * @throws ResourceNotFoundException con 404 si no existe una dirección con ese id para ese cliente
    */
   private CustomerAddress findCustomerAddressByIdOrFail(Long customerId, Long addressId) {
     return customerAddressRepository
@@ -87,8 +85,7 @@ public class CustomerAddressService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION);
             });
   }
 }

@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce.payment;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
@@ -13,10 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 /** Lógica de negocio para consultar pagos ({@link Payment}). */
 @Service
@@ -60,7 +59,7 @@ public class PaymentService {
    *
    * @param paymentId el id del pago
    * @return el {@link PaymentResponse} correspondiente
-   * @throws ResponseStatusException con 404 si no existe un pago con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un pago con ese id
    */
   @Transactional(readOnly = true)
   public PaymentResponse findById(Long paymentId) {
@@ -73,7 +72,7 @@ public class PaymentService {
    *
    * @param paymentId el id del pago
    * @return el {@link Payment} encontrado
-   * @throws ResponseStatusException con 404 si no existe un pago con ese id
+   * @throws ResourceNotFoundException con 404 si no existe un pago con ese id
    */
   private Payment findPaymentByIdOrFail(Long paymentId) {
     return paymentRepository
@@ -81,8 +80,7 @@ public class PaymentService {
         .orElseThrow(
             () -> {
               log.warn(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
-              return new ResponseStatusException(
-                  HttpStatus.NOT_FOUND, AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
+              return new ResourceNotFoundException(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION);
             });
   }
 }
