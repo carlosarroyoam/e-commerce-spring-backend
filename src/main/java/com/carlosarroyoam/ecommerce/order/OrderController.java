@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.order;
 
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.order.dto.OrderResponse;
 import com.carlosarroyoam.ecommerce.order.dto.OrderSpecs;
 import com.carlosarroyoam.ecommerce.order.dto.OrderTrackResponse;

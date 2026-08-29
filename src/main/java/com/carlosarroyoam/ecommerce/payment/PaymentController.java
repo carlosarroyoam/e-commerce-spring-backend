@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.payment;
 
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.payment.dto.PaymentResponse;
 import com.carlosarroyoam.ecommerce.payment.dto.PaymentSpecs;
 import jakarta.validation.Valid;

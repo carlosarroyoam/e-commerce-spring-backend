@@ -1,4 +1,4 @@
-package com.carlosarroyoam.ecommerce.core.dto;
+package com.carlosarroyoam.ecommerce.core.pagination;
 
 import java.util.List;
 import lombok.Builder;

@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.product;
 
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.product.dto.AttributeResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;

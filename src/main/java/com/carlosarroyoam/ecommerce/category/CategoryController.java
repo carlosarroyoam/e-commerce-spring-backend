@@ -1,7 +1,7 @@
 package com.carlosarroyoam.ecommerce.category;
 
 import com.carlosarroyoam.ecommerce.category.dto.CategoryResponse;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;

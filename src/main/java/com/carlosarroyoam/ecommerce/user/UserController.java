@@ -2,7 +2,7 @@ package com.carlosarroyoam.ecommerce.user;
 
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
 import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
 import jakarta.validation.Valid;

@@ -1,8 +1,8 @@
 package com.carlosarroyoam.ecommerce.product;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse.PagedResponseMapper;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.product.dto.PropertyResponse;
 import com.carlosarroyoam.ecommerce.product.dto.PropertyResponse.PropertyResponseMapper;
 import com.carlosarroyoam.ecommerce.product.entity.Property;

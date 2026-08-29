@@ -1,8 +1,8 @@
 package com.carlosarroyoam.ecommerce.shipment;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse.PagedResponseMapper;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
 import com.carlosarroyoam.ecommerce.core.specification.SpecificationBuilder;
 import com.carlosarroyoam.ecommerce.order.entity.Order_;
 import com.carlosarroyoam.ecommerce.shipment.dto.CarrierResponse;

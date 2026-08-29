@@ -13,8 +13,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
-import com.carlosarroyoam.ecommerce.core.dto.PaginationResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PaginationResponse;
 import com.carlosarroyoam.ecommerce.core.exception.GlobalExceptionHandler;
 import com.carlosarroyoam.ecommerce.core.exception.ProblemDetailFactory;
 import com.carlosarroyoam.ecommerce.support.security.FixedAuthPrincipalArgumentResolver;

@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.refund;
 
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.refund.dto.RefundResponse;
 import com.carlosarroyoam.ecommerce.refund.dto.RefundSpecs;
 import jakarta.validation.Valid;

@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.shipment;
 
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.shipment.dto.CarrierResponse;
 import com.carlosarroyoam.ecommerce.shipment.dto.ShipmentResponse;
 import com.carlosarroyoam.ecommerce.shipment.dto.ShipmentSpecs;

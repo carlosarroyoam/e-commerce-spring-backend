@@ -9,7 +9,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
 import com.carlosarroyoam.ecommerce.user.entity.Role;

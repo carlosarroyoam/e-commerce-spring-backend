@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.customer;
 
-import com.carlosarroyoam.ecommerce.core.dto.PagedResponse;
+import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerResponse;
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerSpecs;
 import jakarta.validation.Valid;
