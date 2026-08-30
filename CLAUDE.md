@@ -33,7 +33,15 @@ Before the app will start, two things must exist:
 ./mvnw test -Dtest=ClassName # run a single test class
 ```
 
-Test note: the only test present (`ECommerceApplicationTest`) is a full `@SpringBootTest` context load with no test profile/embedded DB — `mvn test` needs a real, reachable MySQL with `schema.sql`/`data.sql` already applied, same as running the app.
+Test note: the suite needs a reachable **Docker** daemon, not a local MySQL. Integration tests extend `support/AbstractIntegrationTest`, which starts a shared (singleton, `withReuse(true)`) `mysql:8.0` Testcontainer wired in via `@ServiceConnection` and runs under `@ActiveProfiles("test")`. The `test` profile (`src/test/resources/application-test.properties`) sets `spring.sql.init.mode=always` so `schema.sql` + `sql/test-data-reset.sql` (TRUNCATEs the seed tables) + `data.sql` are applied to the container on each run; `ddl-auto` stays `validate` on purpose so tests also catch `schema.sql` drifting from the entities. `ECommerceApplicationTest` is the plain context-load smoke test.
+
+### Test layers and conventions
+
+- **`XServiceTest`** — pure Mockito unit tests, mocked repositories.
+- **`XControllerTest`** — `MockMvc.standaloneSetup` slice: real `GlobalExceptionHandler`, snake_case `ObjectMapper` from `support/testutils/TestObjectMappers`, and `support/security/FixedAuthPrincipalArgumentResolver` to inject a fixed `AuthPrincipal` (no security chain).
+- **`XControllerIT`** — full `@SpringBootTest(RANDOM_PORT)` + `@AutoConfigureMockMvc` + `@Transactional` against the container, with the real security chain; real RS256 JWTs are minted by `support/security/JwtTestTokenFactory`. Response bodies are asserted against JSON fixtures under `src/test/resources/responses/**` via `JSONAssert` + `support/testutils/JsonUtils`.
+- Test method names follow `givenX_whenY_thenZ` plus a human-readable `@DisplayName` on **every** test.
+- `UserControllerIT` currently fails 7/7 with 403 (pre-existing CSRF/security-setup issue, not a regression).
 
 There is no linter/formatter plugin configured in `pom.xml`.
 
