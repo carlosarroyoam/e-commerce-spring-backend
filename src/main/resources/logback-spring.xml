@@ -11,7 +11,7 @@
 -->
 <configuration>
   <property name="LOG_CORRELATION_PATTERN"
-      value="%replace([traceId=%X{requestId:-}, principal=%X{principalType:-}:%X{userId:-anonymous}] ){'\[traceId=, principal=[^\]]*\] ', ''}"/>
+      value="%replace([traceId=%X{requestId:-}, principal=%X{principalType:-anonymous}:%X{userId:-anonymous}] ){'\[traceId=, principal=[^\]]*\] ', ''}"/>
 
   <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
   <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>

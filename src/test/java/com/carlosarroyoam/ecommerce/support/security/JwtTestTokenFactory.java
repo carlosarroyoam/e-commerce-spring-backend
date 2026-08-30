@@ -80,7 +80,7 @@ public class JwtTestTokenFactory {
             .claim("given_name", "Test")
             .claim("family_name", "User")
             .claim("principal_type", principalType)
-            .claim("roles", List.of(roles))
+            .claim("roles", roles)
             .issuedAt(now)
             .expiresAt(now.plus(ttl))
             .build();
