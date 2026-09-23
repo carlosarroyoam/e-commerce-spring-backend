@@ -2856,8 +2856,12 @@ components:
         title:
           description: Title of the category
           type: string
+        slug:
+          description: URL-friendly category identifier
+          type: string
       required:
         - title
+        - slug
 
     UpdateCategoryRequest:
       type: object
@@ -2865,8 +2869,12 @@ components:
         title:
           description: Title of the category
           type: string
+        slug:
+          description: URL-friendly category identifier
+          type: string
       required:
         - title
+        - slug
 
     PagedAttributesResponse:
       type: object
@@ -3241,6 +3249,9 @@ components:
         title:
           type: string
           description: Category title
+        slug:
+          type: string
+          description: URL-friendly category identifier
         deleted_at:
           type: ["string", "null"]
           format: date-time

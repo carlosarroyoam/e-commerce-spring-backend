@@ -17,6 +17,7 @@ import org.mapstruct.factory.Mappers;
 public class CategoryResponse {
   private Byte id;
   private String title;
+  private String slug;
   private LocalDateTime deletedAt;
 
   @Mapper(

@@ -104,9 +104,11 @@ CREATE TABLE IF NOT EXISTS reset_password (
 CREATE TABLE IF NOT EXISTS categories (
     id TINYINT UNSIGNED NOT NULL AUTO_INCREMENT,
     title VARCHAR(64) NOT NULL,
+    slug VARCHAR(64) NOT NULL,
     deleted_at TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY uk_categories_title (title),
+    UNIQUE KEY uk_categories_slug (slug),
     INDEX idx_categories_deleted_at (deleted_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 

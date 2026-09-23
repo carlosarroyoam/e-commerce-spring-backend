@@ -313,15 +313,15 @@ INSERT INTO customer_addresses (id, street_name, street_number, apartment_number
 (99, 'Av. Insurgentes', '199', NULL, 'Centro', 'Ciudad de México', 'CDMX', 'MX', '01099', '5550000099', 1, 99),
 (100, 'C. Reforma', '200', NULL, 'Del Valle', 'Guadalajara', 'Jalisco', 'MX', '01100', '5550000100', 1, 100);
 
-INSERT INTO categories (id, title, deleted_at) VALUES
-(1, 'Smartphones', NULL),
-(2, 'Headphones', NULL),
-(3, 'Accessories', NULL),
-(4, 'Tablets', NULL),
-(5, 'Smartwatches', NULL),
-(6, 'Laptops', NULL),
-(7, 'Gaming', NULL),
-(8, 'Covers & Cases', NULL);
+INSERT INTO categories (id, title, slug, deleted_at) VALUES
+(1, 'Smartphones', 'smartphones', NULL),
+(2, 'Headphones', 'headphones', NULL),
+(3, 'Accessories', 'accessories', NULL),
+(4, 'Tablets', 'tablets', NULL),
+(5, 'Smartwatches', 'smartwatches', NULL),
+(6, 'Laptops', 'laptops', NULL),
+(7, 'Gaming', 'gaming', NULL),
+(8, 'Covers & Cases', 'covers-cases', NULL);
 
 INSERT INTO products (id, title, slug, description, is_featured, is_active, category_id, created_at, updated_at, deleted_at) VALUES
 (1, 'Moto G100', 'moto-g100', 'Moto G100', 0, 1, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, NULL),
