@@ -3107,7 +3107,7 @@ components:
           type: integer
           format: int8
           description: Unique identifier for the role
-        type:
+        name:
           type: string
           description: Type of user role
         description:
@@ -3497,7 +3497,7 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/ShipmentResponse"
-        order_history:
+        status_history:
           description: Latest order history entry
           type: array
           items:
@@ -3645,9 +3645,10 @@ components:
         name:
           description: Name of the carrier
           type: string
-        is_active:
-          description: Indicates if the carrier is active
-          type: boolean
+        deleted_at:
+          type: ["string", "null"]
+          format: date-time
+          description: Timestamp when the carrier was deleted (soft delete)
 
     ShipmentResponse:
       type: object

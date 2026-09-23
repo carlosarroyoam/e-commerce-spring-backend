@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
@@ -17,7 +16,7 @@ import org.mapstruct.factory.Mappers;
 @Builder
 public class AttributeResponse {
   private Long id;
-  private String name;
+  private String title;
   private LocalDateTime deletedAt;
 
   @Mapper(
@@ -26,7 +25,6 @@ public class AttributeResponse {
   public interface AttributeResponseMapper {
     AttributeResponseMapper INSTANCE = Mappers.getMapper(AttributeResponseMapper.class);
 
-    @Mapping(source = "title", target = "name")
     AttributeResponse toDto(Attribute entity);
 
     List<AttributeResponse> toDtos(List<Attribute> entities);
