@@ -12,10 +12,12 @@ Before the app will start, two things must exist:
 
 1. **Database.** `spring.jpa.hibernate.ddl-auto=validate` — Hibernate never creates/alters tables. There is no Flyway/Liquibase and no `spring.sql.init.mode`, so `schema.sql`/`data.sql` are **not** run automatically against MySQL (Spring Boot only auto-runs them for embedded DBs). Apply manually before first run:
    ```bash
-   mysql -u root -p < src/main/resources/schema.sql
-   mysql -u root -p < src/main/resources/data.sql
+   mysql -u root -p < database/schema.sql
+   mysql -u root -p < database/data.sql
    ```
-   DB connection defaults (overridable via `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD` env vars): `localhost:3306`, db `spring-boot-e-commerce`, user `root`/`toor`.
+   DB connection defaults (overridable via `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD` env vars): `localhost:3306`, db `spring-boot-e-commerce`, user `root`/`toor`.
+
+   Alternatively, skip this manual step entirely by running the stack via Docker Compose (`compose.yml`): copy `.env.example` to `.env` and run `docker compose up --build`. `compose.yml` mounts `database/schema.sql`/`database/data.sql` into the MySQL container's `/docker-entrypoint-initdb.d/`, so MySQL applies them automatically on first boot (standard `mysql` image init mechanism, only runs against an empty data directory). Data persists in the `ecommerce-spring-data` named volume; `docker compose down -v` drops it for a clean reseed.
 
 2. **RSA keys** for JWT signing, expected at `src/main/resources/certs/` (`private.pem`, `public.pem`) — already committed, but if regenerating:
    ```bash
@@ -31,6 +33,10 @@ Before the app will start, two things must exist:
 ./mvnw clean package         # build jar
 ./mvnw test                  # run tests
 ./mvnw test -Dtest=ClassName # run a single test class
+
+docker compose up --build    # run MySQL + backend via Docker Compose
+docker compose down          # stop the stack, keep data volume
+docker compose down -v       # stop the stack and drop the data volume
 ```
 
 Test note: the suite needs a reachable **Docker** daemon, not a local MySQL. Integration tests extend `support/AbstractIntegrationTest`, which starts a shared (singleton, `withReuse(true)`) `mysql:8.0` Testcontainer wired in via `@ServiceConnection` and runs under `@ActiveProfiles("test")`. The `test` profile (`src/test/resources/application-test.properties`) sets `spring.sql.init.mode=always` so `schema.sql` + `sql/test-data-reset.sql` (TRUNCATEs the seed tables) + `data.sql` are applied to the container on each run; `ddl-auto` stays `validate` on purpose so tests also catch `schema.sql` drifting from the entities. `ECommerceApplicationTest` is the plain context-load smoke test.
@@ -116,7 +122,7 @@ Two independent principal types share the same JWT-based auth, not a single `use
 
 ### Database
 
-`src/main/resources/schema.sql` is the source of truth for table structure (MySQL, `InnoDB`/`utf8mb4`); status-like columns are plain `VARCHAR` with `CHECK (... IN (...))` constraints rather than lookup tables (e.g. `orders.status`, `payments.status`, `payments.method`) — keep enum values in `schema.sql`, JPA entities, and `api-docs.yaml` in sync when adding/renaming a status. `data.sql` holds seed data loaded on top of it.
+`database/schema.sql` is the source of truth for table structure (MySQL, `InnoDB`/`utf8mb4`); status-like columns are plain `VARCHAR` with `CHECK (... IN (...))` constraints rather than lookup tables (e.g. `orders.status`, `payments.status`, `payments.method`) — keep enum values in `schema.sql`, JPA entities, and `api-docs.yaml` in sync when adding/renaming a status. `data.sql` holds seed data loaded on top of it.
 
 ### Documentation convention
 

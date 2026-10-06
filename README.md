@@ -36,8 +36,8 @@ See [`pom.xml`](pom.xml) for exact versions.
 ## Prerequisites
 
 - Java 17+
-- MySQL 8.0+
-- Docker — required to run the integration tests (`*IT`), which spin up MySQL via Testcontainers
+- MySQL 8.0+ (not needed if running via Docker Compose, see below)
+- Docker — required to run the integration tests (`*IT`), which spin up MySQL via Testcontainers, and to run the stack via Docker Compose
 - Maven 3.8+ (or use the bundled `./mvnw` / `./mvnw.cmd` wrapper)
 
 ## Database Setup
@@ -46,12 +46,36 @@ Hibernate runs with `spring.jpa.hibernate.ddl-auto=validate` and there is no Fly
 so the schema is **never** created automatically. Apply it manually before the first run:
 
 ```bash
-mysql -u root -p < src/main/resources/schema.sql
-mysql -u root -p < src/main/resources/data.sql
+mysql -u root -p < database/schema.sql
+mysql -u root -p < database/data.sql
 ```
 
 `schema.sql` is the source of truth for table structure; `data.sql` holds seed data.
 Defaults: database `spring-boot-e-commerce`, user `root`, password `toor` (see below to override).
+
+This manual step is only needed when running against a MySQL instance you manage yourself. If
+you use Docker Compose (see below), it's handled for you.
+
+## Docker
+
+Run the whole stack (MySQL + backend) with Docker Compose — no local MySQL or manual
+`schema.sql`/`data.sql` step needed:
+
+```bash
+cp .env.example .env   # adjust values if needed
+docker compose up --build
+```
+
+- The backend container waits for MySQL to report healthy before starting.
+- `compose.yml` mounts `database/schema.sql`/`database/data.sql` into the MySQL container's
+  `/docker-entrypoint-initdb.d/`, so MySQL applies them automatically on first boot (empty data
+  directory) — the standard `mysql` image init mechanism.
+- Data persists in the `ecommerce-spring-data` volume across restarts. To fully reset
+  (drop the volume and reseed from scratch on the next `up`):
+  ```bash
+  docker compose down -v
+  ```
+- Server: `http://localhost:8080`. MySQL: `localhost:3306`.
 
 ## Configuration
 
@@ -61,10 +85,9 @@ All have sensible defaults for local development:
 
 | Variable | Default | Description |
 | --- | --- | --- |
-| `DB_HOST` | `localhost` | MySQL host |
-| `DB_PORT` | `3306` | MySQL port |
-| `DB_USERNAME` | `root` | MySQL user |
-| `DB_PASSWORD` | `toor` | MySQL password |
+| `SPRING_DATASOURCE_URL` | _(unset)_ | Full JDBC URL, e.g. `jdbc:mysql://localhost:3306/spring-boot-e-commerce`. When unset, defaults to `localhost:3306` against the `spring-boot-e-commerce` database. |
+| `SPRING_DATASOURCE_USERNAME` | `root` | MySQL user |
+| `SPRING_DATASOURCE_PASSWORD` | `toor` | MySQL password |
 | `JWT_ACCESS_TOKEN_TTL_MS` | `300000` (5 min) | Access token lifetime |
 | `JWT_REFRESH_TOKEN_TTL_MS` | `86400000` (1 day) | Refresh token lifetime |
 | `JWT_REFRESH_TOKEN_MAX_LIFETIME_MS` | `2592000000` (30 days) | Max refresh-token chain lifetime |

@@ -32,5 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
+# dotenv environment variables file
+.env
+.env.test
+
 # RSA Key certs
 src/main/resources/certs

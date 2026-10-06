@@ -1,4 +1,4 @@
--- Vacia (TRUNCATE, no DROP) todas las tablas que puebla src/main/resources/data.sql.
+-- Vacia (TRUNCATE, no DROP) todas las tablas que puebla database/data.sql.
 --
 -- Motivo: data.sql inserta con INSERT INTO planos (sin ON DUPLICATE KEY) y schema.sql
 -- nunca hace DROP. AbstractIntegrationTest usa un contenedor Testcontainers con

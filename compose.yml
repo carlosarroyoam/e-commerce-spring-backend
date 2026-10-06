@@ -1,0 +1,66 @@
+name: ecommerce-spring
+
+services:
+  ecommerce-spring-mysql:
+    image: mysql:8.0.35
+    container_name: ecommerce-spring-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    command: --character-set-server=utf8mb4
+      --collation-server=utf8mb4_0900_ai_ci
+      --character-set-client-handshake=FALSE
+    ports:
+      - 3306:3306
+    volumes:
+      - ecommerce-spring-data:/var/lib/mysql
+      - ./database/schema.sql:/docker-entrypoint-initdb.d/1-schema.sql
+      - ./database/data.sql:/docker-entrypoint-initdb.d/2-data.sql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mysqladmin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u${MYSQL_ROOT_USER}",
+          "-p${MYSQL_ROOT_PASSWORD}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - ecommerce-spring-network
+
+  ecommerce-spring-backend:
+    container_name: ecommerce-spring-backend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    depends_on:
+      ecommerce-spring-mysql:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://ecommerce-spring-mysql:3306/${MYSQL_DATABASE}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_PASSWORD}
+      JWT_ACCESS_TOKEN_TTL_MS: ${JWT_ACCESS_TOKEN_TTL_MS}
+      JWT_REFRESH_TOKEN_TTL_MS: ${JWT_REFRESH_TOKEN_TTL_MS}
+      JWT_REFRESH_TOKEN_MAX_LIFETIME_MS: ${JWT_REFRESH_TOKEN_MAX_LIFETIME_MS}
+    ports:
+      - 8080:8080
+    networks:
+      - ecommerce-spring-network
+
+volumes:
+  ecommerce-spring-data:
+
+networks:
+  ecommerce-spring-network:
+    driver: bridge
