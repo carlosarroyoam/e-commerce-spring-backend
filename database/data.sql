@@ -1,4 +1,6 @@
--- E-commerce Management System MySQL Seed Data
+-- =============================================
+-- E-commerce Management System - Seed data
+-- =============================================
 
 USE `spring-boot-e-commerce`;
 
