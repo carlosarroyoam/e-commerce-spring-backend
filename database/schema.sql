@@ -1,5 +1,5 @@
 -- =============================================
--- E-commerce Management System MySQL Schema
+-- E-commerce Management System - MySQL Schema
 -- =============================================
 
 CREATE DATABASE IF NOT EXISTS `spring-boot-e-commerce`;
