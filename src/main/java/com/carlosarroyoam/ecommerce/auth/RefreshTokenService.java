@@ -58,16 +58,13 @@ public class RefreshTokenService {
         refreshTokenRepository
             .findByDeviceIdAndPrincipalTypeAndPrincipalId(
                 deviceId, principal.getPrincipalType(), principal.getId())
-            .orElse(
-                RefreshToken.builder()
-                    .deviceId(deviceId)
-                    .tokenHash(passwordEncoder.encode(newRefreshToken))
-                    .principalId(principal.getId())
-                    .principalType(principal.getPrincipalType())
-                    .expiresOn(now.plus(jwtProps.getRefreshTokenTtlMs(), ChronoUnit.MILLIS))
-                    .createdAt(now)
-                    .updatedAt(now)
-                    .build());
+            .orElseGet(
+                () ->
+                    RefreshToken.builder()
+                        .deviceId(deviceId)
+                        .principalId(principal.getId())
+                        .principalType(principal.getPrincipalType())
+                        .build());
 
     refreshTokenById.setTokenHash(passwordEncoder.encode(newRefreshToken));
     refreshTokenById.setExpiresOn(now.plus(jwtProps.getRefreshTokenTtlMs(), ChronoUnit.MILLIS));
