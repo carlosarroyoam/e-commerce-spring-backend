@@ -5,8 +5,6 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.MySQLContainer;
-import org.testcontainers.junit.jupiter.Container;
-import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
 /**
@@ -14,17 +12,24 @@ import org.testcontainers.utility.DockerImageName;
  * singleton container) via {@link ServiceConnection}, activa el perfil {@code test} y expone {@link
  * JwtTestTokenFactory} para firmar JWT de prueba reales.
  *
+ * <p>El contenedor se arranca una sola vez en el inicializador estático y lo detiene Ryuk al
+ * terminar la JVM; con {@code @Container} se detendría al acabar cada clase de test mientras el
+ * contexto de Spring cacheado seguiría apuntando a su puerto.
+ *
  * <p>El nombre de base de datos coincide con el de {@code schema.sql} ({@code
  * spring-boot-e-commerce}), que el perfil {@code test} aplica automaticamente contra el contenedor
  * via {@code spring.sql.init.schema-locations}, ya que {@code ddl-auto=validate} nunca crea tablas.
  */
-@Testcontainers
 @ActiveProfiles("test")
 @Import(JwtTestTokenFactory.class)
 public abstract class AbstractIntegrationTest {
-  @Container @ServiceConnection
+  @ServiceConnection
   static final MySQLContainer<?> MYSQL_CONTAINER =
       new MySQLContainer<>(DockerImageName.parse("mysql:8.0"))
           .withDatabaseName("spring-boot-e-commerce")
           .withReuse(true);
+
+  static {
+    MYSQL_CONTAINER.start();
+  }
 }

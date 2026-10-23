@@ -16,6 +16,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -53,6 +54,7 @@ public class AuthService {
    * @throws org.springframework.security.core.AuthenticationException si las credenciales no son
    *     válidas
    */
+  @Transactional
   public AuthResponse login(LoginRequest request) {
     Authentication auth =
         authenticationManager.authenticate(
@@ -78,6 +80,7 @@ public class AuthService {
    * @throws UnauthorizedException con 401 Unauthorized si el token no está presente, tiene formato
    *     inválido, no existe o pertenece a un principal que ya no existe
    */
+  @Transactional(noRollbackFor = UnauthorizedException.class)
   public AuthResponse refreshToken(String rawRefreshTokenCookie) {
     if (!StringUtils.hasText(rawRefreshTokenCookie)) {
       throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
@@ -108,6 +111,7 @@ public class AuthService {
    * @param rawRefreshTokenCookie valor crudo de la cookie {@code refresh_token} (formato {@code
    *     id.rawToken}), puede ser nulo o vacío
    */
+  @Transactional
   public void revoke(String rawRefreshTokenCookie) {
     parseRefreshTokenCookie(rawRefreshTokenCookie)
         .ifPresent(

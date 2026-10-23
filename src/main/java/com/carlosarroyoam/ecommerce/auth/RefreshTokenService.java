@@ -11,6 +11,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Persiste, rota y revoca los refresh tokens, validando su expiración y el hash del token recibido
@@ -38,6 +39,7 @@ public class RefreshTokenService {
    * @return la entidad {@link RefreshToken} encontrada
    * @throws UnauthorizedException con 401 Unauthorized si no existe
    */
+  @Transactional(readOnly = true)
   public RefreshToken findById(UUID refreshTokenId) {
     return findRefreshTokenByIdOrFail(refreshTokenId);
   }
@@ -51,6 +53,7 @@ public class RefreshTokenService {
    * @param newRefreshToken el valor crudo del nuevo refresh token, que se hashea antes de persistir
    * @return la entidad {@link RefreshToken} guardada
    */
+  @Transactional
   public RefreshToken save(AuthPrincipal principal, String deviceId, String newRefreshToken) {
     LocalDateTime now = LocalDateTime.now();
 
@@ -76,7 +79,8 @@ public class RefreshTokenService {
 
   /**
    * Valida el refresh token actual y, si es válido, lo reemplaza por uno nuevo actualizando su
-   * hash, expiración y fecha de último uso.
+   * hash, expiración y fecha de último uso. Si el token no es válido, la eliminación del registro
+   * se confirma aunque se lance la excepción ({@code noRollbackFor}).
    *
    * @param refreshTokenId el id del refresh token a rotar
    * @param currentRefreshToken el valor crudo del refresh token actual, para validar su hash
@@ -85,6 +89,7 @@ public class RefreshTokenService {
    * @throws UnauthorizedException con 401 Unauthorized si el token no existe, expiró, la sesión
    *     superó su vida máxima, o el hash no coincide
    */
+  @Transactional(noRollbackFor = UnauthorizedException.class)
   public RefreshToken rotate(
       UUID refreshTokenId, String currentRefreshToken, String newRefreshToken) {
     LocalDateTime now = LocalDateTime.now();
@@ -106,6 +111,7 @@ public class RefreshTokenService {
    * @param refreshTokenId el id del refresh token a revocar
    * @param rawToken el valor crudo del refresh token, para validar su hash antes de eliminar
    */
+  @Transactional
   public void revoke(UUID refreshTokenId, String rawToken) {
     refreshTokenRepository
         .findById(refreshTokenId)
