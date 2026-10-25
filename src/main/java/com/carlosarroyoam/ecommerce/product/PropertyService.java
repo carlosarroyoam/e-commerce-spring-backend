@@ -44,7 +44,7 @@ public class PropertyService {
    */
   @Transactional(readOnly = true)
   public PropertyResponse findById(Long propertyId) {
-    Property propertyById = findPropertyByIdOrFail(propertyId);
+    Property propertyById = findPropertyById(propertyId);
     return PropertyResponseMapper.INSTANCE.toDto(propertyById);
   }
 
@@ -55,7 +55,7 @@ public class PropertyService {
    * @return la {@link Property} encontrada
    * @throws ResourceNotFoundException con 404 si no existe una propiedad con ese id
    */
-  private Property findPropertyByIdOrFail(Long propertyId) {
+  private Property findPropertyById(Long propertyId) {
     return propertyRepository
         .findById(propertyId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION));

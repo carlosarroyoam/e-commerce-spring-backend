@@ -68,8 +68,8 @@ public class OrderService {
    */
   @Transactional(readOnly = true)
   public OrderResponse findById(Long orderId) {
-    Order orderByIdOrFail = findOrderByIdOrFail(orderId);
-    return OrderResponseMapper.INSTANCE.toDto(orderByIdOrFail);
+    Order orderById = findOrderById(orderId);
+    return OrderResponseMapper.INSTANCE.toDto(orderById);
   }
 
   /**
@@ -100,7 +100,7 @@ public class OrderService {
    */
   @Transactional
   public void cancel(Long orderId) {
-    Order orderById = findOrderByIdOrFail(orderId);
+    Order orderById = findOrderById(orderId);
 
     if (!canBeCancelled(orderById.getStatus())) {
       throw new BusinessException(AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
@@ -138,7 +138,7 @@ public class OrderService {
    * @return la {@link Order} encontrada
    * @throws ResourceNotFoundException con 404 si no existe una orden con ese id
    */
-  private Order findOrderByIdOrFail(Long orderId) {
+  private Order findOrderById(Long orderId) {
     return orderRepository
         .findById(orderId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.ORDER_NOT_FOUND_EXCEPTION));

@@ -44,7 +44,7 @@ public class CategoryService {
    */
   @Transactional(readOnly = true)
   public CategoryResponse findById(Byte categoryId) {
-    Category categoryById = findCategoryByIdOrFail(categoryId);
+    Category categoryById = findCategoryById(categoryId);
     return CategoryResponseMapper.INSTANCE.toDto(categoryById);
   }
 
@@ -55,7 +55,7 @@ public class CategoryService {
    * @return la {@link Category} encontrada
    * @throws ResourceNotFoundException con 404 si no existe una categoría con ese id
    */
-  private Category findCategoryByIdOrFail(Byte categoryId) {
+  private Category findCategoryById(Byte categoryId) {
     return categoryRepository
         .findById(categoryId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.CATEGORY_NOT_FOUND_EXCEPTION));

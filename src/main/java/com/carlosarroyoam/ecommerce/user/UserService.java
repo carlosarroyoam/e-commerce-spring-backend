@@ -67,7 +67,7 @@ public class UserService {
    */
   @Transactional(readOnly = true)
   public UserResponse findById(Long userId) {
-    User userById = findUserByIdOrFail(userId);
+    User userById = findUserById(userId);
     return UserResponseMapper.INSTANCE.toDto(userById);
   }
 
@@ -87,7 +87,7 @@ public class UserService {
       throw new BusinessException(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
     }
 
-    User userById = findUserByIdOrFail(userId);
+    User userById = findUserById(userId);
 
     if (userById.getStatus() == UserStatus.DELETED) {
       throw new BusinessException(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
@@ -106,7 +106,7 @@ public class UserService {
    * @return el {@link User} encontrado
    * @throws ResourceNotFoundException con 404 si no existe un usuario con ese id
    */
-  private User findUserByIdOrFail(Long userId) {
+  private User findUserById(Long userId) {
     return userRepository
         .findById(userId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.USER_NOT_FOUND_EXCEPTION));

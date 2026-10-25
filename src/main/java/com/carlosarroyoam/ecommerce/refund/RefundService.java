@@ -56,7 +56,7 @@ public class RefundService {
    */
   @Transactional(readOnly = true)
   public RefundResponse findById(Long refundId) {
-    Refund refundById = findRefundByIdOrFail(refundId);
+    Refund refundById = findRefundById(refundId);
     return RefundResponseMapper.INSTANCE.toDto(refundById);
   }
 
@@ -69,7 +69,7 @@ public class RefundService {
    */
   @Transactional(readOnly = true)
   public RefundResponse findByOrderId(Long orderId) {
-    Refund refundByOrderId = findRefundByOrderIdOrFail(orderId);
+    Refund refundByOrderId = findRefundByOrderId(orderId);
     return RefundResponseMapper.INSTANCE.toDto(refundByOrderId);
   }
 
@@ -80,7 +80,7 @@ public class RefundService {
    * @return el {@link Refund} encontrado
    * @throws ResourceNotFoundException con 404 si no existe un reembolso con ese id
    */
-  private Refund findRefundByIdOrFail(Long refundId) {
+  private Refund findRefundById(Long refundId) {
     return refundRepository
         .findById(refundId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION));
@@ -93,7 +93,7 @@ public class RefundService {
    * @return el {@link Refund} encontrado
    * @throws ResourceNotFoundException con 404 si la orden no tiene un reembolso asociado
    */
-  private Refund findRefundByOrderIdOrFail(Long orderId) {
+  private Refund findRefundByOrderId(Long orderId) {
     return refundRepository
         .findByOrderId(orderId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION));

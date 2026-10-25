@@ -66,7 +66,7 @@ public class ProductService {
    */
   @Transactional(readOnly = true)
   public ProductResponse findById(Long productId) {
-    Product productById = findProductByIdOrFail(productId);
+    Product productById = findProductById(productId);
     return ProductResponseMapper.INSTANCE.toDto(productById);
   }
 
@@ -77,7 +77,7 @@ public class ProductService {
    * @return el {@link Product} encontrado
    * @throws ResourceNotFoundException con 404 si no existe un producto con ese id
    */
-  private Product findProductByIdOrFail(Long productId) {
+  private Product findProductById(Long productId) {
     return productRepository
         .findById(productId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION));

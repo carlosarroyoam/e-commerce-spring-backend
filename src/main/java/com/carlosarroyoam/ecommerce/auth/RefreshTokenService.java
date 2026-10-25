@@ -41,7 +41,7 @@ public class RefreshTokenService {
    */
   @Transactional(readOnly = true)
   public RefreshToken findById(UUID refreshTokenId) {
-    return findRefreshTokenByIdOrFail(refreshTokenId);
+    return findRefreshTokenById(refreshTokenId);
   }
 
   /**
@@ -93,7 +93,7 @@ public class RefreshTokenService {
   public RefreshToken rotate(
       UUID refreshTokenId, String currentRefreshToken, String newRefreshToken) {
     LocalDateTime now = LocalDateTime.now();
-    RefreshToken refreshTokenById = findRefreshTokenByIdOrFail(refreshTokenId);
+    RefreshToken refreshTokenById = findRefreshTokenById(refreshTokenId);
 
     validateRefreshToken(currentRefreshToken, refreshTokenById);
 
@@ -156,7 +156,7 @@ public class RefreshTokenService {
    * @return la entidad {@link RefreshToken} encontrada
    * @throws UnauthorizedException con 401 Unauthorized si no existe
    */
-  private RefreshToken findRefreshTokenByIdOrFail(UUID refreshTokenId) {
+  private RefreshToken findRefreshTokenById(UUID refreshTokenId) {
     return refreshTokenRepository
         .findById(refreshTokenId)
         .orElseThrow(() -> new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID));

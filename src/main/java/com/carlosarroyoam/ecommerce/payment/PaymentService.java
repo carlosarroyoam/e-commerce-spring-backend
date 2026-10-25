@@ -60,7 +60,7 @@ public class PaymentService {
    */
   @Transactional(readOnly = true)
   public PaymentResponse findById(Long paymentId) {
-    Payment paymentById = findPaymentByIdOrFail(paymentId);
+    Payment paymentById = findPaymentById(paymentId);
     return PaymentResponseMapper.INSTANCE.toDto(paymentById);
   }
 
@@ -71,7 +71,7 @@ public class PaymentService {
    * @return el {@link Payment} encontrado
    * @throws ResourceNotFoundException con 404 si no existe un pago con ese id
    */
-  private Payment findPaymentByIdOrFail(Long paymentId) {
+  private Payment findPaymentById(Long paymentId) {
     return paymentRepository
         .findById(paymentId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION));

@@ -61,7 +61,7 @@ public class CustomerService {
    */
   @Transactional(readOnly = true)
   public CustomerResponse findById(Long customerId) {
-    Customer customerById = findCustomerByIdOrFail(customerId);
+    Customer customerById = findCustomerById(customerId);
     return CustomerResponseMapper.INSTANCE.toDto(customerById);
   }
 
@@ -72,7 +72,7 @@ public class CustomerService {
    * @return el {@link Customer} encontrado
    * @throws ResourceNotFoundException con 404 si no existe un cliente con ese id
    */
-  private Customer findCustomerByIdOrFail(Long customerId) {
+  private Customer findCustomerById(Long customerId) {
     return customerRepository
         .findById(customerId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION));

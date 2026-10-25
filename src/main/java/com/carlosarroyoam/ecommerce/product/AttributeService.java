@@ -44,7 +44,7 @@ public class AttributeService {
    */
   @Transactional(readOnly = true)
   public AttributeResponse findById(Long attributeId) {
-    Attribute attributeById = findAttributeByIdOrFail(attributeId);
+    Attribute attributeById = findAttributeById(attributeId);
     return AttributeResponseMapper.INSTANCE.toDto(attributeById);
   }
 
@@ -55,7 +55,7 @@ public class AttributeService {
    * @return el {@link Attribute} encontrado
    * @throws ResourceNotFoundException con 404 si no existe un atributo con ese id
    */
-  private Attribute findAttributeByIdOrFail(Long attributeId) {
+  private Attribute findAttributeById(Long attributeId) {
     return attributeRepository
         .findById(attributeId)
         .orElseThrow(

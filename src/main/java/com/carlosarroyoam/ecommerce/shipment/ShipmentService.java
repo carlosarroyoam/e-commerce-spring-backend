@@ -65,7 +65,7 @@ public class ShipmentService {
    */
   @Transactional(readOnly = true)
   public ShipmentResponse findById(Long shipmentId) {
-    Shipment shipmentById = findShipmentByIdOrFail(shipmentId);
+    Shipment shipmentById = findShipmentById(shipmentId);
     return ShipmentResponseMapper.INSTANCE.toDto(shipmentById);
   }
 
@@ -78,7 +78,7 @@ public class ShipmentService {
    */
   @Transactional(readOnly = true)
   public ShipmentResponse findByOrderId(Long orderId) {
-    Shipment shipmentByOrderId = findShipmentByOrderIdOrFail(orderId);
+    Shipment shipmentByOrderId = findShipmentByOrderId(orderId);
     return ShipmentResponseMapper.INSTANCE.toDto(shipmentByOrderId);
   }
 
@@ -100,7 +100,7 @@ public class ShipmentService {
    * @return el {@link Shipment} encontrado
    * @throws ResourceNotFoundException con 404 si no existe un envío con ese id
    */
-  private Shipment findShipmentByIdOrFail(Long shipmentId) {
+  private Shipment findShipmentById(Long shipmentId) {
     return shipmentRepository
         .findById(shipmentId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION));
@@ -113,7 +113,7 @@ public class ShipmentService {
    * @return el {@link Shipment} encontrado
    * @throws ResourceNotFoundException con 404 si la orden no tiene un envío asociado
    */
-  private Shipment findShipmentByOrderIdOrFail(Long orderId) {
+  private Shipment findShipmentByOrderId(Long orderId) {
     return shipmentRepository
         .findByOrderId(orderId)
         .orElseThrow(() -> new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION));

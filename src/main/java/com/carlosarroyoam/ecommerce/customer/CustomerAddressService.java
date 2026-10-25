@@ -50,7 +50,7 @@ public class CustomerAddressService {
   public CustomerAddressResponse findById(Long customerId, Long addressId) {
     validateCustomerExists(customerId);
 
-    CustomerAddress customerAddressById = findCustomerAddressByIdOrFail(customerId, addressId);
+    CustomerAddress customerAddressById = findCustomerAddressById(customerId, addressId);
 
     return CustomerAddressResponseMapper.INSTANCE.toDto(customerAddressById);
   }
@@ -76,7 +76,7 @@ public class CustomerAddressService {
    * @throws ResourceNotFoundException con 404 si no existe una dirección con ese id para ese
    *     cliente
    */
-  private CustomerAddress findCustomerAddressByIdOrFail(Long customerId, Long addressId) {
+  private CustomerAddress findCustomerAddressById(Long customerId, Long addressId) {
     return customerAddressRepository
         .findByIdAndCustomerId(addressId, customerId)
         .orElseThrow(
