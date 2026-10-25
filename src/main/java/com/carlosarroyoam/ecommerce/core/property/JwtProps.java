@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Propiedades de configuración de JWT bajo el prefijo {@code app.jwt}: tiempos de vida del
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "app.jwt")
+@Validated
 @Getter
 @Setter
 public class JwtProps {

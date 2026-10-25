@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Propiedades de configuración de cookies bajo el prefijo {@code app.cookie}: si deben
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "app.cookie")
+@Validated
 @Getter
 @Setter
 public class CookieProps {

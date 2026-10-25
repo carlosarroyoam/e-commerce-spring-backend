@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 /**
  * Propiedades de configuración del par de llaves RSA bajo el prefijo {@code app.rsa},
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ConfigurationProperties(prefix = "app.rsa")
+@Validated
 @Getter
 @Setter
 public class RsaKeyProps {
