@@ -9,17 +9,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * Propiedades de configuración del par de llaves RSA bajo el prefijo {@code application.rsa},
+ * Propiedades de configuración del par de llaves RSA bajo el prefijo {@code app.rsa},
  * usadas para firmar y verificar los JWT emitidos por la API.
  */
 @Component
-@ConfigurationProperties(prefix = "application.rsa")
+@ConfigurationProperties(prefix = "app.rsa")
 @Getter
 @Setter
 public class RsaKeyProps {
-  @NotNull(message = "private-key must not be null")
+  @NotNull(message = "app.rsa.private-key must not be null")
   private RSAPrivateKey privateKey;
 
-  @NotNull(message = "public-key must not be null")
+  @NotNull(message = "app.rsa.public-key must not be null")
   private RSAPublicKey publicKey;
 }

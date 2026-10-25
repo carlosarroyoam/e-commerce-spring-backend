@@ -9,26 +9,26 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 /**
- * Propiedades de configuración CORS bajo el prefijo {@code application.cors}: orígenes, métodos y
+ * Propiedades de configuración CORS bajo el prefijo {@code app.cors}: orígenes, métodos y
  * cabeceras permitidos/expuestos, y si se permiten credenciales.
  */
 @Component
-@ConfigurationProperties(prefix = "application.cors")
+@ConfigurationProperties(prefix = "app.cors")
 @Getter
 @Setter
 public class CorsProps {
-  @NotEmpty(message = "allowed-origins must not be empty")
+  @NotEmpty(message = "app.cors.allowed-origins must not be empty")
   private List<String> allowedOrigins;
 
-  @NotEmpty(message = "allowed-methods must not be empty")
+  @NotEmpty(message = "app.cors.allowed-methods must not be empty")
   private List<String> allowedMethods;
 
-  @NotEmpty(message = "allowed-headers must not be empty")
+  @NotEmpty(message = "app.cors.allowed-headers must not be empty")
   private List<String> allowedHeaders;
 
-  @NotEmpty(message = "exposed-headers must not be empty")
+  @NotEmpty(message = "app.cors.exposed-headers must not be empty")
   private List<String> exposedHeaders;
 
-  @NotNull(message = "allow-credentials must not be null")
+  @NotNull(message = "app.cors.allow-credentials must not be null")
   private Boolean allowCredentials;
 }

@@ -63,7 +63,7 @@ Each business domain is a top-level package (`auth`, `user`, `customer`, `produc
 - `dto/` — request/response DTOs and `*Specs` filter DTOs
 - `entity/` — JPA entities. Static metamodel classes (`User_`, `Role_`, etc.) are generated at compile time by `hibernate-jpamodelgen` (annotation processor in `pom.xml`) and used for type-safe Criteria/Specification paths — don't hand-write them.
 
-Cross-cutting code lives in `core/`: `config` (security, JWT), `constant` (`AppMessages` — centralized exception message strings, reused across services), `pagination` (`PagedResponse`/`PaginationResponse`), `exception` (`ApplicationException` hierarchy, `GlobalExceptionHandler`, `ProblemDetailFactory`, `ExceptionLogger`), `filter` (`CorrelationIdFilter`, `MdcUserContextFilter`, `RequestLoggingFilter`, `CsrfCookieFilter`), `property` (`@ConfigurationProperties` classes: `CookieProps`, `CorsProps`, `JwtProps`, `RsaKeyProps`, bound to `application.*` keys), `security`, `specification` (`SpecificationBuilder`), `util`.
+Cross-cutting code lives in `core/`: `config` (security, JWT), `constant` (`AppMessages` — centralized exception message strings, reused across services), `pagination` (`PagedResponse`/`PaginationResponse`), `exception` (`ApplicationException` hierarchy, `GlobalExceptionHandler`, `ProblemDetailFactory`, `ExceptionLogger`), `filter` (`CorrelationIdFilter`, `MdcUserContextFilter`, `RequestLoggingFilter`, `CsrfCookieFilter`), `property` (`@ConfigurationProperties` classes: `CookieProps`, `CorsProps`, `JwtProps`, `RsaKeyProps`, bound to `app.*` keys), `security`, `specification` (`SpecificationBuilder`), `util`.
 
 ### DTO mapping: MapStruct nested in the DTO, not Spring beans
 
@@ -110,11 +110,11 @@ Two independent principal types share the same JWT-based auth, not a single `use
 - JWTs are RS256, signed/verified with the RSA key pair via Nimbus (`JwtConfig`), consumed as a Spring Security OAuth2 **resource server** (self-issued, self-validated — no external IdP). Roles are carried as a `roles` JWT claim and mapped to `ROLE_*` authorities; `@EnableMethodSecurity` is on.
 - Sessions are stateless; refresh tokens are hashed and bound to `(principal_id, principal_type, device_id)` (see `refresh_tokens` table / `RefreshTokenService`).
 - CSRF cookie protection (`CsrfCookieFilter`, double-submit `X-XSRF-TOKEN`) applies to non-`/auth/login` routes even though the API is stateless/token-based. `/auth/**` and `/actuator/**` are `permitAll`.
-- CORS is configured from `application.cors.*` (`CorsProps`); allowed methods include `PATCH` — add any new HTTP verb there too, or browser preflights will fail.
+- CORS is configured from `app.cors.*` (`CorsProps`); allowed methods include `PATCH` — add any new HTTP verb there too, or browser preflights will fail.
 
 ### JSON naming convention
 
-`spring.jackson.property-naming-strategy=SNAKE_CASE` is set globally in `application.properties`. Java/DTO fields stay camelCase; **request and response bodies are serialized as snake_case on the wire**. Query parameters are bound directly to `*Specs`/other DTOs via `@ModelAttribute` and are unaffected by that Jackson setting, so they stay **camelCase**. This split is intentional — keep it when adding fields (see `docs/openapi/api-docs.yaml`, which documents the same convention).
+`spring.jackson.property-naming-strategy=SNAKE_CASE` is set globally in `app.properties`. Java/DTO fields stay camelCase; **request and response bodies are serialized as snake_case on the wire**. Query parameters are bound directly to `*Specs`/other DTOs via `@ModelAttribute` and are unaffected by that Jackson setting, so they stay **camelCase**. This split is intentional — keep it when adding fields (see `docs/openapi/api-docs.yaml`, which documents the same convention).
 
 ### API documentation
 
