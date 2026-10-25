@@ -10,8 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * Propiedades de configuración del par de llaves RSA bajo el prefijo {@code app.rsa},
- * usadas para firmar y verificar los JWT emitidos por la API.
+ * Propiedades de configuración del par de llaves RSA bajo el prefijo {@code app.rsa}, usadas para
+ * firmar y verificar los JWT emitidos por la API.
  */
 @Component
 @ConfigurationProperties(prefix = "app.rsa")

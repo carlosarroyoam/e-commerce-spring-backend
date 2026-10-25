@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.annotation.Validated;
 
 /**
- * Propiedades de configuración de cookies bajo el prefijo {@code app.cookie}: si deben
- * marcarse como {@code Secure}.
+ * Propiedades de configuración de cookies bajo el prefijo {@code app.cookie}: si deben marcarse
+ * como {@code Secure}.
  */
 @Component
 @ConfigurationProperties(prefix = "app.cookie")
