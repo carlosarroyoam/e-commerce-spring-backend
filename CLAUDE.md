@@ -69,10 +69,6 @@ No linter or formatter plugin is configured.
 
 Caveat: `.dockerignore` excludes `*.pem`, so `src/main/resources/certs/` is **not** copied into the build context and the image is built without RSA keys.
 
-## Javadoc
-
-All Javadoc is written in **Spanish**. Rules: third-person present-tense first sentence, `@throws` only for domain exceptions thrown by `UserService`/`AuthService`, REST methods guarded by `@RolesAllowed` end their first sentence with "Requiere rol {@code X}.", no `@author`/`@since`.
-
 ## Tests
 
 `maven-failsafe-plugin` is bound in `pom.xml`, so classes ending in `IT` run only in `verify`, not in `test`. Everything that extends `support/AbstractIntegrationTest` (including the `ECommerceApplicationTest` smoke test, which does run in `test`) needs a reachable **Docker** daemon — not a local MySQL.
@@ -174,6 +170,10 @@ Never put MDC keys from services/controllers.
 ### API documentation
 
 `docs/openapi/api-docs.yaml` is a hand-written OpenAPI 3.1 spec, not generated. Update it whenever a controller, DTO or `CHECK` constraint changes — nothing enforces it. A Postman collection lives in `docs/postman/postman_collection.json`.
+
+## Javadoc
+
+All Javadoc is written in **Spanish**. Rules: third-person present-tense first sentence, `@throws` only for domain exceptions thrown by `UserService`/`AuthService`, REST methods guarded by `@RolesAllowed` end their first sentence with "Requiere rol {@code X}.", no `@author`/`@since`.
 
 ## Code conventions
 
