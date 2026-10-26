@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.refund;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
@@ -83,7 +83,7 @@ public class RefundService {
   private Refund findRefundById(Long refundId) {
     return refundRepository
         .findById(refundId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.REFUND_NOT_FOUND_EXCEPTION));
   }
 
   /**
@@ -96,6 +96,6 @@ public class RefundService {
   private Refund findRefundByOrderId(Long orderId) {
     return refundRepository
         .findByOrderId(orderId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.REFUND_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.REFUND_NOT_FOUND_EXCEPTION));
   }
 }

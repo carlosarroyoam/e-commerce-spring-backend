@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.product;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
@@ -59,6 +59,6 @@ public class AttributeService {
     return attributeRepository
         .findById(attributeId)
         .orElseThrow(
-            () -> new ResourceNotFoundException(AppMessages.ATTRIBUTE_NOT_FOUND_EXCEPTION));
+            () -> new ResourceNotFoundException(MessageKeys.ATTRIBUTE_NOT_FOUND_EXCEPTION));
   }
 }

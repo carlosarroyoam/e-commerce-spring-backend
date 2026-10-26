@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.order;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
@@ -85,7 +85,7 @@ public class OrderService {
         orderRepository
             .findByOrderNumber(orderNumber)
             .orElseThrow(
-                () -> new ResourceNotFoundException(AppMessages.ORDER_NOT_FOUND_EXCEPTION));
+                () -> new ResourceNotFoundException(MessageKeys.ORDER_NOT_FOUND_EXCEPTION));
 
     return OrderTrackResponseMapper.INSTANCE.toDto(orderByOrderNumber);
   }
@@ -103,7 +103,7 @@ public class OrderService {
     Order orderById = findOrderById(orderId);
 
     if (!canBeCancelled(orderById.getStatus())) {
-      throw new BusinessException(AppMessages.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
+      throw new BusinessException(MessageKeys.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
     }
 
     orderById.setStatus(OrderStatus.CANCELLED);
@@ -141,6 +141,6 @@ public class OrderService {
   private Order findOrderById(Long orderId) {
     return orderRepository
         .findById(orderId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.ORDER_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.ORDER_NOT_FOUND_EXCEPTION));
   }
 }

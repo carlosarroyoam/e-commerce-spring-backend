@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.product;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
@@ -58,6 +58,6 @@ public class PropertyService {
   private Property findPropertyById(Long propertyId) {
     return propertyRepository
         .findById(propertyId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.PROPERTY_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.PROPERTY_NOT_FOUND_EXCEPTION));
   }
 }

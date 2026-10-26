@@ -8,7 +8,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.CommonConstants;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
@@ -90,7 +91,7 @@ class UserServiceTest {
 
     assertThatThrownBy(() -> userService.findById(999L))
         .isInstanceOf(ResourceNotFoundException.class)
-        .hasMessage(AppMessages.USER_NOT_FOUND_EXCEPTION);
+        .hasMessage(MessageKeys.USER_NOT_FOUND_EXCEPTION);
   }
 
   @Test
@@ -99,7 +100,7 @@ class UserServiceTest {
   void givenUserIdEqualsCurrentUserId_whenDeleteById_thenThrowsCannotDeleteItself() {
     assertThatThrownBy(() -> userService.deleteById(1L, 1L))
         .isInstanceOf(BusinessException.class)
-        .hasMessage(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
+        .hasMessage(MessageKeys.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
 
     verify(userRepository, never()).findById(any());
   }
@@ -111,7 +112,7 @@ class UserServiceTest {
 
     assertThatThrownBy(() -> userService.deleteById(999L, 1L))
         .isInstanceOf(ResourceNotFoundException.class)
-        .hasMessage(AppMessages.USER_NOT_FOUND_EXCEPTION);
+        .hasMessage(MessageKeys.USER_NOT_FOUND_EXCEPTION);
   }
 
   @Test
@@ -123,7 +124,7 @@ class UserServiceTest {
 
     assertThatThrownBy(() -> userService.deleteById(6L, 1L))
         .isInstanceOf(BusinessException.class)
-        .hasMessage(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
+        .hasMessage(MessageKeys.USER_CANNOT_BE_DELETED_EXCEPTION);
 
     verify(userRepository, never()).save(any());
   }

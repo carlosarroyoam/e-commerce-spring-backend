@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.shipment;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
@@ -103,7 +103,7 @@ public class ShipmentService {
   private Shipment findShipmentById(Long shipmentId) {
     return shipmentRepository
         .findById(shipmentId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.SHIPMENT_NOT_FOUND_EXCEPTION));
   }
 
   /**
@@ -116,6 +116,6 @@ public class ShipmentService {
   private Shipment findShipmentByOrderId(Long orderId) {
     return shipmentRepository
         .findByOrderId(orderId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.SHIPMENT_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.SHIPMENT_NOT_FOUND_EXCEPTION));
   }
 }

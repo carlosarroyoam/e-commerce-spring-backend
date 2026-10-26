@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.customer;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
@@ -75,6 +75,6 @@ public class CustomerService {
   private Customer findCustomerById(Long customerId) {
     return customerRepository
         .findById(customerId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.CUSTOMER_NOT_FOUND_EXCEPTION));
   }
 }

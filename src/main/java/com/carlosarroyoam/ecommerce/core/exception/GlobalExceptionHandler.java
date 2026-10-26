@@ -157,8 +157,8 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Traduce errores de validación de Bean Validation a {@code 422 Unprocessable Entity},
-   * incluyendo el detalle de cada campo inválido en la propiedad de extensión {@code errors}.
+   * Traduce errores de validación de Bean Validation a {@code 422 Unprocessable Entity}, incluyendo
+   * el detalle de cada campo inválido en la propiedad de extensión {@code errors}.
    *
    * @param ex excepción capturada
    * @param request petición HTTP en curso

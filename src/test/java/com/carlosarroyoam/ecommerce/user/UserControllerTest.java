@@ -12,7 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.CommonConstants;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
 import com.carlosarroyoam.ecommerce.core.exception.ExceptionLogger;
 import com.carlosarroyoam.ecommerce.core.exception.GlobalExceptionHandler;
@@ -144,7 +145,7 @@ class UserControllerTest {
   @DisplayName("Given a non existing user id, when find by id, then returns 404")
   void givenNonExistingUserId_whenFindById_thenReturns404() throws Exception {
     given(userService.findById(999L))
-        .willThrow(new ResourceNotFoundException(AppMessages.USER_NOT_FOUND_EXCEPTION));
+        .willThrow(new ResourceNotFoundException(MessageKeys.USER_NOT_FOUND_EXCEPTION));
 
     mockMvc
         .perform(get("/users/999"))
@@ -169,7 +170,7 @@ class UserControllerTest {
   void
       givenServiceThrowsUnprocessableEntity_whenDeleteById_thenReturns422ViaGlobalExceptionHandler()
           throws Exception {
-    doThrow(new BusinessException(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION))
+    doThrow(new BusinessException(MessageKeys.USER_CANNOT_DELETE_ITSELF_EXCEPTION))
         .when(userService)
         .deleteById(1L, FIXED_STAFF_PRINCIPAL_ID);
 

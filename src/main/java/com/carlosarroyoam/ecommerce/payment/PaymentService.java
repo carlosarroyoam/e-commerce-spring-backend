@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.payment;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
@@ -74,6 +74,6 @@ public class PaymentService {
   private Payment findPaymentById(Long paymentId) {
     return paymentRepository
         .findById(paymentId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.PAYMENT_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.PAYMENT_NOT_FOUND_EXCEPTION));
   }
 }

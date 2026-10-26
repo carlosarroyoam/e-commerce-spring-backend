@@ -1,7 +1,7 @@
 package com.carlosarroyoam.ecommerce.product;
 
 import com.carlosarroyoam.ecommerce.category.entity.Category_;
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
@@ -80,6 +80,6 @@ public class ProductService {
   private Product findProductById(Long productId) {
     return productRepository
         .findById(productId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.PRODUCT_NOT_FOUND_EXCEPTION));
   }
 }

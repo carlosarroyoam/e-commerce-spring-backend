@@ -2,7 +2,8 @@ package com.carlosarroyoam.ecommerce.core.exception;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.CommonConstants;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.support.testutils.TestMessageSources;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -36,7 +37,7 @@ class GlobalExceptionHandlerTest {
   @DisplayName("Given a message key, when handle application exception, then detail is the text")
   void givenMessageKey_whenHandleApplicationException_thenDetailIsResolvedText() {
     ResourceNotFoundException ex =
-        new ResourceNotFoundException(AppMessages.USER_NOT_FOUND_EXCEPTION);
+        new ResourceNotFoundException(MessageKeys.USER_NOT_FOUND_EXCEPTION);
 
     ProblemDetail problem = handler.handleApplicationException(ex, request);
 
@@ -58,7 +59,7 @@ class GlobalExceptionHandlerTest {
   @DisplayName("Given every AppMessages constant, when resolved, then each has a bundle entry")
   void givenEveryAppMessagesConstant_whenResolved_thenEachHasBundleEntry() {
     List<String> missingKeys =
-        Arrays.stream(AppMessages.class.getDeclaredFields())
+        Arrays.stream(MessageKeys.class.getDeclaredFields())
             .filter(GlobalExceptionHandlerTest::isMessageKeyConstant)
             .map(GlobalExceptionHandlerTest::readConstant)
             .filter(
@@ -87,7 +88,7 @@ class GlobalExceptionHandlerTest {
   }
 
   /**
-   * Lee el valor de una constante estática de {@link AppMessages}.
+   * Lee el valor de una constante estática de {@link CommonConstants}.
    *
    * @param field el campo a leer
    * @return el valor de la constante

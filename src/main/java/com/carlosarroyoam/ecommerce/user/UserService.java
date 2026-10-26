@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.user;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
@@ -84,13 +84,13 @@ public class UserService {
   @Transactional
   public void deleteById(Long userId, Long currentUserId) {
     if (userId.equals(currentUserId)) {
-      throw new BusinessException(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
+      throw new BusinessException(MessageKeys.USER_CANNOT_DELETE_ITSELF_EXCEPTION);
     }
 
     User userById = findUserById(userId);
 
     if (userById.getStatus() == UserStatus.DELETED) {
-      throw new BusinessException(AppMessages.USER_CANNOT_BE_DELETED_EXCEPTION);
+      throw new BusinessException(MessageKeys.USER_CANNOT_BE_DELETED_EXCEPTION);
     }
 
     userById.setStatus(UserStatus.DELETED);
@@ -109,6 +109,6 @@ public class UserService {
   private User findUserById(Long userId) {
     return userRepository
         .findById(userId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.USER_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.USER_NOT_FOUND_EXCEPTION));
   }
 }

@@ -2,7 +2,7 @@ package com.carlosarroyoam.ecommerce.auth;
 
 import com.carlosarroyoam.ecommerce.auth.entity.RefreshToken;
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.UnauthorizedException;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
 import java.time.LocalDateTime;
@@ -145,7 +145,7 @@ public class RefreshTokenService {
     }
 
     if (sessionExpired || tokenExpired || hashMismatch) {
-      throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+      throw new UnauthorizedException(MessageKeys.REFRESH_TOKEN_IS_NOT_VALID_EXCEPTION);
     }
   }
 
@@ -159,6 +159,7 @@ public class RefreshTokenService {
   private RefreshToken findRefreshTokenById(UUID refreshTokenId) {
     return refreshTokenRepository
         .findById(refreshTokenId)
-        .orElseThrow(() -> new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID));
+        .orElseThrow(
+            () -> new UnauthorizedException(MessageKeys.REFRESH_TOKEN_IS_NOT_VALID_EXCEPTION));
   }
 }

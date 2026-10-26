@@ -3,7 +3,7 @@ package com.carlosarroyoam.ecommerce.category;
 import com.carlosarroyoam.ecommerce.category.dto.CategoryResponse;
 import com.carlosarroyoam.ecommerce.category.dto.CategoryResponse.CategoryResponseMapper;
 import com.carlosarroyoam.ecommerce.category.entity.Category;
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse.PagedResponseMapper;
@@ -58,6 +58,6 @@ public class CategoryService {
   private Category findCategoryById(Byte categoryId) {
     return categoryRepository
         .findById(categoryId)
-        .orElseThrow(() -> new ResourceNotFoundException(AppMessages.CATEGORY_NOT_FOUND_EXCEPTION));
+        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.CATEGORY_NOT_FOUND_EXCEPTION));
   }
 }

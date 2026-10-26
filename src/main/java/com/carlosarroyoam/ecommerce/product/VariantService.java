@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.product;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.product.dto.VariantResponse;
 import com.carlosarroyoam.ecommerce.product.dto.VariantResponse.VariantResponseMapper;
@@ -52,7 +52,7 @@ public class VariantService {
             .findByIdAndProductId(variantId, productId)
             .orElseThrow(
                 () ->
-                    new ResourceNotFoundException(AppMessages.PRODUCT_VARIANT_NOT_FOUND_EXCEPTION));
+                    new ResourceNotFoundException(MessageKeys.PRODUCT_VARIANT_NOT_FOUND_EXCEPTION));
 
     return VariantResponseMapper.INSTANCE.toDto(variantById);
   }
@@ -65,7 +65,7 @@ public class VariantService {
    */
   private void validateProductExists(Long productId) {
     if (!productRepository.existsById(productId)) {
-      throw new ResourceNotFoundException(AppMessages.PRODUCT_NOT_FOUND_EXCEPTION);
+      throw new ResourceNotFoundException(MessageKeys.PRODUCT_NOT_FOUND_EXCEPTION);
     }
   }
 }

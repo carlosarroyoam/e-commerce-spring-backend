@@ -6,7 +6,7 @@ import com.carlosarroyoam.ecommerce.auth.dto.LoginRequest;
 import com.carlosarroyoam.ecommerce.auth.dto.ResetPasswordRequest;
 import com.carlosarroyoam.ecommerce.auth.entity.RefreshToken;
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.UnauthorizedException;
 import java.util.Optional;
 import java.util.UUID;
@@ -83,13 +83,13 @@ public class AuthService {
   @Transactional(noRollbackFor = UnauthorizedException.class)
   public AuthResponse refreshToken(String rawRefreshTokenCookie) {
     if (!StringUtils.hasText(rawRefreshTokenCookie)) {
-      throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_REQUIRED);
+      throw new UnauthorizedException(MessageKeys.REFRESH_TOKEN_IS_REQUIRED_EXCEPTION);
     }
 
     RefreshTokenCookie refreshTokenCookie =
         parseRefreshTokenCookie(rawRefreshTokenCookie)
             .orElseThrow(
-                () -> new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID));
+                () -> new UnauthorizedException(MessageKeys.REFRESH_TOKEN_IS_NOT_VALID_EXCEPTION));
 
     RefreshToken refreshTokenById = refreshTokenService.findById(refreshTokenCookie.getId());
     AuthPrincipal principal = loadPrincipal(refreshTokenById);
@@ -128,7 +128,7 @@ public class AuthService {
    */
   public void forgotPassword(ForgotPasswordRequest request) {
     throw new ResponseStatusException(
-        HttpStatus.NOT_IMPLEMENTED, AppMessages.FEATURE_NOT_IMPLEMENTED_EXCEPTION);
+        HttpStatus.NOT_IMPLEMENTED, MessageKeys.FEATURE_NOT_IMPLEMENTED_EXCEPTION);
   }
 
   /**
@@ -139,7 +139,7 @@ public class AuthService {
    */
   public void resetPassword(ResetPasswordRequest request) {
     throw new ResponseStatusException(
-        HttpStatus.NOT_IMPLEMENTED, AppMessages.FEATURE_NOT_IMPLEMENTED_EXCEPTION);
+        HttpStatus.NOT_IMPLEMENTED, MessageKeys.FEATURE_NOT_IMPLEMENTED_EXCEPTION);
   }
 
   /**
@@ -159,7 +159,7 @@ public class AuthService {
             (AuthPrincipal) customerDetailsService.loadUserById(refreshTokenById.getPrincipalId());
       };
     } catch (UsernameNotFoundException ex) {
-      throw new UnauthorizedException(AppMessages.JWT_REFRESH_TOKEN_IS_NOT_VALID);
+      throw new UnauthorizedException(MessageKeys.REFRESH_TOKEN_IS_NOT_VALID_EXCEPTION);
     }
   }
 

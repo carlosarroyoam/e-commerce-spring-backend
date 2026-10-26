@@ -1,6 +1,6 @@
 package com.carlosarroyoam.ecommerce.customer;
 
-import com.carlosarroyoam.ecommerce.core.constant.AppMessages;
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerAddressResponse;
 import com.carlosarroyoam.ecommerce.customer.dto.CustomerAddressResponse.CustomerAddressResponseMapper;
@@ -63,7 +63,7 @@ public class CustomerAddressService {
    */
   private void validateCustomerExists(Long customerId) {
     if (!customerRepository.existsById(customerId)) {
-      throw new ResourceNotFoundException(AppMessages.CUSTOMER_NOT_FOUND_EXCEPTION);
+      throw new ResourceNotFoundException(MessageKeys.CUSTOMER_NOT_FOUND_EXCEPTION);
     }
   }
 
@@ -80,6 +80,6 @@ public class CustomerAddressService {
     return customerAddressRepository
         .findByIdAndCustomerId(addressId, customerId)
         .orElseThrow(
-            () -> new ResourceNotFoundException(AppMessages.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION));
+            () -> new ResourceNotFoundException(MessageKeys.CUSTOMER_ADDRESS_NOT_FOUND_EXCEPTION));
   }
 }
