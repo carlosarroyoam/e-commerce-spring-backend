@@ -21,6 +21,7 @@ import com.carlosarroyoam.ecommerce.core.exception.ResourceNotFoundException;
 import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.core.pagination.PaginationResponse;
 import com.carlosarroyoam.ecommerce.support.security.FixedAuthPrincipalArgumentResolver;
+import com.carlosarroyoam.ecommerce.support.testutils.TestMessageSources;
 import com.carlosarroyoam.ecommerce.support.testutils.TestObjectMappers;
 import com.carlosarroyoam.ecommerce.user.dto.RoleResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
@@ -75,7 +76,10 @@ class UserControllerTest {
     mockMvc =
         MockMvcBuilders.standaloneSetup(userController)
             .setControllerAdvice(
-                new GlobalExceptionHandler(new ProblemDetailFactory(), new ExceptionLogger()))
+                new GlobalExceptionHandler(
+                    new ProblemDetailFactory(),
+                    new ExceptionLogger(),
+                    TestMessageSources.create()))
             .setCustomArgumentResolvers(
                 new PageableHandlerMethodArgumentResolver(), authPrincipalResolver)
             .setMessageConverters(
@@ -149,7 +153,7 @@ class UserControllerTest {
         .andExpect(jsonPath("$.status").value(404))
         .andExpect(jsonPath("$.title").value("Not Found"))
         .andExpect(jsonPath("$.instance").value("/users/999"))
-        .andExpect(jsonPath("$.detail").value(AppMessages.USER_NOT_FOUND_EXCEPTION));
+        .andExpect(jsonPath("$.detail").value("User not found"));
   }
 
   @Test
@@ -173,6 +177,6 @@ class UserControllerTest {
         .perform(delete("/users/1"))
         .andExpect(status().isUnprocessableEntity())
         .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-        .andExpect(jsonPath("$.detail").value(AppMessages.USER_CANNOT_DELETE_ITSELF_EXCEPTION));
+        .andExpect(jsonPath("$.detail").value("User cannot delete itself"));
   }
 }

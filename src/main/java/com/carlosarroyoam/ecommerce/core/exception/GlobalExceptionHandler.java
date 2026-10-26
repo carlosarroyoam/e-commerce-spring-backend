@@ -3,6 +3,8 @@ package com.carlosarroyoam.ecommerce.core.exception;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.stream.Collectors;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -18,33 +20,51 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 /**
- * Punto único de traducción de excepciones a respuestas HTTP: captura cada tipo de excepción de la
- * aplicación (las {@link ApplicationException} de dominio, validación, autenticación/autorización,
- * 404, método no soportado, genéricas) y las convierte en un {@link ProblemDetail} uniforme (RFC
- * 9457) mediante {@link ProblemDetailFactory}. Delega el registro en el log de cada excepción en
- * {@link ExceptionLogger}, que aplica la política de severidad común (4xx en {@code WARN}, 5xx en
- * {@code ERROR} con traza de pila).
+ * Traduce las excepciones no controladas de la aplicación a respuestas HTTP {@link ProblemDetail}
+ * (RFC 9457, {@code application/problem+json}), delegando la construcción del cuerpo en {@link
+ * ProblemDetailFactory}.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {
   private final ProblemDetailFactory problemDetailFactory;
   private final ExceptionLogger exceptionLogger;
+  private final MessageSource messageSource;
 
   public GlobalExceptionHandler(
-      ProblemDetailFactory problemDetailFactory, ExceptionLogger exceptionLogger) {
+      ProblemDetailFactory problemDetailFactory,
+      ExceptionLogger exceptionLogger,
+      MessageSource messageSource) {
     this.problemDetailFactory = problemDetailFactory;
     this.exceptionLogger = exceptionLogger;
+    this.messageSource = messageSource;
   }
 
-  /** Traduce una {@link ApplicationException} de dominio al estado HTTP que ella misma declara. */
+  /**
+   * Traduce una {@link ApplicationException} de dominio/aplicación a una respuesta con el código de
+   * estado que fija la propia excepción. El mensaje de la excepción se interpreta como una clave de
+   * {@code messages.properties}; si no existe, se usa tal cual.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con el código de estado y mensaje de la excepción
+   */
   @ExceptionHandler({ApplicationException.class})
   public ProblemDetail handleApplicationException(
       ApplicationException ex, HttpServletRequest request) {
-    exceptionLogger.log(ex.getStatus(), ex.getMessage(), request, ex);
-    return problemDetailFactory.build(ex.getStatus(), ex.getMessage(), request);
+    String detail =
+        messageSource.getMessage(
+            ex.getMessage(), null, ex.getMessage(), LocaleContextHolder.getLocale());
+    exceptionLogger.log(ex.getStatus(), detail, request, ex);
+    return problemDetailFactory.build(ex.getStatus(), detail, request);
   }
 
-  /** Mapea un cuerpo de petición ilegible o malformado a 400 Bad Request. */
+  /**
+   * Traduce un cuerpo de petición ilegible o mal formado a {@code 400 Bad Request}.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 400 Bad Request}
+   */
   @ExceptionHandler({HttpMessageNotReadableException.class})
   public ProblemDetail handleHttpMessageNotReadable(
       HttpMessageNotReadableException ex, HttpServletRequest request) {
@@ -52,7 +72,13 @@ public class GlobalExceptionHandler {
     return problemDetailFactory.build(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
   }
 
-  /** Mapea un parámetro con tipo incompatible a 400 Bad Request. */
+  /**
+   * Traduce un parámetro con tipo incompatible a {@code 400 Bad Request}.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 400 Bad Request}
+   */
   @ExceptionHandler({MethodArgumentTypeMismatchException.class})
   public ProblemDetail handleMethodArgumentTypeMismatch(
       MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
@@ -60,7 +86,13 @@ public class GlobalExceptionHandler {
     return problemDetailFactory.build(HttpStatus.BAD_REQUEST, ex.getMessage(), request);
   }
 
-  /** Mapea una ruta sin handler registrado a 404 Not Found. */
+  /**
+   * Traduce una ruta sin handler registrado a {@code 404 Not Found}.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 404 Not Found}
+   */
   @ExceptionHandler({NoHandlerFoundException.class})
   public ProblemDetail handleNoHandlerFound(
       NoHandlerFoundException ex, HttpServletRequest request) {
@@ -68,7 +100,13 @@ public class GlobalExceptionHandler {
     return problemDetailFactory.build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
   }
 
-  /** Mapea un recurso estático no encontrado a 404 Not Found. */
+  /**
+   * Traduce un recurso estático no encontrado a {@code 404 Not Found}.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 404 Not Found}
+   */
   @ExceptionHandler({NoResourceFoundException.class})
   public ProblemDetail handleNoResourceFound(
       NoResourceFoundException ex, HttpServletRequest request) {
@@ -76,7 +114,13 @@ public class GlobalExceptionHandler {
     return problemDetailFactory.build(HttpStatus.NOT_FOUND, ex.getMessage(), request);
   }
 
-  /** Mapea un método HTTP no soportado por el endpoint a 405 Method Not Allowed. */
+  /**
+   * Traduce un método HTTP no soportado por el endpoint a {@code 405 Method Not Allowed}.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 405 Method Not Allowed}
+   */
   @ExceptionHandler({HttpRequestMethodNotSupportedException.class})
   public ProblemDetail handleMethodNotSupported(
       HttpRequestMethodNotSupportedException ex, HttpServletRequest request) {
@@ -84,7 +128,13 @@ public class GlobalExceptionHandler {
     return problemDetailFactory.build(HttpStatus.METHOD_NOT_ALLOWED, ex.getMessage(), request);
   }
 
-  /** Mapea un fallo de autenticación a 401 Unauthorized. */
+  /**
+   * Traduce un fallo de autenticación a {@code 401 Unauthorized}.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 401 Unauthorized}
+   */
   @ExceptionHandler({AuthenticationException.class})
   public ProblemDetail handleAuthenticationException(
       AuthenticationException ex, HttpServletRequest request) {
@@ -92,7 +142,13 @@ public class GlobalExceptionHandler {
     return problemDetailFactory.build(HttpStatus.UNAUTHORIZED, ex.getMessage(), request);
   }
 
-  /** Mapea un fallo de autorización a 403 Forbidden. */
+  /**
+   * Traduce un fallo de autorización a {@code 403 Forbidden}.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 403 Forbidden}
+   */
   @ExceptionHandler({AccessDeniedException.class})
   public ProblemDetail handleAccessDeniedException(
       AccessDeniedException ex, HttpServletRequest request) {
@@ -101,8 +157,13 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Mapea errores de validación de Bean Validation a 422 Unprocessable Entity, incluyendo el
-   * detalle de cada campo inválido en la propiedad de extensión {@code errors}.
+   * Traduce errores de validación de Bean Validation a {@code 422 Unprocessable Entity},
+   * incluyendo el detalle de cada campo inválido en la propiedad de extensión {@code errors}.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 422 Unprocessable Entity} y el mapa de
+   *     errores por campo
    */
   @ExceptionHandler({MethodArgumentNotValidException.class})
   public ProblemDetail handleMethodArgumentNotValid(
@@ -122,8 +183,12 @@ public class GlobalExceptionHandler {
   }
 
   /**
-   * Último manejador de respaldo: registra la excepción y responde 500 Internal Server Error sin
-   * exponer detalles internos en el cuerpo de la respuesta.
+   * Último manejador de respaldo: registra la excepción y responde {@code 500 Internal Server
+   * Error} sin exponer detalles internos en el cuerpo de la respuesta.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 500 Internal Server Error}
    */
   @ExceptionHandler({Exception.class})
   public ProblemDetail handleException(Exception ex, HttpServletRequest request) {
