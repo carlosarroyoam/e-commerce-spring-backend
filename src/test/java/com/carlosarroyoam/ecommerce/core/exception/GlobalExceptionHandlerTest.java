@@ -56,8 +56,8 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
-  @DisplayName("Given every AppMessages constant, when resolved, then each has a bundle entry")
-  void givenEveryAppMessagesConstant_whenResolved_thenEachHasBundleEntry() {
+  @DisplayName("Given every MessageKeys constant, when resolved, then each has a bundle entry")
+  void givenEveryMessageKeysConstant_whenResolved_thenEachHasBundleEntry() {
     List<String> missingKeys =
         Arrays.stream(MessageKeys.class.getDeclaredFields())
             .filter(GlobalExceptionHandlerTest::isMessageKeyConstant)
