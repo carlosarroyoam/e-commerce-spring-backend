@@ -73,7 +73,7 @@ class GlobalExceptionHandlerTest {
 
   /**
    * Indica si el campo es una constante de clave de mensaje, es decir, una {@code public static
-   * final String} distinta de {@code ILLEGAL_ACCESS_EXCEPTION}, que no es un mensaje de la API.
+   * final String}.
    *
    * @param field el campo a evaluar
    * @return {@code true} si el campo es una clave de mensaje
@@ -83,8 +83,7 @@ class GlobalExceptionHandlerTest {
     return field.getType() == String.class
         && Modifier.isPublic(modifiers)
         && Modifier.isStatic(modifiers)
-        && Modifier.isFinal(modifiers)
-        && !field.getName().equals("ILLEGAL_ACCESS_EXCEPTION");
+        && Modifier.isFinal(modifiers);
   }
 
   /**
