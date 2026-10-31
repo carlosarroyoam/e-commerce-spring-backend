@@ -8,11 +8,12 @@ import org.springframework.http.HttpStatus;
  */
 public class ValidationException extends ApplicationException {
   /**
-   * Crea la excepción con el mensaje descriptivo indicado.
+   * Crea la excepción con la clave de mensaje y los argumentos indicados.
    *
-   * @param message el mensaje descriptivo del fallo
+   * @param key la clave del mensaje en {@code messages.properties}
+   * @param args los argumentos que reemplazan los placeholders del mensaje
    */
-  public ValidationException(String message) {
-    super(HttpStatus.UNPROCESSABLE_ENTITY, message);
+  public ValidationException(String key, Object... args) {
+    super(HttpStatus.UNPROCESSABLE_ENTITY, key, args);
   }
 }

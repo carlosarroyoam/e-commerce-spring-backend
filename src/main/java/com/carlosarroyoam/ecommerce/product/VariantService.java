@@ -50,9 +50,8 @@ public class VariantService {
     Variant variantById =
         variantRepository
             .findByIdAndProductId(variantId, productId)
-            .orElseThrow(
-                () ->
-                    new ResourceNotFoundException(MessageKeys.PRODUCT_VARIANT_NOT_FOUND_EXCEPTION));
+            .orElseThrow(() ->
+                new ResourceNotFoundException(MessageKeys.PRODUCT_VARIANT_NOT_FOUND_EXCEPTION));
 
     return VariantResponseMapper.INSTANCE.toDto(variantById);
   }

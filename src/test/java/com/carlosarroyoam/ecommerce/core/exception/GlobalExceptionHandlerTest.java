@@ -56,6 +56,16 @@ class GlobalExceptionHandlerTest {
   }
 
   @Test
+  @DisplayName("Given a message with args, when handle application exception, then args are set")
+  void givenMessageWithArgs_whenHandleApplicationException_thenDetailHasArgsInterpolated() {
+    ResourceNotFoundException ex = new ResourceNotFoundException("Item {0} not found", 42);
+
+    ProblemDetail problem = handler.handleApplicationException(ex, request);
+
+    assertThat(problem.getDetail()).isEqualTo("Item 42 not found");
+  }
+
+  @Test
   @DisplayName("Given every MessageKeys constant, when resolved, then each has a bundle entry")
   void givenEveryMessageKeysConstant_whenResolved_thenEachHasBundleEntry() {
     List<String> missingKeys =

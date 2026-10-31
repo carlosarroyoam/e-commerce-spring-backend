@@ -114,10 +114,9 @@ public class AuthService {
   @Transactional
   public void revoke(String rawRefreshTokenCookie) {
     parseRefreshTokenCookie(rawRefreshTokenCookie)
-        .ifPresent(
-            refreshTokenCookie ->
-                refreshTokenService.revoke(
-                    refreshTokenCookie.getId(), refreshTokenCookie.getRawToken()));
+        .ifPresent(refreshTokenCookie ->
+            refreshTokenService.revoke(
+                refreshTokenCookie.getId(), refreshTokenCookie.getRawToken()));
   }
 
   /**

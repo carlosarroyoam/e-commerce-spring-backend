@@ -70,40 +70,35 @@ public class WebSecurityConfig {
       AuthenticationEntryPoint authenticationEntryPoint,
       AccessDeniedHandler accessDeniedHandler)
       throws Exception {
-    http.csrf(
-            csrf ->
-                csrf.csrfTokenRepository(csrfTokenRepository)
-                    .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
-                    .ignoringRequestMatchers("/auth/login"))
+    http.csrf(csrf ->
+            csrf.csrfTokenRepository(csrfTokenRepository)
+                .csrfTokenRequestHandler(new CsrfTokenRequestAttributeHandler())
+                .ignoringRequestMatchers("/auth/login"))
         .cors(cors -> cors.configurationSource(corsConfigurationSource))
         .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
         .sessionManagement(
             session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        .oauth2ResourceServer(
-            oauth2 -> {
-              oauth2.authenticationEntryPoint(authenticationEntryPoint);
-              oauth2.jwt(
-                  jwt -> {
-                    jwt.decoder(jwtDecoder);
-                    jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
-                  });
-            })
-        .exceptionHandling(
-            ex -> {
-              ex.authenticationEntryPoint(authenticationEntryPoint);
-              ex.accessDeniedHandler(accessDeniedHandler);
-            })
+        .oauth2ResourceServer(oauth2 -> {
+          oauth2.authenticationEntryPoint(authenticationEntryPoint);
+          oauth2.jwt(jwt -> {
+            jwt.decoder(jwtDecoder);
+            jwt.jwtAuthenticationConverter(jwtAuthenticationConverter);
+          });
+        })
+        .exceptionHandling(ex -> {
+          ex.authenticationEntryPoint(authenticationEntryPoint);
+          ex.accessDeniedHandler(accessDeniedHandler);
+        })
         .addFilterAfter(new CsrfCookieFilter(), CsrfFilter.class)
         .addFilterAfter(new MdcUserContextFilter(), BearerTokenAuthenticationFilter.class);
 
-    http.authorizeHttpRequests(
-        auth ->
-            auth.requestMatchers("/auth/**")
-                .permitAll()
-                .requestMatchers("/actuator/**")
-                .permitAll()
-                .anyRequest()
-                .authenticated());
+    http.authorizeHttpRequests(auth ->
+        auth.requestMatchers("/auth/**")
+            .permitAll()
+            .requestMatchers("/actuator/**")
+            .permitAll()
+            .anyRequest()
+            .authenticated());
 
     return http.build();
   }

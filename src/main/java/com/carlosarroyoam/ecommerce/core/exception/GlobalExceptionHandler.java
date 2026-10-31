@@ -41,8 +41,8 @@ public class GlobalExceptionHandler {
 
   /**
    * Traduce una {@link ApplicationException} de dominio/aplicación a una respuesta con el código de
-   * estado que fija la propia excepción. El mensaje de la excepción se interpreta como una clave de
-   * {@code messages.properties}; si no existe, se usa tal cual.
+   * estado que fija la propia excepción. La clave de la excepción se resuelve en {@code
+   * messages.properties} con sus argumentos; si no existe, se usa tal cual como texto.
    *
    * @param ex excepción capturada
    * @param request petición HTTP en curso
@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
       ApplicationException ex, HttpServletRequest request) {
     String detail =
         messageSource.getMessage(
-            ex.getMessage(), null, ex.getMessage(), LocaleContextHolder.getLocale());
+            ex.getKey(), ex.getArgs(), ex.getKey(), LocaleContextHolder.getLocale());
     exceptionLogger.log(ex.getStatus(), detail, request, ex);
     return problemDetailFactory.build(ex.getStatus(), detail, request);
   }

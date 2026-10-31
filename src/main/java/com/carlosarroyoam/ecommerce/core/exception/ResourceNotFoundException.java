@@ -5,11 +5,12 @@ import org.springframework.http.HttpStatus;
 /** Se lanza cuando no existe el recurso solicitado. Se traduce a 404 Not Found. */
 public class ResourceNotFoundException extends ApplicationException {
   /**
-   * Crea la excepción con el mensaje descriptivo indicado.
+   * Crea la excepción con la clave de mensaje y los argumentos indicados.
    *
-   * @param message el mensaje descriptivo del fallo
+   * @param key la clave del mensaje en {@code messages.properties}
+   * @param args los argumentos que reemplazan los placeholders del mensaje
    */
-  public ResourceNotFoundException(String message) {
-    super(HttpStatus.NOT_FOUND, message);
+  public ResourceNotFoundException(String key, Object... args) {
+    super(HttpStatus.NOT_FOUND, key, args);
   }
 }
