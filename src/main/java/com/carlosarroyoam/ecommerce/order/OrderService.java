@@ -103,7 +103,7 @@ public class OrderService {
     Order orderById = findOrderById(orderId);
 
     if (!canBeCancelled(orderById.getStatus())) {
-      throw new BusinessException(MessageKeys.ORDER_CANNOT_BE_CANCELLED_EXCEPTION);
+      throw new BusinessException(MessageKeys.ORDER_CANNOT_BE_CANCELED_EXCEPTION);
     }
 
     orderById.setStatus(OrderStatus.CANCELLED);

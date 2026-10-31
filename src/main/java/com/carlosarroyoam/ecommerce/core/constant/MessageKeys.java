@@ -25,8 +25,9 @@ public class MessageKeys {
   public static final String PRODUCT_VARIANT_NOT_FOUND_EXCEPTION = "product.variant.not-found";
   public static final String ATTRIBUTE_NOT_FOUND_EXCEPTION = "attribute.not-found";
   public static final String PROPERTY_NOT_FOUND_EXCEPTION = "property.not-found";
+
   public static final String ORDER_NOT_FOUND_EXCEPTION = "order.not-found";
-  public static final String ORDER_CANNOT_BE_CANCELLED_EXCEPTION = "order.cannot-be-cancelled";
+  public static final String ORDER_CANNOT_BE_CANCELED_EXCEPTION = "order.cannot-be-canceled";
 
   public static final String PAYMENT_NOT_FOUND_EXCEPTION = "payment.not-found";
 
