@@ -11,6 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa el valor de un atributo asignado a una variante de producto. */
 @Getter
 @Setter
 @Builder

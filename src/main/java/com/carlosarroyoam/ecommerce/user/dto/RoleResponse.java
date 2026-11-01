@@ -10,6 +10,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un rol de usuario del personal interno. */
 @Getter
 @Setter
 @Builder

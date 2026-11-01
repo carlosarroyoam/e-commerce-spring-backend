@@ -13,6 +13,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa el detalle de un cliente en las respuestas de la API. */
 @Getter
 @Setter
 @Builder

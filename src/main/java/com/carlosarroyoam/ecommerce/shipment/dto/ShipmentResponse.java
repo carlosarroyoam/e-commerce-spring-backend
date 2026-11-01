@@ -13,6 +13,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un envío de una orden en las respuestas de la API. */
 @Getter
 @Setter
 @Builder

@@ -15,6 +15,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un pago asociado a una orden en las respuestas de la API. */
 @Getter
 @Setter
 @Builder

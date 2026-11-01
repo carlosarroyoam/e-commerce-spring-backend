@@ -11,6 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un atributo de variante de producto (por ejemplo, color o talla). */
 @Getter
 @Setter
 @Builder

@@ -11,6 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un movimiento de inventario junto con su tipo. */
 @Getter
 @Setter
 @Builder

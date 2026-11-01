@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+/** Agrupa los filtros opcionales para consultar el listado de usuarios. */
 @Getter
 @Setter
 @Builder

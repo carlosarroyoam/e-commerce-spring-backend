@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/** Representa las credenciales enviadas para iniciar sesión. */
 @Getter
 @Setter
 @Builder

@@ -16,6 +16,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Representa la vista de seguimiento de una orden: estatus, total, envíos e historial de estatus.
+ */
 @Getter
 @Setter
 @Builder

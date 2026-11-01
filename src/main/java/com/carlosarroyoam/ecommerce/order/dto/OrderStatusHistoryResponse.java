@@ -11,6 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un registro del historial de estatus de una orden. */
 @Getter
 @Setter
 @Builder

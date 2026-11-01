@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
+/** Agrupa los filtros opcionales para consultar el listado de productos. */
 @Getter
 @Setter
 @Builder

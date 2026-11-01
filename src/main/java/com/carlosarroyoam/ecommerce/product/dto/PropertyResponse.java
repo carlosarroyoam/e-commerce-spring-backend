@@ -11,6 +11,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa una propiedad descriptiva de producto (por ejemplo, material). */
 @Getter
 @Setter
 @Builder

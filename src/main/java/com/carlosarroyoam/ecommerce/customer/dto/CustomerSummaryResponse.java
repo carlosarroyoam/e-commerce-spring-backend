@@ -13,6 +13,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa la versión resumida de un cliente, usada al anidarlo en otras respuestas. */
 @Getter
 @Setter
 @Builder

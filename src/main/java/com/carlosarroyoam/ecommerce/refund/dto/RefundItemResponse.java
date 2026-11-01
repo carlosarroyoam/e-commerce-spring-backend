@@ -14,6 +14,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa una partida reembolsada de una orden. */
 @Getter
 @Setter
 @Builder

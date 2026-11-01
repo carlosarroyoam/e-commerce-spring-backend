@@ -14,6 +14,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un reembolso de una orden en las respuestas de la API. */
 @Getter
 @Setter
 @Builder

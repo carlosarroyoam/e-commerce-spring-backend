@@ -13,6 +13,7 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/** Representa un movimiento de inventario de una variante en las respuestas de la API. */
 @Getter
 @Setter
 @Builder

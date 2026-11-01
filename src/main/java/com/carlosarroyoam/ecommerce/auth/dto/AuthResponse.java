@@ -6,6 +6,10 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Representa la respuesta de autenticación: datos básicos del principal, sus roles y los tokens
+ * emitidos (el refresh token se omite del JSON y viaja en cookie).
+ */
 @Getter
 @Setter
 @Builder

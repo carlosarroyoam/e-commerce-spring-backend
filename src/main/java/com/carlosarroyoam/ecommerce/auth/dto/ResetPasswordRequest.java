@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
+/** Representa la petición para restablecer la contraseña con un token de recuperación. */
 @Getter
 @Setter
 @Builder

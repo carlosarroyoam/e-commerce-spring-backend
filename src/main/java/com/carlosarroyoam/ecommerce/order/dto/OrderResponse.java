@@ -23,6 +23,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+/**
+ * Representa el detalle de una orden: totales, partidas, pagos, envíos, historial de estatus,
+ * cliente y dirección de envío.
+ */
 @Getter
 @Setter
 @Builder
