@@ -12,7 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
-import com.carlosarroyoam.ecommerce.core.constant.CommonConstants;
 import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.BusinessException;
 import com.carlosarroyoam.ecommerce.core.exception.ExceptionLogger;
@@ -78,9 +77,7 @@ class UserControllerTest {
         MockMvcBuilders.standaloneSetup(userController)
             .setControllerAdvice(
                 new GlobalExceptionHandler(
-                    new ProblemDetailFactory(),
-                    new ExceptionLogger(),
-                    TestMessageSources.create()))
+                    new ProblemDetailFactory(), new ExceptionLogger(), TestMessageSources.create()))
             .setCustomArgumentResolvers(
                 new PageableHandlerMethodArgumentResolver(), authPrincipalResolver)
             .setMessageConverters(

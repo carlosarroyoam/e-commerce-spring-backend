@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.carlosarroyoam.ecommerce.auth.entity.RefreshToken;
 import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
-import com.carlosarroyoam.ecommerce.core.constant.CommonConstants;
 import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.UnauthorizedException;
 import com.carlosarroyoam.ecommerce.support.AbstractIntegrationTest;

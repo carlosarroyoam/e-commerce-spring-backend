@@ -9,7 +9,6 @@ import com.carlosarroyoam.ecommerce.core.property.CorsProps;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
 import java.time.Duration;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -121,7 +120,6 @@ public class WebSecurityConfig {
    * @return un {@link BCryptPasswordEncoder} con factor de coste 4
    */
   @Bean
-  @Qualifier("refreshTokenPasswordEncoder")
   PasswordEncoder refreshTokenPasswordEncoder() {
     return new BCryptPasswordEncoder(4);
   }
