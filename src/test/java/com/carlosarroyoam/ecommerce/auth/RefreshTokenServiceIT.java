@@ -8,6 +8,7 @@ import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
 import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.UnauthorizedException;
 import com.carlosarroyoam.ecommerce.support.AbstractIntegrationTest;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -31,6 +32,7 @@ class RefreshTokenServiceIT extends AbstractIntegrationTest {
 
   @Autowired private RefreshTokenService refreshTokenService;
   @Autowired private RefreshTokenRepository refreshTokenRepository;
+  @Autowired private Clock clock;
 
   @Autowired
   @Qualifier("refreshTokenPasswordEncoder")
@@ -45,7 +47,8 @@ class RefreshTokenServiceIT extends AbstractIntegrationTest {
   @DisplayName(
       "Given a valid refresh token, when rotate, then replaces the hash and keeps the row")
   void givenValidToken_whenRotate_thenReplacesHashAndKeepsRow() {
-    RefreshToken stored = persistToken(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+    LocalDateTime now = LocalDateTime.now(clock);
+    RefreshToken stored = persistToken(now, now.plusHours(1));
 
     RefreshToken rotated = refreshTokenService.rotate(stored.getId(), RAW_TOKEN, NEW_RAW_TOKEN);
 
@@ -58,7 +61,8 @@ class RefreshTokenServiceIT extends AbstractIntegrationTest {
   @DisplayName(
       "Given a token with a wrong raw value, when rotate, then throws 401 and deletes the row")
   void givenHashMismatch_whenRotate_thenThrowsUnauthorizedAndDeletesRow() {
-    RefreshToken stored = persistToken(LocalDateTime.now(), LocalDateTime.now().plusHours(1));
+    LocalDateTime now = LocalDateTime.now(clock);
+    RefreshToken stored = persistToken(now, now.plusHours(1));
     UUID id = stored.getId();
 
     assertThatThrownBy(() -> refreshTokenService.rotate(id, "wrong-raw-token", NEW_RAW_TOKEN))
@@ -72,8 +76,8 @@ class RefreshTokenServiceIT extends AbstractIntegrationTest {
   @DisplayName(
       "Given a session past its max lifetime, when rotate, then throws 401 and deletes the row")
   void givenSessionExpired_whenRotate_thenThrowsUnauthorizedAndDeletesRow() {
-    RefreshToken stored =
-        persistToken(LocalDateTime.now().minusDays(1), LocalDateTime.now().plusHours(1));
+    LocalDateTime now = LocalDateTime.now(clock);
+    RefreshToken stored = persistToken(now.minusDays(1), now.plusHours(1));
     UUID id = stored.getId();
 
     assertThatThrownBy(() -> refreshTokenService.rotate(id, RAW_TOKEN, NEW_RAW_TOKEN))
@@ -87,7 +91,8 @@ class RefreshTokenServiceIT extends AbstractIntegrationTest {
   @DisplayName(
       "Given a token expired by inactivity, when rotate, then throws 401 and keeps the row")
   void givenTokenExpired_whenRotate_thenThrowsUnauthorizedAndKeepsRow() {
-    RefreshToken stored = persistToken(LocalDateTime.now(), LocalDateTime.now().minusMinutes(1));
+    LocalDateTime now = LocalDateTime.now(clock);
+    RefreshToken stored = persistToken(now, now.minusMinutes(1));
     UUID id = stored.getId();
 
     assertThatThrownBy(() -> refreshTokenService.rotate(id, RAW_TOKEN, NEW_RAW_TOKEN))

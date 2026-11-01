@@ -161,6 +161,8 @@ Never put MDC keys from services/controllers.
 
 ### Configuration properties
 
+Time: the current time always comes from the injected `java.time.Clock` bean (`core/config/ClockConfig`, system default zone). Use `LocalDateTime.now(clock)` / `Instant.now(clock)`, never a bare `now()`; unit tests build the service by hand with `Clock.fixed(...)` (`@InjectMocks` can't inject a real `Clock`). `RequestLoggingFilter` keeps `System.currentTimeMillis()` since it only measures duration.
+
 `@ConfigurationProperties` classes live in `core/property`: `RsaKeyProps` (`app.rsa`), `JwtProps` (`app.jwt`), `CookieProps` (`app.cookie`), `CorsProps` (`app.cors`). Other notable settings: `spring.web.resources.add-mappings=false`, fixed locale `en_US`.
 
 ### Database

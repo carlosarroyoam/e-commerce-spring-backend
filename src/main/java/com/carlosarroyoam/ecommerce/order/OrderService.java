@@ -16,6 +16,7 @@ import com.carlosarroyoam.ecommerce.order.entity.Order;
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatus;
 import com.carlosarroyoam.ecommerce.order.entity.OrderStatusHistory;
 import com.carlosarroyoam.ecommerce.order.entity.Order_;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,9 +28,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class OrderService {
   private final OrderRepository orderRepository;
+  private final Clock clock;
 
-  public OrderService(final OrderRepository orderRepository) {
+  public OrderService(final OrderRepository orderRepository, final Clock clock) {
     this.orderRepository = orderRepository;
+    this.clock = clock;
   }
 
   /**
@@ -106,15 +109,16 @@ public class OrderService {
       throw new BusinessException(MessageKeys.ORDER_CANNOT_BE_CANCELED_EXCEPTION);
     }
 
+    LocalDateTime now = LocalDateTime.now(clock);
     orderById.setStatus(OrderStatus.CANCELLED);
-    orderById.setUpdatedAt(LocalDateTime.now());
+    orderById.setUpdatedAt(now);
     orderById
         .getStatusHistory()
         .add(
             OrderStatusHistory.builder()
                 .order(orderById)
                 .notes("Order cancelled")
-                .changedAt(LocalDateTime.now())
+                .changedAt(now)
                 .build());
     orderRepository.save(orderById);
   }

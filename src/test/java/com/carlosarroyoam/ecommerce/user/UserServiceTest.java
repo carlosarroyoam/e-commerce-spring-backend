@@ -17,16 +17,19 @@ import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
 import com.carlosarroyoam.ecommerce.user.entity.Role;
 import com.carlosarroyoam.ecommerce.user.entity.User;
 import com.carlosarroyoam.ecommerce.user.entity.UserStatus;
+import java.time.Clock;
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.ArgumentMatchers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.PageImpl;
@@ -36,9 +39,18 @@ import org.springframework.data.jpa.domain.Specification;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+  private static final Clock FIXED_CLOCK =
+      Clock.fixed(Instant.parse("2025-01-15T10:30:00Z"), ZoneOffset.UTC);
+  private static final LocalDateTime NOW = LocalDateTime.now(FIXED_CLOCK);
+
   @Mock private UserRepository userRepository;
 
-  @InjectMocks private UserService userService;
+  private UserService userService;
+
+  @BeforeEach
+  void setUp() {
+    userService = new UserService(userRepository, FIXED_CLOCK);
+  }
 
   private static User activeUser(Long id) {
     return User.builder()
@@ -50,8 +62,8 @@ class UserServiceTest {
         .roles(
             Set.of(
                 Role.builder().id((byte) 1).name("ADMIN").description("Admin user role").build()))
-        .createdAt(LocalDateTime.now())
-        .updatedAt(LocalDateTime.now())
+        .createdAt(NOW.minusDays(1))
+        .updatedAt(NOW.minusDays(1))
         .build();
   }
 
@@ -140,8 +152,8 @@ class UserServiceTest {
     ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
     verify(userRepository).save(captor.capture());
     assertThat(captor.getValue().getStatus()).isEqualTo(UserStatus.DELETED);
-    assertThat(captor.getValue().getDeletedAt()).isNotNull();
-    assertThat(captor.getValue().getUpdatedAt()).isNotNull();
+    assertThat(captor.getValue().getDeletedAt()).isEqualTo(NOW);
+    assertThat(captor.getValue().getUpdatedAt()).isEqualTo(NOW);
   }
 
   @Test

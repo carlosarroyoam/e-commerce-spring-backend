@@ -5,6 +5,7 @@ import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
 import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.UnauthorizedException;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
@@ -22,14 +23,17 @@ public class RefreshTokenService {
   private final PasswordEncoder passwordEncoder;
   private final RefreshTokenRepository refreshTokenRepository;
   private final JwtProps jwtProps;
+  private final Clock clock;
 
   public RefreshTokenService(
       @Qualifier("refreshTokenPasswordEncoder") PasswordEncoder passwordEncoder,
       JwtProps jwtProps,
-      RefreshTokenRepository refreshTokenRepository) {
+      RefreshTokenRepository refreshTokenRepository,
+      Clock clock) {
     this.passwordEncoder = passwordEncoder;
     this.jwtProps = jwtProps;
     this.refreshTokenRepository = refreshTokenRepository;
+    this.clock = clock;
   }
 
   /**
@@ -55,7 +59,7 @@ public class RefreshTokenService {
    */
   @Transactional
   public RefreshToken save(AuthPrincipal principal, String deviceId, String newRefreshToken) {
-    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime now = LocalDateTime.now(clock);
 
     RefreshToken refreshTokenById =
         refreshTokenRepository
@@ -91,7 +95,7 @@ public class RefreshTokenService {
   @Transactional(noRollbackFor = UnauthorizedException.class)
   public RefreshToken rotate(
       UUID refreshTokenId, String currentRefreshToken, String newRefreshToken) {
-    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime now = LocalDateTime.now(clock);
     RefreshToken refreshTokenById = findRefreshTokenById(refreshTokenId);
 
     validateRefreshToken(currentRefreshToken, refreshTokenById);
@@ -129,7 +133,7 @@ public class RefreshTokenService {
    *     los motivos anteriores
    */
   private void validateRefreshToken(String currentRefreshToken, RefreshToken refreshToken) {
-    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime now = LocalDateTime.now(clock);
     boolean sessionExpired =
         now.isAfter(
             refreshToken

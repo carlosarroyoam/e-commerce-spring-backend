@@ -14,6 +14,7 @@ import com.carlosarroyoam.ecommerce.user.entity.User;
 import com.carlosarroyoam.ecommerce.user.entity.UserStatus;
 import com.carlosarroyoam.ecommerce.user.entity.User_;
 import jakarta.persistence.criteria.JoinType;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,9 +26,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
   private final UserRepository userRepository;
+  private final Clock clock;
 
-  public UserService(UserRepository userRepository) {
+  public UserService(UserRepository userRepository, Clock clock) {
     this.userRepository = userRepository;
+    this.clock = clock;
   }
 
   /**
@@ -93,9 +96,10 @@ public class UserService {
       throw new BusinessException(MessageKeys.USER_CANNOT_BE_DELETED_EXCEPTION);
     }
 
+    LocalDateTime now = LocalDateTime.now(clock);
     userById.setStatus(UserStatus.DELETED);
-    userById.setDeletedAt(LocalDateTime.now());
-    userById.setUpdatedAt(LocalDateTime.now());
+    userById.setDeletedAt(now);
+    userById.setUpdatedAt(now);
     userRepository.save(userById);
   }
 

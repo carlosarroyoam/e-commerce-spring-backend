@@ -2,6 +2,7 @@ package com.carlosarroyoam.ecommerce.auth;
 
 import com.carlosarroyoam.ecommerce.auth.principal.AuthPrincipal;
 import com.carlosarroyoam.ecommerce.core.property.JwtProps;
+import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
@@ -15,10 +16,12 @@ import org.springframework.stereotype.Service;
 public class TokenService {
   private final long accessTokenTtlMs;
   private final JwtEncoder jwtEncoder;
+  private final Clock clock;
 
-  public TokenService(JwtProps jwtProps, JwtEncoder jwtEncoder) {
+  public TokenService(JwtProps jwtProps, JwtEncoder jwtEncoder, Clock clock) {
     this.accessTokenTtlMs = jwtProps.getAccessTokenTtlMs();
     this.jwtEncoder = jwtEncoder;
+    this.clock = clock;
   }
 
   /**
@@ -29,7 +32,7 @@ public class TokenService {
    * @return el access token JWT codificado
    */
   public String generateAccessToken(AuthPrincipal principal) {
-    Instant now = Instant.now();
+    Instant now = Instant.now(clock);
     JwtClaimsSet claims =
         JwtClaimsSet.builder()
             .issuer("self")

@@ -8,6 +8,7 @@ import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
 import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import com.carlosarroyoam.ecommerce.core.exception.UnauthorizedException;
 import com.carlosarroyoam.ecommerce.support.AbstractIntegrationTest;
+import java.time.Clock;
 import java.time.LocalDateTime;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
@@ -32,6 +33,7 @@ class AuthServiceIT extends AbstractIntegrationTest {
 
   @Autowired private AuthService authService;
   @Autowired private RefreshTokenRepository refreshTokenRepository;
+  @Autowired private Clock clock;
 
   @Autowired
   @Qualifier("refreshTokenPasswordEncoder")
@@ -70,7 +72,7 @@ class AuthServiceIT extends AbstractIntegrationTest {
   }
 
   private RefreshToken persistToken() {
-    LocalDateTime now = LocalDateTime.now();
+    LocalDateTime now = LocalDateTime.now(clock);
     return refreshTokenRepository.save(
         RefreshToken.builder()
             .tokenHash(passwordEncoder.encode(RAW_TOKEN))

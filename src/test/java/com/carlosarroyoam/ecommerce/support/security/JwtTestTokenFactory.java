@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce.support.security;
 
 import com.carlosarroyoam.ecommerce.auth.principal.PrincipalType;
+import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
@@ -25,9 +26,11 @@ public class JwtTestTokenFactory {
   private static final Duration DEFAULT_TTL = Duration.ofMinutes(5);
 
   private final JwtEncoder jwtEncoder;
+  private final Clock clock;
 
-  public JwtTestTokenFactory(JwtEncoder jwtEncoder) {
+  public JwtTestTokenFactory(JwtEncoder jwtEncoder, Clock clock) {
     this.jwtEncoder = jwtEncoder;
+    this.clock = clock;
   }
 
   /**
@@ -70,7 +73,7 @@ public class JwtTestTokenFactory {
 
   private String token(
       long id, String email, String principalType, Duration ttl, List<String> roles) {
-    Instant now = Instant.now();
+    Instant now = Instant.now(clock);
     JwtClaimsSet claims =
         JwtClaimsSet.builder()
             .issuer("self")
