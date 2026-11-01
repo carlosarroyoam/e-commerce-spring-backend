@@ -1,6 +1,7 @@
 package com.carlosarroyoam.ecommerce;
 
 import com.carlosarroyoam.ecommerce.support.AbstractIntegrationTest;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -12,5 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class ECommerceApplicationTest extends AbstractIntegrationTest {
   @Test
-  void contextLoads() {}
+  @DisplayName("Given the application context, when started, then context loads")
+  void givenApplicationContext_whenStarted_thenContextLoads() {}
 }

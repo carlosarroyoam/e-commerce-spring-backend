@@ -11,6 +11,7 @@ import com.carlosarroyoam.ecommerce.refund.dto.RefundResponse.RefundResponseMapp
 import com.carlosarroyoam.ecommerce.refund.dto.RefundSpecs;
 import com.carlosarroyoam.ecommerce.refund.entity.Refund;
 import com.carlosarroyoam.ecommerce.refund.entity.Refund_;
+import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -61,16 +62,15 @@ public class RefundService {
   }
 
   /**
-   * Busca el reembolso asociado a una orden.
+   * Lista los reembolsos asociados a una orden.
    *
    * @param orderId el id de la orden
-   * @return el {@link RefundResponse} correspondiente
-   * @throws ResourceNotFoundException con 404 si la orden no tiene un reembolso asociado
+   * @return la lista de {@link RefundResponse} de la orden, vacía si no tiene reembolsos
    */
   @Transactional(readOnly = true)
-  public RefundResponse findByOrderId(Long orderId) {
-    Refund refundByOrderId = findRefundByOrderId(orderId);
-    return RefundResponseMapper.INSTANCE.toDto(refundByOrderId);
+  public List<RefundResponse> findAllByOrderId(Long orderId) {
+    List<Refund> refundsByOrderId = refundRepository.findAllByOrderId(orderId);
+    return RefundResponseMapper.INSTANCE.toDtos(refundsByOrderId);
   }
 
   /**
@@ -83,19 +83,6 @@ public class RefundService {
   private Refund findRefundById(Long refundId) {
     return refundRepository
         .findById(refundId)
-        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.REFUND_NOT_FOUND_EXCEPTION));
-  }
-
-  /**
-   * Busca el reembolso asociado a una orden o lanza una excepción si no existe.
-   *
-   * @param orderId el id de la orden
-   * @return el {@link Refund} encontrado
-   * @throws ResourceNotFoundException con 404 si la orden no tiene un reembolso asociado
-   */
-  private Refund findRefundByOrderId(Long orderId) {
-    return refundRepository
-        .findByOrderId(orderId)
         .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.REFUND_NOT_FOUND_EXCEPTION));
   }
 }

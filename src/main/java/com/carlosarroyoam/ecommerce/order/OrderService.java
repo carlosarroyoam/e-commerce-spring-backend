@@ -120,7 +120,6 @@ public class OrderService {
                 .notes("Order cancelled")
                 .changedAt(now)
                 .build());
-    orderRepository.save(orderById);
   }
 
   /**

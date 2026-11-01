@@ -53,15 +53,15 @@ public class ShipmentController {
   }
 
   /**
-   * Obtiene el envío asociado a una orden.
+   * Lista los envíos asociados a una orden.
    *
    * @param orderId el id de la orden
-   * @return el envío encontrado y el estado 200 OK
+   * @return los envíos de la orden (lista vacía si no tiene) y el estado 200 OK
    */
   @GetMapping(value = "/order/{orderId}", produces = "application/json")
-  public ResponseEntity<ShipmentResponse> findByOrderId(@PathVariable Long orderId) {
-    ShipmentResponse shipmentByOrderId = shipmentService.findByOrderId(orderId);
-    return ResponseEntity.ok(shipmentByOrderId);
+  public ResponseEntity<List<ShipmentResponse>> findAllByOrderId(@PathVariable Long orderId) {
+    List<ShipmentResponse> shipmentsByOrderId = shipmentService.findAllByOrderId(orderId);
+    return ResponseEntity.ok(shipmentsByOrderId);
   }
 
   /**

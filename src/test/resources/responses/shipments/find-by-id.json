@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "tracking_number": "FX123456789012",
+  "carrier": {
+    "id": 1,
+    "name": "FedEx",
+    "deleted_at": null
+  },
+  "order_id": 1,
+  "shipped_at": "2025-01-16T09:00:00",
+  "delivered_at": "2025-01-18T14:20:00"
+}

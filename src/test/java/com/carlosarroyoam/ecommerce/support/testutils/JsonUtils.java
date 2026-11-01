@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.support.testutils;
 
+import com.carlosarroyoam.ecommerce.core.constant.CommonConstants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UncheckedIOException;
@@ -8,7 +9,7 @@ import java.nio.charset.StandardCharsets;
 /** Lee fixtures JSON de respuesta esperada desde {@code src/test/resources/responses}. */
 public final class JsonUtils {
   private JsonUtils() {
-    throw new IllegalAccessError("Illegal access to utility class");
+    throw new IllegalAccessError(CommonConstants.ILLEGAL_ACCESS_ERROR);
   }
 
   /**

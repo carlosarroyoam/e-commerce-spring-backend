@@ -18,8 +18,8 @@ import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
  *
  * <p>Anotada con {@link TestComponent} (no {@code @Component}) para que nunca sea recogida por el
  * escaneo de componentes de la aplicacion real, ya que vive bajo el mismo paquete base que {@code
- * ECommerceApplication}; solo se registra cuando un test la importa explicitamente (ver {@link
- * SecurityTestConfig} y {@code AbstractIntegrationTest}).
+ * ECommerceApplication}; solo se registra cuando un test la importa explicitamente (ver {@code
+ * AbstractIntegrationTest}).
  */
 @TestComponent
 public class JwtTestTokenFactory {

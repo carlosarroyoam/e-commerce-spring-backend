@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.support.testutils;
 
+import com.carlosarroyoam.ecommerce.core.constant.CommonConstants;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -11,7 +12,7 @@ import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
  */
 public final class TestObjectMappers {
   private TestObjectMappers() {
-    throw new IllegalAccessError("Illegal access to utility class");
+    throw new IllegalAccessError(CommonConstants.ILLEGAL_ACCESS_ERROR);
   }
 
   /**

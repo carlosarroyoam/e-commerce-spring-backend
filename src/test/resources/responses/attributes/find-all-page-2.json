@@ -1,0 +1,12 @@
+{
+  "items": [
+    {"id": 3, "title": "RAM", "deleted_at": null},
+    {"id": 4, "title": "Connectivity", "deleted_at": null}
+  ],
+  "pagination": {
+    "page": 1,
+    "size": 2,
+    "total_items": 5,
+    "total_pages": 3
+  }
+}

@@ -1,10 +1,11 @@
 package com.carlosarroyoam.ecommerce.user;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -26,11 +27,13 @@ import com.carlosarroyoam.ecommerce.support.testutils.TestObjectMappers;
 import com.carlosarroyoam.ecommerce.user.dto.RoleResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserResponse;
 import com.carlosarroyoam.ecommerce.user.dto.UserSpecs;
+import com.carlosarroyoam.ecommerce.user.entity.UserStatus;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.web.PageableHandlerMethodArgumentResolver;
@@ -38,143 +41,170 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 
-/** Slice unitario de {@link UserController} via {@code MockMvc.standaloneSetup}. */
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
-  private static final long FIXED_STAFF_PRINCIPAL_ID = 1L;
-  private MockMvc mockMvc;
+  private static final long CURRENT_USER_ID = 1L;
 
   @Mock private UserService userService;
+  @InjectMocks private UserController userController;
 
-  private static UserResponse sampleUser(Long id) {
-    return UserResponse.builder()
-        .id(id)
-        .firstName("Carlos Alberto")
-        .lastName("Arroyo Martinez")
-        .email("carlos.arroyo@e-commerce.com")
-        .status(com.carlosarroyoam.ecommerce.user.entity.UserStatus.ACTIVE)
-        .roles(
-            List.of(
-                RoleResponse.builder()
-                    .id((byte) 1)
-                    .name("ADMIN")
-                    .description("Admin user role")
-                    .build()))
-        .build();
-  }
+  private MockMvc mockMvc;
+  private UserResponse user;
 
   @BeforeEach
-  void setUp() {
-    UserController userController = new UserController(userService);
-
-    HandlerMethodArgumentResolver authPrincipalResolver =
-        new FixedAuthPrincipalArgumentResolver(
-            FIXED_STAFF_PRINCIPAL_ID, PrincipalType.STAFF, "ADMIN");
+  void setup() {
+    user =
+        UserResponse.builder()
+            .id(2L)
+            .firstName("Cathy")
+            .lastName("Guido")
+            .email("cathy.guido@e-commerce.com")
+            .status(UserStatus.ACTIVE)
+            .roles(
+                List.of(
+                    RoleResponse.builder()
+                        .id((byte) 1)
+                        .name("ADMIN")
+                        .description("Admin user role")
+                        .build()))
+            .build();
 
     mockMvc =
         MockMvcBuilders.standaloneSetup(userController)
             .setControllerAdvice(
                 new GlobalExceptionHandler(
-                    new ProblemDetailFactory(), new ExceptionLogger(), TestMessageSources.create()))
-            .setCustomArgumentResolvers(
-                new PageableHandlerMethodArgumentResolver(), authPrincipalResolver)
+                    new ProblemDetailFactory(),
+                    new ExceptionLogger(),
+                    TestMessageSources.messages()))
             .setMessageConverters(
                 new MappingJackson2HttpMessageConverter(TestObjectMappers.snakeCase()))
+            .setCustomArgumentResolvers(
+                new PageableHandlerMethodArgumentResolver(),
+                new FixedAuthPrincipalArgumentResolver(
+                    CURRENT_USER_ID, PrincipalType.STAFF, "ADMIN"))
             .build();
   }
 
   @Test
-  @DisplayName("Given no filters, when find all, then returns 200 with paged users")
-  void givenNoFilters_whenFindAll_thenReturns200() throws Exception {
+  @DisplayName("GET /users - Given users exist, when find all, then returns paged users")
+  void givenUsersExist_whenFindAllUsers_thenReturnsPagedUsers() throws Exception {
     PagedResponse<UserResponse> page =
         PagedResponse.<UserResponse>builder()
-            .items(List.of(sampleUser(1L), sampleUser(2L)))
+            .items(List.of(user))
             .pagination(
-                PaginationResponse.builder().page(0).size(10).totalItems(2).totalPages(1).build())
+                PaginationResponse.builder().page(0).size(10).totalItems(1).totalPages(1).build())
             .build();
-    given(userService.findAll(any(), any())).willReturn(page);
+
+    when(userService.findAll(any(UserSpecs.class), any())).thenReturn(page);
 
     mockMvc
-        .perform(get("/users"))
+        .perform(
+            get("/users")
+                .queryParam("page", "0")
+                .queryParam("size", "10")
+                .accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.items.length()").value(2))
-        .andExpect(jsonPath("$.items[0].first_name").value("Carlos Alberto"))
-        .andExpect(jsonPath("$.pagination.total_items").value(2));
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.items.length()").value(1))
+        .andExpect(jsonPath("$.items[0].first_name").value("Cathy"))
+        .andExpect(jsonPath("$.pagination.page").value(0))
+        .andExpect(jsonPath("$.pagination.size").value(10))
+        .andExpect(jsonPath("$.pagination.total_items").value(1))
+        .andExpect(jsonPath("$.pagination.total_pages").value(1));
   }
 
   @Test
-  @DisplayName("Given a first name filter, when find all, then passes it to the service")
-  void givenFirstNameFilter_whenFindAll_thenPassesFilterToService() throws Exception {
-    given(userService.findAll(any(), any()))
-        .willReturn(
-            PagedResponse.<UserResponse>builder()
-                .items(List.of())
-                .pagination(
-                    PaginationResponse.builder()
-                        .page(0)
-                        .size(10)
-                        .totalItems(0)
-                        .totalPages(0)
-                        .build())
-                .build());
+  @DisplayName("GET /users - Given first name filter, when find all, then passes filter to service")
+  void givenFirstNameFilter_whenFindAllUsers_thenPassesFilterToService() throws Exception {
+    PagedResponse<UserResponse> page =
+        PagedResponse.<UserResponse>builder()
+            .items(List.of())
+            .pagination(
+                PaginationResponse.builder().page(0).size(10).totalItems(0).totalPages(0).build())
+            .build();
 
-    mockMvc.perform(get("/users").param("firstName", "Carlos")).andExpect(status().isOk());
+    when(userService.findAll(any(UserSpecs.class), any())).thenReturn(page);
+
+    mockMvc.perform(get("/users").queryParam("firstName", "Cathy")).andExpect(status().isOk());
 
     verify(userService)
-        .findAll(argThat((UserSpecs specs) -> "Carlos".equals(specs.getFirstName())), any());
+        .findAll(argThat((UserSpecs specs) -> "Cathy".equals(specs.getFirstName())), any());
   }
 
   @Test
-  @DisplayName("Given an existing user id, when find by id, then returns 200 with the user")
-  void givenExistingUserId_whenFindById_thenReturns200WithUser() throws Exception {
-    given(userService.findById(1L)).willReturn(sampleUser(1L));
+  @DisplayName("GET /users/{id} - Given user exists, when find by id, then returns user")
+  void givenUserExists_whenFindUserById_thenReturnsUser() throws Exception {
+    when(userService.findById(anyLong())).thenReturn(user);
 
     mockMvc
-        .perform(get("/users/1"))
+        .perform(get("/users/{userId}", 2L).accept(MediaType.APPLICATION_JSON))
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.email").value("carlos.arroyo@e-commerce.com"))
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.id").value(2))
+        .andExpect(jsonPath("$.email").value("cathy.guido@e-commerce.com"))
         .andExpect(jsonPath("$.roles[0].name").value("ADMIN"));
   }
 
   @Test
-  @DisplayName("Given a non existing user id, when find by id, then returns 404")
-  void givenNonExistingUserId_whenFindById_thenReturns404() throws Exception {
-    given(userService.findById(999L))
-        .willThrow(new ResourceNotFoundException(MessageKeys.USER_NOT_FOUND_EXCEPTION));
+  @DisplayName(
+      "GET /users/{id} - Given user does not exist, when find by id, then returns not found")
+  void givenUserDoesNotExist_whenFindUserById_thenReturnsNotFound() throws Exception {
+    when(userService.findById(anyLong()))
+        .thenThrow(new ResourceNotFoundException(MessageKeys.USER_NOT_FOUND_EXCEPTION));
 
     mockMvc
-        .perform(get("/users/999"))
+        .perform(get("/users/{userId}", 999L))
         .andExpect(status().isNotFound())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
         .andExpect(jsonPath("$.status").value(404))
         .andExpect(jsonPath("$.title").value("Not Found"))
-        .andExpect(jsonPath("$.instance").value("/users/999"))
-        .andExpect(jsonPath("$.detail").value("User not found"));
+        .andExpect(jsonPath("$.detail").value("User not found"))
+        .andExpect(jsonPath("$.instance").value("/users/999"));
   }
 
   @Test
-  @DisplayName("Given a user id, when delete by id, then returns 204")
-  void givenUserId_whenDeleteById_thenReturns204AndDelegatesWithCurrentUserId() throws Exception {
-    mockMvc.perform(delete("/users/5")).andExpect(status().isNoContent());
+  @DisplayName("DELETE /users/{id} - Given user exists, when delete, then returns no content")
+  void givenUserExists_whenDeleteUser_thenReturnsNoContent() throws Exception {
+    mockMvc.perform(delete("/users/{userId}", 2L)).andExpect(status().isNoContent());
 
-    verify(userService).deleteById(5L, FIXED_STAFF_PRINCIPAL_ID);
+    verify(userService).deleteById(2L, CURRENT_USER_ID);
   }
 
   @Test
-  @DisplayName("Given the service throws unprocessable entity, when delete by id, then returns 422")
-  void
-      givenServiceThrowsUnprocessableEntity_whenDeleteById_thenReturns422ViaGlobalExceptionHandler()
-          throws Exception {
-    doThrow(new BusinessException(MessageKeys.USER_CANNOT_DELETE_ITSELF_EXCEPTION))
+  @DisplayName(
+      "DELETE /users/{id} - Given user does not exist, when delete, then returns not found")
+  void givenUserDoesNotExist_whenDeleteUser_thenReturnsNotFound() throws Exception {
+    doThrow(new ResourceNotFoundException(MessageKeys.USER_NOT_FOUND_EXCEPTION))
         .when(userService)
-        .deleteById(1L, FIXED_STAFF_PRINCIPAL_ID);
+        .deleteById(999L, CURRENT_USER_ID);
 
     mockMvc
-        .perform(delete("/users/1"))
+        .perform(delete("/users/{userId}", 999L))
+        .andExpect(status().isNotFound())
+        .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.status").value(404))
+        .andExpect(jsonPath("$.title").value("Not Found"))
+        .andExpect(jsonPath("$.detail").value("User not found"))
+        .andExpect(jsonPath("$.instance").value("/users/999"));
+  }
+
+  @Test
+  @DisplayName(
+      "DELETE /users/{id} - Given service rejects deletion, when delete, then returns unprocessable entity")
+  void givenServiceRejectsDeletion_whenDeleteUser_thenReturnsUnprocessableEntity()
+      throws Exception {
+    doThrow(new BusinessException(MessageKeys.USER_CANNOT_DELETE_ITSELF_EXCEPTION))
+        .when(userService)
+        .deleteById(CURRENT_USER_ID, CURRENT_USER_ID);
+
+    mockMvc
+        .perform(delete("/users/{userId}", CURRENT_USER_ID))
         .andExpect(status().isUnprocessableEntity())
-        .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-        .andExpect(jsonPath("$.detail").value("User cannot delete itself"));
+        .andExpect(content().contentType(MediaType.APPLICATION_PROBLEM_JSON))
+        .andExpect(jsonPath("$.status").value(422))
+        .andExpect(jsonPath("$.title").value("Unprocessable Entity"))
+        .andExpect(jsonPath("$.detail").value("User cannot delete itself"))
+        .andExpect(jsonPath("$.instance").value("/users/1"));
   }
 }

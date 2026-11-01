@@ -1,0 +1,13 @@
+{
+  "items": [
+    {"id": 4, "title": "Tablets", "slug": "tablets", "deleted_at": null},
+    {"id": 5, "title": "Smartwatches", "slug": "smartwatches", "deleted_at": null},
+    {"id": 6, "title": "Laptops", "slug": "laptops", "deleted_at": null}
+  ],
+  "pagination": {
+    "page": 1,
+    "size": 3,
+    "total_items": 8,
+    "total_pages": 3
+  }
+}

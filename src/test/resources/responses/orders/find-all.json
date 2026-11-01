@@ -1,0 +1,221 @@
+{
+  "items": [
+    {
+      "id": 1,
+      "order_number": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "subtotal": 8999.0,
+      "tax_total": 800.0,
+      "shipping_total": 150.0,
+      "total": 9949.0,
+      "notes": "Please handle with care",
+      "status": "CONFIRMED",
+      "items": [
+        {
+          "id": 1,
+          "quantity": 1,
+          "unit_price": 8999.0,
+          "total": 8999.0,
+          "product": {
+            "id": 1,
+            "title": "Moto G100",
+            "slug": "moto-g100",
+            "description": "Moto G100",
+            "is_featured": false,
+            "is_active": true,
+            "deleted_at": null
+          },
+          "variant": {
+            "id": 1,
+            "sku": "motog100nimbusblue",
+            "price": 8999.0,
+            "compared_at_price": 9999.0
+          },
+          "order_id": 1
+        }
+      ],
+      "payments": [
+        {
+          "id": 1,
+          "amount": 8999.0,
+          "reference": "123456789012",
+          "description": "Order payed",
+          "method": "DEBIT_CARD",
+          "status": "COMPLETED",
+          "order_id": 1,
+          "created_at": "2025-01-15T10:30:00",
+          "updated_at": "2025-01-15T10:30:00"
+        }
+      ],
+      "shipments": [
+        {
+          "id": 1,
+          "tracking_number": "FX123456789012",
+          "carrier": {
+            "id": 1,
+            "name": "FedEx",
+            "deleted_at": null
+          },
+          "order_id": 1,
+          "shipped_at": "2025-01-16T09:00:00",
+          "delivered_at": "2025-01-18T14:20:00"
+        }
+      ],
+      "status_history": [
+        {
+          "id": 1,
+          "notes": "Order created",
+          "changed_at": "2025-01-15T10:30:00"
+        },
+        {
+          "id": 2,
+          "notes": "Payment received",
+          "changed_at": "2025-01-15T11:00:00"
+        },
+        {
+          "id": 3,
+          "notes": "Order shipped",
+          "changed_at": "2025-01-16T09:00:00"
+        },
+        {
+          "id": 4,
+          "notes": "Order delivered",
+          "changed_at": "2025-01-18T14:20:00"
+        }
+      ],
+      "customer": {
+        "id": 1,
+        "first_name": "José",
+        "last_name": "García Hernández",
+        "phone_number": "6181234567",
+        "email": "jose.garcia@example.com",
+        "status": "ACTIVE",
+        "deleted_at": null
+      },
+      "shipping_address": {
+        "id": 1,
+        "street_name": "C. Leona Vicario",
+        "street_number": "120",
+        "apartment_number": null,
+        "sublocality": "Centro",
+        "locality": "Acámbaro",
+        "state": "Guanajuato",
+        "postal_code": "38923",
+        "country": "MX",
+        "phone_number": "4431232123",
+        "is_default": true,
+        "customer_id": 1
+      },
+      "created_at": "2025-01-15T10:30:00",
+      "updated_at": "2025-01-18T14:20:00"
+    },
+    {
+      "id": 2,
+      "order_number": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "subtotal": 27999.0,
+      "tax_total": 2500.0,
+      "shipping_total": 200.0,
+      "total": 30699.0,
+      "notes": null,
+      "status": "SHIPPED",
+      "items": [
+        {
+          "id": 2,
+          "quantity": 1,
+          "unit_price": 27999.0,
+          "total": 27999.0,
+          "product": {
+            "id": 3,
+            "title": "iPhone 15 Pro",
+            "slug": "iphone-15-pro",
+            "description": "iPhone 15 Pro Max 256GB",
+            "is_featured": true,
+            "is_active": true,
+            "deleted_at": null
+          },
+          "variant": {
+            "id": 5,
+            "sku": "iphone15problack",
+            "price": 27999.0,
+            "compared_at_price": 29999.0
+          },
+          "order_id": 2
+        }
+      ],
+      "payments": [
+        {
+          "id": 2,
+          "amount": 27999.0,
+          "reference": "123456789012",
+          "description": "Order payed",
+          "method": "CREDIT_CARD",
+          "status": "COMPLETED",
+          "order_id": 2,
+          "created_at": "2025-01-15T10:30:00",
+          "updated_at": "2025-01-15T10:30:00"
+        }
+      ],
+      "shipments": [
+        {
+          "id": 2,
+          "tracking_number": "FX987654321098",
+          "carrier": {
+            "id": 1,
+            "name": "FedEx",
+            "deleted_at": null
+          },
+          "order_id": 2,
+          "shipped_at": "2025-01-22T16:45:00",
+          "delivered_at": null
+        }
+      ],
+      "status_history": [
+        {
+          "id": 5,
+          "notes": "Order created",
+          "changed_at": "2025-01-20T09:15:00"
+        },
+        {
+          "id": 6,
+          "notes": "Payment received",
+          "changed_at": "2025-01-20T10:00:00"
+        },
+        {
+          "id": 7,
+          "notes": "Order shipped via FedEx",
+          "changed_at": "2025-01-22T16:45:00"
+        }
+      ],
+      "customer": {
+        "id": 1,
+        "first_name": "José",
+        "last_name": "García Hernández",
+        "phone_number": "6181234567",
+        "email": "jose.garcia@example.com",
+        "status": "ACTIVE",
+        "deleted_at": null
+      },
+      "shipping_address": {
+        "id": 1,
+        "street_name": "C. Leona Vicario",
+        "street_number": "120",
+        "apartment_number": null,
+        "sublocality": "Centro",
+        "locality": "Acámbaro",
+        "state": "Guanajuato",
+        "postal_code": "38923",
+        "country": "MX",
+        "phone_number": "4431232123",
+        "is_default": true,
+        "customer_id": 1
+      },
+      "created_at": "2025-01-20T09:15:00",
+      "updated_at": "2025-01-22T16:45:00"
+    }
+  ],
+  "pagination": {
+    "page": 0,
+    "size": 2,
+    "total_items": 5,
+    "total_pages": 3
+  }
+}

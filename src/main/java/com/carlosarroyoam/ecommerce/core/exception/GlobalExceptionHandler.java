@@ -1,10 +1,14 @@
 package com.carlosarroyoam.ecommerce.core.exception;
 
+import com.carlosarroyoam.ecommerce.core.constant.MessageKeys;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.stream.Collectors;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
+import org.springframework.core.NestedExceptionUtils;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -56,6 +61,52 @@ public class GlobalExceptionHandler {
             ex.getKey(), ex.getArgs(), ex.getKey(), LocaleContextHolder.getLocale());
     exceptionLogger.log(ex.getStatus(), detail, request, ex);
     return problemDetailFactory.build(ex.getStatus(), detail, request);
+  }
+
+  /**
+   * Traduce una {@link ResponseStatusException} al código de estado que ella misma declara. Su
+   * razón se resuelve como clave de {@code messages.properties} y, si no existe, se usa tal cual.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con el estado y mensaje de la excepción
+   */
+  @ExceptionHandler({ResponseStatusException.class})
+  public ProblemDetail handleResponseStatus(
+      ResponseStatusException ex, HttpServletRequest request) {
+    HttpStatus status = HttpStatus.valueOf(ex.getStatusCode().value());
+    String reason = ex.getReason() != null ? ex.getReason() : status.getReasonPhrase();
+    String detail = messageSource.getMessage(reason, null, reason, LocaleContextHolder.getLocale());
+    exceptionLogger.log(status, detail, request, ex);
+    return problemDetailFactory.build(status, detail, request);
+  }
+
+  /**
+   * Traduce una propiedad de ordenamiento inexistente (parámetro {@code sort}) a {@code 400 Bad
+   * Request}. Spring Data la lanza como {@link PropertyReferenceException}, que el repositorio
+   * puede envolver en una {@link InvalidDataAccessApiUsageException}; cualquier otro uso inválido
+   * de acceso a datos se trata como error interno.
+   *
+   * @param ex excepción capturada
+   * @param request petición HTTP en curso
+   * @return el {@link ProblemDetail} con estado {@code 400 Bad Request}, o {@code 500} si la causa
+   *     no es una propiedad inexistente
+   */
+  @ExceptionHandler({PropertyReferenceException.class, InvalidDataAccessApiUsageException.class})
+  public ProblemDetail handleInvalidSortProperty(Exception ex, HttpServletRequest request) {
+    if (!(ex instanceof PropertyReferenceException)
+        && !(NestedExceptionUtils.getMostSpecificCause(ex) instanceof PropertyReferenceException)) {
+      return handleException(ex, request);
+    }
+
+    String detail =
+        messageSource.getMessage(
+            MessageKeys.INVALID_SORT_PROPERTY_EXCEPTION,
+            null,
+            MessageKeys.INVALID_SORT_PROPERTY_EXCEPTION,
+            LocaleContextHolder.getLocale());
+    exceptionLogger.log(HttpStatus.BAD_REQUEST, detail, request, ex);
+    return problemDetailFactory.build(HttpStatus.BAD_REQUEST, detail, request);
   }
 
   /**

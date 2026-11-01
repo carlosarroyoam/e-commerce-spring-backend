@@ -8,26 +8,7 @@ REST API for an e-commerce platform: Spring Boot 3.5 (parent `3.5.16`) / Java 17
 
 The API is almost entirely **read-only**: every feature exposes `GET` list/detail endpoints; the only writes are `/auth/*` (login, refresh-token, logout, plus `forgot-password`/`reset-password` which are not implemented), `PATCH /orders/{orderId}/cancel` and `DELETE /users/{userId}`.
 
-## Directory layout
-
-```
-database/            schema.sql (source of truth for tables) + data.sql (seed). Also a Maven
-                     resource dir, so both are on the classpath (used by the test profile).
-docs/openapi/        api-docs.yaml — hand-maintained OpenAPI 3.1 spec
-docs/postman/        postman_collection.json
-src/main/java/com/carlosarroyoam/ecommerce/
-  ECommerceApplication.java
-  auth/              login/refresh/logout, TokenService, RefreshTokenService, Staff/CustomerDetailsService,
-                     principal/ (AuthPrincipal, PrincipalType STAFF|CUSTOMER, token + mapper)
-  user/ customer/ product/ category/ order/ payment/ shipment/ refund/ inventory/
-  core/              config, constant, exception, filter, pagination, property, security, specification, util
-src/main/resources/  application.properties, messages.properties, logback-spring.xml, certs/ (gitignored)
-src/test/java/...    user/, auth/, core/exception/, support/ (test infrastructure), ECommerceApplicationTest
-src/test/resources/  application-test.properties, sql/test-data-reset.sql, responses/** (JSON fixtures)
-compose.yml, Dockerfile, .env.example
-```
-
-`inventory/` currently only has `dto/` and `entity/` (no controller/service/repository).
+`database/` is also a Maven resource dir, so `schema.sql` and `data.sql` are on the classpath (the test profile uses them). `inventory/` currently only has `dto/` and `entity/` (no controller/service/repository).
 
 ## Setup
 
@@ -49,47 +30,25 @@ compose.yml, Dockerfile, .env.example
 ## Common commands
 
 ```bash
-./mvnw spring-boot:run       # run locally on http://localhost:8080
-./mvnw clean package         # build the jar (runs unit tests)
 ./mvnw test                  # Surefire: *Test classes only
 ./mvnw verify                # Surefire + Failsafe: also runs *IT classes
-./mvnw test -Dtest=UserServiceTest              # single unit test class
 ./mvnw verify -Dit.test=UserControllerIT -Dtest=none -Dsurefire.failIfNoSpecifiedTests=false  # single IT
-
 docker compose up --build    # MySQL + backend (copy .env.example to .env first)
-docker compose down          # stop, keep the data volume
 docker compose down -v       # stop and drop the volume (reseeds on next up)
 ```
 
-No linter or formatter plugin is configured.
-
 ### Docker Compose
 
-`compose.yml` runs `mysql:8.0.35` and the backend (built from the multi-stage `Dockerfile`: Maven build with `-DskipTests`, then `eclipse-temurin:17-jre-alpine` as non-root user, healthcheck on `/actuator/health`). It mounts `database/schema.sql` and `database/data.sql` into `/docker-entrypoint-initdb.d/`, so MySQL applies them only on first boot of an empty `ecommerce-spring-data` volume. The backend waits for MySQL to be healthy.
+`database/schema.sql` and `database/data.sql` are mounted into `/docker-entrypoint-initdb.d/`, so MySQL applies them only on first boot of an empty `ecommerce-spring-data` volume.
 
 Caveat: `.dockerignore` excludes `*.pem`, so `src/main/resources/certs/` is **not** copied into the build context and the image is built without RSA keys.
 
 ## Tests
 
-`maven-failsafe-plugin` is bound in `pom.xml`, so classes ending in `IT` run only in `verify`, not in `test`. Everything that extends `support/AbstractIntegrationTest` (including the `ECommerceApplicationTest` smoke test, which does run in `test`) needs a reachable **Docker** daemon — not a local MySQL.
-
-- `AbstractIntegrationTest` starts a singleton `mysql:8.0` Testcontainer (`withReuse(true)`, db `spring-boot-e-commerce`) wired via `@ServiceConnection`, activates `@ActiveProfiles("test")` and imports `JwtTestTokenFactory`.
-- The `test` profile (`src/test/resources/application-test.properties`) sets `spring.sql.init.mode=always` and applies `schema.sql` → `sql/test-data-reset.sql` (TRUNCATEs the seeded tables so a reused container doesn't hit duplicate keys) → `data.sql`. `ddl-auto` stays `validate` on purpose so tests catch `schema.sql` drifting from the entities. It also sets `app.cookie.secure=false` and very short JWT TTLs (2 s access / 5 s refresh / 15 s max lifetime).
-
-Existing tests: `user/` (`UserServiceTest`, `UserControllerTest`, `UserControllerIT`), `auth/` (`AuthServiceIT`, `RefreshTokenServiceIT`), `core/exception/GlobalExceptionHandlerTest`, and `ECommerceApplicationTest`.
-
-### Test layers
-
-- **`XServiceTest`** — pure Mockito unit tests with mocked repositories.
-- **`XControllerTest`** — `MockMvc.standaloneSetup` slice: real `GlobalExceptionHandler` (built with `support/testutils/TestMessageSources.create()`), snake_case `ObjectMapper` from `support/testutils/TestObjectMappers`, and `support/security/FixedAuthPrincipalArgumentResolver` injecting a fixed `AuthPrincipal` (no security chain).
-- **`XControllerIT`** — `@SpringBootTest(RANDOM_PORT)` + `@AutoConfigureMockMvc` + `@Transactional` against the container with the real security chain; real RS256 JWTs come from `JwtTestTokenFactory` (`staffToken`, `customerToken`, `expiredToken`). Response bodies are compared with `JSONAssert` against fixtures under `src/test/resources/responses/**` via `support/testutils/JsonUtils`.
-- **Service ITs** (`AuthServiceIT`, `RefreshTokenServiceIT`) — `@SpringBootTest` against the container; deliberately **not** `@Transactional` when the test must observe committed state, cleaning up in `@AfterEach` instead.
-
-### Test conventions
-
-- Method names follow `givenX_whenY_thenZ`, and **every** test has a human-readable English `@DisplayName` ("Given ..., when ..., then ...").
-- `JwtTestTokenFactory` puts `roles` in the claim as a **flat** list without the `ROLE_` prefix; the real `JwtAuthenticationConverter` maps each entry to `ROLE_*`. A nested list produces 403s.
-- `GlobalExceptionHandlerTest` fails if any `MessageKeys` constant has no entry in `messages.properties`.
+- Every test method is named `given<X>_when<Y>_then<Z>` and has a matching English `@DisplayName("Given ..., when ..., then ...")`; HTTP tests (`*ControllerTest`, `*ControllerIT`) prefix it with `"METHOD /path - "`.
+- Each resource gets `XServiceTest` (Mockito), `XControllerTest` (`MockMvc.standaloneSetup`) and `XControllerIT` (`@SpringBootTest` + Testcontainers MySQL, real RS256 JWTs from `JwtTestTokenFactory`), package-private, in the same package as the class under test. There are no service ITs. The one exception to `@Transactional` ITs is `AuthControllerCommitIT`, which goes through HTTP but is deliberately non-transactional (cleans up in `@AfterEach`) to verify that the invalid refresh token deletion is committed despite the 401 (`noRollbackFor`).
+- `*IT` classes (and anything extending `support/AbstractIntegrationTest`) need Docker and run only in `./mvnw verify`.
+- Response fixtures live in `src/test/resources/responses/<module>/` (snake_case, explicit `null`s).
 
 ## Architecture
 
@@ -102,8 +61,6 @@ Each domain package follows the same shape:
 - `XRepository` — `JpaRepository`, plus `JpaSpecificationExecutor` where the list endpoint supports filtering.
 - `dto/` — response DTOs, request DTOs (only in `auth`) and `*Specs` filter DTOs.
 - `entity/` — JPA entities plus status enums. The static metamodel (`User_`, `Order_`, …) is generated by `hibernate-jpamodelgen` at compile time — never hand-write it.
-
-Annotation processors (in `maven-compiler-plugin`): `hibernate-jpamodelgen`, `lombok`, `mapstruct-processor`, `lombok-mapstruct-binding`.
 
 ### DTO mapping: MapStruct mapper nested in the DTO
 
@@ -136,19 +93,13 @@ List endpoints bind query params to a `*Specs` DTO via `@ModelAttribute` and bui
 - Services throw subclasses of the abstract `core/exception/ApplicationException` (which carries its `HttpStatus`): `ResourceNotFoundException` (404), `BusinessException` (422), `ValidationException` (422), `ConflictException` (409), `ResourceAlreadyExistsException` (409), `UnauthorizedException` (401), `ForbiddenException` (403), `InternalServerException` (500, optional `cause`).
 - The message passed to an exception is a **key** of `src/main/resources/messages.properties`, referenced through a constant in `core/constant/MessageKeys`. To add a user-facing error: add the key to `messages.properties` and a constant to `MessageKeys`; don't inline texts.
 - `GlobalExceptionHandler` (`@RestControllerAdvice`) is the single translation point to RFC 9457 `ProblemDetail` (`application/problem+json`), built by `ProblemDetailFactory`: `type`, `title`, `status`, `detail`, `instance` (request path), plus an `errors` map (field → message) on 422 validation failures. It resolves the message key through `MessageSource` (falling back to the literal text). Handled: `ApplicationException`, unreadable body, type mismatch, no handler/resource, method not supported, `AuthenticationException`, `AccessDeniedException`, `MethodArgumentNotValidException` (→ **422**), and a catch-all `Exception` (→ 500).
-- There is no `ResponseStatusException` handler: the unimplemented `forgot-password`/`reset-password` in `AuthService` throw it with 501, but it falls to the catch-all and surfaces as **500**.
+- `ResponseStatusException` is translated with its own status (the unimplemented `forgot-password`/`reset-password` surface as **501**); its reason is resolved as a message key like any other exception. An unknown `sort` property (`PropertyReferenceException`, possibly wrapped in `InvalidDataAccessApiUsageException`) is a **400** (`request.invalid-sort`).
 - `CustomAuthenticationEntryPoint` and `CustomAccessDeniedHandler` (`core/security`) bypass the advice and serialize the same `ProblemDetail` with the injected `ObjectMapper`.
 - **Logging of exceptions** happens only in `ExceptionLogger` (`@Component`), called by every handler above: `METHOD /path -> detail`, 4xx at `WARN` without stack trace, 5xx at `ERROR` with stack trace. Services and controllers must not log exceptions themselves.
 
 ### Logging / MDC
 
-`logback-spring.xml` reuses Spring Boot's console config and only fills `LOG_CORRELATION_PATTERN` with `[traceId=<requestId>, principal=<principalType>:<userId>]`; the block disappears entirely outside an HTTP request. Only these filters (`core/filter`) write MDC keys, always clearing them in `finally`:
-
-- `CorrelationIdFilter` — `@Component`, `Ordered.HIGHEST_PRECEDENCE`. MDC `requestId` from the `X-Request-Id` header or a new UUID; echoes it in the response header.
-- `MdcUserContextFilter` — not a bean; added in `WebSecurityConfig` after `BearerTokenAuthenticationFilter`. Sets `userId`/`principalType` only when authenticated (otherwise `anonymous:anonymous`).
-- `RequestLoggingFilter` — `@Component`; one `INFO` line per request: `METHOD URI status - N ms`.
-
-Never put MDC keys from services/controllers.
+Never put MDC keys from services/controllers. Only the filters in `core/filter` write them (details in `core/CLAUDE.md`).
 
 ### Auth model
 
@@ -159,11 +110,9 @@ Never put MDC keys from services/controllers.
 - `/auth/**` and `/actuator/**` are `permitAll`; everything else requires authentication.
 - CORS from `app.cors.*` (`CorsProps`): origin `http://localhost:4200`, methods `GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS` — add any new HTTP verb there or browser preflights fail.
 
-### Configuration properties
+### Time
 
-Time: the current time always comes from the injected `java.time.Clock` bean (`core/config/ClockConfig`, system default zone). Use `LocalDateTime.now(clock)` / `Instant.now(clock)`, never a bare `now()`; unit tests build the service by hand with `Clock.fixed(...)` (`@InjectMocks` can't inject a real `Clock`). `RequestLoggingFilter` keeps `System.currentTimeMillis()` since it only measures duration.
-
-`@ConfigurationProperties` classes live in `core/property`: `RsaKeyProps` (`app.rsa`), `JwtProps` (`app.jwt`), `CookieProps` (`app.cookie`), `CorsProps` (`app.cors`). Other notable settings: `spring.web.resources.add-mappings=false`, fixed locale `en_US`.
+The current time always comes from the injected `java.time.Clock` bean (`core/config/ClockConfig`, system default zone). Use `LocalDateTime.now(clock)` / `Instant.now(clock)`, never a bare `now()`; unit tests declare `@Spy private Clock clock = Clock.fixed(...)` next to the `@Mock`s and let `@InjectMocks` build the service through its constructor. Because `clock` is a spy, don't call helpers that use it (e.g. `LocalDateTime.now(clock)`) inside a `when(...)` argument — build the object first, or Mockito throws `UnfinishedStubbing`. `RequestLoggingFilter` keeps `System.currentTimeMillis()` since it only measures duration.
 
 ### Database
 
@@ -175,13 +124,13 @@ Time: the current time always comes from the injected `java.time.Clock` bean (`c
 
 ## Javadoc
 
-All Javadoc is written in **Spanish**. Rules: third-person present-tense first sentence, `@throws` only for domain exceptions thrown by `UserService`/`AuthService`, REST methods guarded by `@RolesAllowed` end their first sentence with "Requiere rol {@code X}.", no `@author`/`@since`.
+All Javadoc is written in **Spanish** (the `auth` package is the style reference); identifiers, log and error messages and `@DisplayName` stay in English.
+
+- Third-person present-tense first sentence; `@param`/`@return` where meaningful, `@param <T>` for every type parameter; no `@author`/`@since`/`@see`.
+- Services declare domain exceptions with `@throws <Exception> con <status> si <condición>`; controllers do not use `@throws`.
+- Class-level Javadoc on every public class; method Javadoc (public **and private**) on controllers, services and `core/*`. Repositories: class-level naming the entity, methods only for custom queries. Entities: class-level only. DTOs and nested MapStruct mappers: none.
 
 ## Code conventions
 
-- **Javadoc in Spanish** is required (the `auth` package is the style reference): class-level Javadoc (1–3 sentences, `{@link}` to related types) on every public class; Javadoc on public **and private** methods of controllers, services and everything in `core/*`, with `@param`/`@return` where meaningful.
-- Repositories: class-level Javadoc naming the entity, and Javadoc only on custom query methods.
-- Entities: class-level Javadoc only, no per-field comments unless semantics are non-obvious.
-- DTOs (request/response/`*Specs`): no Javadoc. Nested MapStruct mappers: no method-level Javadoc.
 - Inline comments inside method bodies only for a genuinely non-obvious WHY.
 - Commit messages are short, in Spanish, imperative third person (e.g. "Agrega @Validated", "Corrige typo").

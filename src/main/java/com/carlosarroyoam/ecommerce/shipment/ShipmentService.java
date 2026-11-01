@@ -70,26 +70,25 @@ public class ShipmentService {
   }
 
   /**
-   * Busca el envío asociado a una orden.
+   * Lista los envíos asociados a una orden.
    *
    * @param orderId el id de la orden
-   * @return el {@link ShipmentResponse} correspondiente
-   * @throws ResourceNotFoundException con 404 si la orden no tiene un envío asociado
+   * @return la lista de {@link ShipmentResponse} de la orden, vacía si no tiene envíos
    */
   @Transactional(readOnly = true)
-  public ShipmentResponse findByOrderId(Long orderId) {
-    Shipment shipmentByOrderId = findShipmentByOrderId(orderId);
-    return ShipmentResponseMapper.INSTANCE.toDto(shipmentByOrderId);
+  public List<ShipmentResponse> findAllByOrderId(Long orderId) {
+    List<Shipment> shipmentsByOrderId = shipmentRepository.findAllByOrderId(orderId);
+    return ShipmentResponseMapper.INSTANCE.toDtos(shipmentsByOrderId);
   }
 
   /**
-   * Lista todos los transportistas disponibles.
+   * Lista los transportistas activos, es decir, los que no han sido eliminados.
    *
    * @return la lista de {@link CarrierResponse}
    */
   @Transactional(readOnly = true)
   public List<CarrierResponse> findAllActiveCarriers() {
-    List<Carrier> carriers = carrierRepository.findAll();
+    List<Carrier> carriers = carrierRepository.findAllByDeletedAtIsNull();
     return CarrierResponseMapper.INSTANCE.toDtos(carriers);
   }
 
@@ -103,19 +102,6 @@ public class ShipmentService {
   private Shipment findShipmentById(Long shipmentId) {
     return shipmentRepository
         .findById(shipmentId)
-        .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.SHIPMENT_NOT_FOUND_EXCEPTION));
-  }
-
-  /**
-   * Busca el envío asociado a una orden o lanza una excepción si no existe.
-   *
-   * @param orderId el id de la orden
-   * @return el {@link Shipment} encontrado
-   * @throws ResourceNotFoundException con 404 si la orden no tiene un envío asociado
-   */
-  private Shipment findShipmentByOrderId(Long orderId) {
-    return shipmentRepository
-        .findByOrderId(orderId)
         .orElseThrow(() -> new ResourceNotFoundException(MessageKeys.SHIPMENT_NOT_FOUND_EXCEPTION));
   }
 }

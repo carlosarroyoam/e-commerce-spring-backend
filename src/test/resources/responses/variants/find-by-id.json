@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "sku": "motog100nimbusblue",
+  "price": 8999.00,
+  "compared_at_price": 9999.00,
+  "attributes": [
+    {"id": 1, "value": "Blue Nimbus", "attribute": {"id": 1, "title": "Color", "deleted_at": null}},
+    {"id": 2, "value": "128GB", "attribute": {"id": 2, "title": "Storage", "deleted_at": null}},
+    {"id": 3, "value": "8GB", "attribute": {"id": 3, "title": "RAM", "deleted_at": null}}
+  ],
+  "images": [{"id": 1, "url": "motog100nimbusblue.jpg"}]
+}

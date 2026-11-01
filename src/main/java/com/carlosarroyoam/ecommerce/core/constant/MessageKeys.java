@@ -8,6 +8,7 @@ package com.carlosarroyoam.ecommerce.core.constant;
  */
 public class MessageKeys {
   public static final String FEATURE_NOT_IMPLEMENTED_EXCEPTION = "feature.not-implemented";
+  public static final String INVALID_SORT_PROPERTY_EXCEPTION = "request.invalid-sort";
 
   public static final String REFRESH_TOKEN_IS_REQUIRED_EXCEPTION = "auth.refresh-token.required";
   public static final String REFRESH_TOKEN_IS_NOT_VALID_EXCEPTION = "auth.refresh-token.invalid";

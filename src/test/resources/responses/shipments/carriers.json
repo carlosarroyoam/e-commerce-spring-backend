@@ -1,0 +1,27 @@
+[
+  {
+    "id": 1,
+    "name": "FedEx",
+    "deleted_at": null
+  },
+  {
+    "id": 2,
+    "name": "UPS",
+    "deleted_at": null
+  },
+  {
+    "id": 3,
+    "name": "DHL",
+    "deleted_at": null
+  },
+  {
+    "id": 4,
+    "name": "Estafeta",
+    "deleted_at": null
+  },
+  {
+    "id": 5,
+    "name": "Paquetexpress",
+    "deleted_at": null
+  }
+]

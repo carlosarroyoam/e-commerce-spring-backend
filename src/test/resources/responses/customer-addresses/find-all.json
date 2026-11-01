@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1,
+    "street_name": "C. Leona Vicario",
+    "street_number": "120",
+    "apartment_number": null,
+    "sublocality": "Centro",
+    "locality": "Acámbaro",
+    "state": "Guanajuato",
+    "postal_code": "38923",
+    "country": "MX",
+    "phone_number": "4431232123",
+    "is_default": true,
+    "customer_id": 1
+  }
+]

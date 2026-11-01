@@ -1,0 +1,18 @@
+{
+  "items": [
+    {"id": 1, "title": "Smartphones", "slug": "smartphones", "deleted_at": null},
+    {"id": 2, "title": "Headphones", "slug": "headphones", "deleted_at": null},
+    {"id": 3, "title": "Accessories", "slug": "accessories", "deleted_at": null},
+    {"id": 4, "title": "Tablets", "slug": "tablets", "deleted_at": null},
+    {"id": 5, "title": "Smartwatches", "slug": "smartwatches", "deleted_at": null},
+    {"id": 6, "title": "Laptops", "slug": "laptops", "deleted_at": null},
+    {"id": 7, "title": "Gaming", "slug": "gaming", "deleted_at": null},
+    {"id": 8, "title": "Covers & Cases", "slug": "covers-cases", "deleted_at": null}
+  ],
+  "pagination": {
+    "page": 0,
+    "size": 10,
+    "total_items": 8,
+    "total_pages": 1
+  }
+}

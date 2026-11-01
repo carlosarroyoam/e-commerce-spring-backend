@@ -1967,7 +1967,7 @@ paths:
           description: Payment reference value
           schema:
             type: string
-            maxLength: 255
+            maxLength: 254
         - name: method
           in: query
           required: false
@@ -2263,12 +2263,13 @@ paths:
     get:
       tags:
         - Shipments
-      summary: Gets the shipment for an order
-      operationId: findShipmentByOrderId
+      summary: Lists the shipments for an order
+      description: Responds 200 with an empty array when the order has no shipments.
+      operationId: findShipmentsByOrderId
       parameters:
         - name: orderId
           in: path
-          description: ID of order to query its shipment
+          description: ID of order to query its shipments
           required: true
           schema:
             type: integer
@@ -2279,15 +2280,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/ShipmentResponse"
+                type: array
+                items:
+                  $ref: "#/components/schemas/ShipmentResponse"
         "422":
           $ref: "#/components/responses/UnprocessableEntity"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalServerError"
       security:
@@ -2440,12 +2441,13 @@ paths:
     get:
       tags:
         - Refunds
-      summary: Gets the refund for an order
-      operationId: findRefundByOrderId
+      summary: Lists the refunds for an order
+      description: Responds 200 with an empty array when the order has no refunds.
+      operationId: findRefundsByOrderId
       parameters:
         - name: orderId
           in: path
-          description: ID of order to query its refund
+          description: ID of order to query its refunds
           required: true
           schema:
             type: integer
@@ -2456,15 +2458,15 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RefundResponse"
+                type: array
+                items:
+                  $ref: "#/components/schemas/RefundResponse"
         "400":
           $ref: "#/components/responses/BadRequest"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
           $ref: "#/components/responses/Forbidden"
-        "404":
-          $ref: "#/components/responses/NotFound"
         "500":
           $ref: "#/components/responses/InternalServerError"
       security:

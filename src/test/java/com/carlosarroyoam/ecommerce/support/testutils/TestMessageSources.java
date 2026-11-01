@@ -1,5 +1,6 @@
 package com.carlosarroyoam.ecommerce.support.testutils;
 
+import com.carlosarroyoam.ecommerce.core.constant.CommonConstants;
 import org.springframework.context.MessageSource;
 import org.springframework.context.support.ResourceBundleMessageSource;
 
@@ -10,7 +11,7 @@ import org.springframework.context.support.ResourceBundleMessageSource;
  */
 public final class TestMessageSources {
   private TestMessageSources() {
-    throw new IllegalAccessError("Illegal access to utility class");
+    throw new IllegalAccessError(CommonConstants.ILLEGAL_ACCESS_ERROR);
   }
 
   /**
@@ -18,7 +19,7 @@ public final class TestMessageSources {
    *
    * @return el {@link MessageSource} configurado
    */
-  public static MessageSource create() {
+  public static MessageSource messages() {
     ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
     messageSource.setBasename("messages");
     messageSource.setDefaultEncoding("UTF-8");

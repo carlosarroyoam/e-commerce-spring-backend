@@ -4,6 +4,7 @@ import com.carlosarroyoam.ecommerce.core.pagination.PagedResponse;
 import com.carlosarroyoam.ecommerce.refund.dto.RefundResponse;
 import com.carlosarroyoam.ecommerce.refund.dto.RefundSpecs;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
@@ -51,14 +52,14 @@ public class RefundController {
   }
 
   /**
-   * Obtiene el reembolso asociado a una orden.
+   * Lista los reembolsos asociados a una orden.
    *
    * @param orderId el id de la orden
-   * @return el reembolso encontrado y el estado 200 OK
+   * @return los reembolsos de la orden (lista vacía si no tiene) y el estado 200 OK
    */
   @GetMapping(value = "/order/{orderId}", produces = "application/json")
-  public ResponseEntity<RefundResponse> findByOrderId(@PathVariable Long orderId) {
-    RefundResponse refundByOrderId = refundService.findByOrderId(orderId);
-    return ResponseEntity.ok(refundByOrderId);
+  public ResponseEntity<List<RefundResponse>> findAllByOrderId(@PathVariable Long orderId) {
+    List<RefundResponse> refundsByOrderId = refundService.findAllByOrderId(orderId);
+    return ResponseEntity.ok(refundsByOrderId);
   }
 }

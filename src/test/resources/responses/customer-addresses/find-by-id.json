@@ -1,0 +1,14 @@
+{
+  "id": 2,
+  "street_name": "Av. Universidad",
+  "street_number": "456",
+  "apartment_number": "302",
+  "sublocality": "Del Valle",
+  "locality": "Ciudad de México",
+  "state": "CDMX",
+  "postal_code": "03100",
+  "country": "MX",
+  "phone_number": "5556789012",
+  "is_default": true,
+  "customer_id": 2
+}

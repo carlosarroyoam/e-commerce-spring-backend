@@ -13,7 +13,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Setter
 @Builder
 public class PaymentSpecs {
-  @Size(max = 255, message = "Reference should be max 255")
+  @Size(max = 254, message = "Reference should be max 254")
   private String reference;
 
   @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)

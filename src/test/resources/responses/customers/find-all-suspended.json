@@ -1,0 +1,60 @@
+{
+  "items": [
+    {
+      "id": 6,
+      "first_name": "Laura Isabel",
+      "last_name": "Ramírez Torres",
+      "phone_number": "6186789012",
+      "email": "laura.ramirez@example.com",
+      "status": "SUSPENDED",
+      "addresses": [
+        {
+          "id": 6,
+          "street_name": "Av. Revolución",
+          "street_number": "890",
+          "apartment_number": null,
+          "sublocality": "San Ángel",
+          "locality": "Monterrey",
+          "state": "Nuevo León",
+          "postal_code": "64800",
+          "country": "MX",
+          "phone_number": "8181234567",
+          "is_default": true,
+          "customer_id": 6
+        }
+      ],
+      "deleted_at": null
+    },
+    {
+      "id": 12,
+      "first_name": "Karina Beatriz",
+      "last_name": "Navarro Castillo",
+      "phone_number": "6183334444",
+      "email": "karina.navarro@example.com",
+      "status": "SUSPENDED",
+      "addresses": [
+        {
+          "id": 12,
+          "street_name": "C. Hidalgo",
+          "street_number": "112",
+          "apartment_number": null,
+          "sublocality": "Obrera",
+          "locality": "Puebla",
+          "state": "Puebla",
+          "postal_code": "01012",
+          "country": "MX",
+          "phone_number": "5550000012",
+          "is_default": true,
+          "customer_id": 12
+        }
+      ],
+      "deleted_at": null
+    }
+  ],
+  "pagination": {
+    "page": 0,
+    "size": 2,
+    "total_items": 6,
+    "total_pages": 3
+  }
+}
