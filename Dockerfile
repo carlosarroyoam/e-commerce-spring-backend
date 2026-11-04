@@ -3,7 +3,7 @@
 # =========================
 FROM maven:3.10-eclipse-temurin-17 AS build
 
-WORKDIR /app
+WORKDIR /build
 
 COPY pom.xml ./
 
@@ -25,7 +25,7 @@ RUN addgroup -S spring && \
 
 USER spring:spring
 
-COPY --from=build /app/target/*.jar app.jar
+COPY --from=build /build/target/*.jar app.jar
 
 EXPOSE 8080
 

@@ -128,7 +128,7 @@ All Javadoc is written in **Spanish** (the `auth` package is the style reference
 
 - Third-person present-tense first sentence; `@param`/`@return` where meaningful, `@param <T>` for every type parameter; no `@author`/`@since`/`@see`.
 - Services declare domain exceptions with `@throws <Exception> con <status> si <condición>`; controllers do not use `@throws`.
-- Class-level Javadoc on every public class; method Javadoc (public **and private**) on controllers, services and `core/*`. Repositories: class-level naming the entity, methods only for custom queries. Entities: class-level only. DTOs and nested MapStruct mappers: none.
+- Class-level Javadoc on every public class; method Javadoc (public **and private**) on controllers, services, repositories and `core/*`. Repositories: class-level naming the entity. Entities: class-level only. DTOs and nested MapStruct mappers: none.
 
 ## Code conventions
 
