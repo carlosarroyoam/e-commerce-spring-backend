@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-REST API for an e-commerce platform: Spring Boot 3.5 (parent `3.5.16`) / Java 17, MySQL 8, Spring Data JPA (Hibernate), Spring Security as an OAuth2 resource server (self-issued RS256 JWT), MapStruct 1.6, Lombok. Maven with wrapper (`./mvnw`, `mvnw.cmd` on Windows). Package-by-feature under `com.carlosarroyoam.ecommerce`.
+REST API for an e-commerce platform: Spring Boot 3.5 (parent `3.5.16`) / Java 25, MySQL 8, Spring Data JPA (Hibernate), Spring Security as an OAuth2 resource server (self-issued RS256 JWT), MapStruct 1.6, Lombok. Maven with wrapper (`./mvnw`, `mvnw.cmd` on Windows). Package-by-feature under `com.carlosarroyoam.ecommerce`.
 
 The API is almost entirely **read-only**: every feature exposes `GET` list/detail endpoints; the only writes are `/auth/*` (login, refresh-token, logout, plus `forgot-password`/`reset-password` which are not implemented), `PATCH /orders/{orderId}/cancel` and `DELETE /users/{userId}`.
 

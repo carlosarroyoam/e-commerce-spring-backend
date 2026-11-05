@@ -1,11 +1,11 @@
 # E-Commerce Backend
 
-REST API for an e-commerce platform built with Spring Boot 3.5 and Java 17.
+REST API for an e-commerce platform built with Spring Boot 3.5 and Java 25.
 
 ## Technology Stack
 
 - **Framework:** Spring Boot 3.5
-- **Language:** Java 17
+- **Language:** Java 25
 - **Database:** MySQL 8
 - **Persistence:** Spring Data JPA (Hibernate)
 - **Security:** Spring Security + OAuth2 Resource Server (self-issued RS256 JWT)
@@ -35,7 +35,7 @@ See [`pom.xml`](pom.xml) for exact versions.
 
 ## Prerequisites
 
-- Java 17+
+- Java 25+
 - MySQL 8.0+ (not needed if running via Docker Compose, see below)
 - Docker — required to run the integration tests (`*IT`), which spin up MySQL via Testcontainers, and to run the stack via Docker Compose
 - Maven 3.8+ (or use the bundled `./mvnw` / `./mvnw.cmd` wrapper)
