@@ -1,7 +1,15 @@
 {
   "items": [
-    {"id": 3, "title": "RAM", "deleted_at": null},
-    {"id": 4, "title": "Connectivity", "deleted_at": null}
+    {
+      "id": 3,
+      "title": "RAM",
+      "deleted_at": null
+    },
+    {
+      "id": 4,
+      "title": "Connectivity",
+      "deleted_at": null
+    }
   ],
   "pagination": {
     "page": 1,

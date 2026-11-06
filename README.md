@@ -37,7 +37,8 @@ See [`pom.xml`](pom.xml) for exact versions.
 
 - Java 25+
 - MySQL 8.0+ (not needed if running via Docker Compose, see below)
-- Docker — required to run the integration tests (`*IT`), which spin up MySQL via Testcontainers, and to run the stack via Docker Compose
+- Docker — required to run the integration tests (`*IT`), which spin up MySQL via Testcontainers, and to run the stack
+  via Docker Compose
 - Maven 3.8+ (or use the bundled `./mvnw` / `./mvnw.cmd` wrapper)
 
 ## Database Setup
@@ -70,8 +71,8 @@ docker compose up --build
 - `compose.yml` mounts `database/schema.sql`/`database/data.sql` into the MySQL container's
   `/docker-entrypoint-initdb.d/`, so MySQL applies them automatically on first boot (empty data
   directory) — the standard `mysql` image init mechanism.
-- Data persists in the `ecommerce-spring-data` volume across restarts. To fully reset
-  (drop the volume and reseed from scratch on the next `up`):
+- Data persists in the `ecommerce-spring-data` volume across restarts. To fully reset (drop the volume and reseed from
+  scratch on the next `up`):
   ```bash
   docker compose down -v
   ```
@@ -83,15 +84,15 @@ docker compose up --build
 
 All have sensible defaults for local development:
 
-| Variable | Default | Description |
-| --- | --- | --- |
-| `SPRING_DATASOURCE_URL` | _(unset)_ | Full JDBC URL, e.g. `jdbc:mysql://localhost:3306/spring-boot-e-commerce`. When unset, defaults to `localhost:3306` against the `spring-boot-e-commerce` database. |
-| `SPRING_DATASOURCE_USERNAME` | `root` | MySQL user |
-| `SPRING_DATASOURCE_PASSWORD` | `toor` | MySQL password |
-| `JWT_ACCESS_TOKEN_TTL_MS` | `300000` (5 min) | Access token lifetime |
-| `JWT_REFRESH_TOKEN_TTL_MS` | `86400000` (1 day) | Refresh token lifetime |
-| `JWT_REFRESH_TOKEN_MAX_LIFETIME_MS` | `2592000000` (30 days) | Max refresh-token chain lifetime |
-| `COOKIE_SECURE` | `true` | Mark auth cookies as `Secure` (set `false` for plain HTTP) |
+| Variable                            | Default                | Description                                                                                                                                                       |
+|-------------------------------------|------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `SPRING_DATASOURCE_URL`             | _(unset)_              | Full JDBC URL, e.g. `jdbc:mysql://localhost:3306/spring-boot-e-commerce`. When unset, defaults to `localhost:3306` against the `spring-boot-e-commerce` database. |
+| `SPRING_DATASOURCE_USERNAME`        | `root`                 | MySQL user                                                                                                                                                        |
+| `SPRING_DATASOURCE_PASSWORD`        | `toor`                 | MySQL password                                                                                                                                                    |
+| `JWT_ACCESS_TOKEN_TTL_MS`           | `300000` (5 min)       | Access token lifetime                                                                                                                                             |
+| `JWT_REFRESH_TOKEN_TTL_MS`          | `86400000` (1 day)     | Refresh token lifetime                                                                                                                                            |
+| `JWT_REFRESH_TOKEN_MAX_LIFETIME_MS` | `2592000000` (30 days) | Max refresh-token chain lifetime                                                                                                                                  |
+| `COOKIE_SECURE`                     | `true`                 | Mark auth cookies as `Secure` (set `false` for plain HTTP)                                                                                                        |
 
 ### RSA Keys
 

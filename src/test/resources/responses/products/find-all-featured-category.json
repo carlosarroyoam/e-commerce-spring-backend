@@ -1,7 +1,31 @@
 {
   "items": [
-    {"id": 2, "title": "Moto G60", "slug": "moto-g60", "is_featured": true, "is_active": true, "category": {"id": 1, "title": "Smartphones", "slug": "smartphones", "deleted_at": null}},
-    {"id": 3, "title": "iPhone 15 Pro", "slug": "iphone-15-pro", "is_featured": true, "is_active": true, "category": {"id": 1, "title": "Smartphones", "slug": "smartphones", "deleted_at": null}}
+    {
+      "id": 2,
+      "title": "Moto G60",
+      "slug": "moto-g60",
+      "is_featured": true,
+      "is_active": true,
+      "category": {
+        "id": 1,
+        "title": "Smartphones",
+        "slug": "smartphones",
+        "deleted_at": null
+      }
+    },
+    {
+      "id": 3,
+      "title": "iPhone 15 Pro",
+      "slug": "iphone-15-pro",
+      "is_featured": true,
+      "is_active": true,
+      "category": {
+        "id": 1,
+        "title": "Smartphones",
+        "slug": "smartphones",
+        "deleted_at": null
+      }
+    }
   ],
   "pagination": {
     "page": 0,

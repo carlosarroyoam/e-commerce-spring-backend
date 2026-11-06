@@ -4,28 +4,40 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-REST API for an e-commerce platform: Spring Boot 3.5 (parent `3.5.16`) / Java 25, MySQL 8, Spring Data JPA (Hibernate), Spring Security as an OAuth2 resource server (self-issued RS256 JWT), MapStruct 1.6, Lombok. Maven with wrapper (`./mvnw`, `mvnw.cmd` on Windows). Package-by-feature under `com.carlosarroyoam.ecommerce`.
+REST API for an e-commerce platform: Spring Boot 3.5 (parent `3.5.16`) / Java 25, MySQL 8, Spring Data JPA (Hibernate),
+Spring Security as an OAuth2 resource server (self-issued RS256 JWT), MapStruct 1.6, Lombok. Maven with wrapper
+(`./mvnw`, `mvnw.cmd` on Windows). Package-by-feature under `com.carlosarroyoam.ecommerce`.
 
-The API is almost entirely **read-only**: every feature exposes `GET` list/detail endpoints; the only writes are `/auth/*` (login, refresh-token, logout, plus `forgot-password`/`reset-password` which are not implemented), `PATCH /orders/{orderId}/cancel` and `DELETE /users/{userId}`.
+The API is almost entirely **read-only**: every feature exposes `GET` list/detail endpoints; the only writes are
+`/auth/*` (login, refresh-token, logout, plus `forgot-password`/`reset-password` which are not implemented),
+`PATCH /orders/{orderId}/cancel` and `DELETE /users/{userId}`.
 
-`database/` is also a Maven resource dir, so `schema.sql` and `data.sql` are on the classpath (the test profile uses them). `inventory/` currently only has `dto/` and `entity/` (no controller/service/repository).
+`database/` is also a Maven resource dir, so `schema.sql` and `data.sql` are on the classpath (the test profile uses
+them). `inventory/` currently only has `dto/` and `entity/` (no controller/service/repository).
 
 ## Setup
 
-1. **RSA keys** for JWT signing at `src/main/resources/certs/` (`private.pem`, `public.pem`). The directory is **gitignored** — a fresh clone must generate them, or the app fails to start (`RsaKeyProps` binds `app.rsa.*` as `@NotNull`):
+1. **RSA keys** for JWT signing at `src/main/resources/certs/` (`private.pem`, `public.pem`). The directory is
+   **gitignored** — a fresh clone must generate them, or the app fails to start (`RsaKeyProps` binds `app.rsa.*` as
+   `@NotNull`):
    ```bash
    openssl genrsa -out src/main/resources/certs/keypair.pem 2048
    openssl rsa -in src/main/resources/certs/keypair.pem -pubout -out src/main/resources/certs/public.pem
    openssl pkcs8 -topk8 -inform PEM -outform PEM -nocrypt -in src/main/resources/certs/keypair.pem -out src/main/resources/certs/private.pem
    ```
-2. **Database.** `spring.jpa.hibernate.ddl-auto=validate`, no Flyway/Liquibase, and the main profile doesn't set `spring.sql.init.mode`, so nothing creates tables. Apply manually before the first local run:
+2. **Database.** `spring.jpa.hibernate.ddl-auto=validate`, no Flyway/Liquibase, and the main profile doesn't set
+   `spring.sql.init.mode`, so nothing creates tables. Apply manually before the first local run:
    ```bash
    mysql -u root -p < database/schema.sql
    mysql -u root -p < database/data.sql
    ```
-   Defaults: `localhost:3306`, database `spring-boot-e-commerce`, `root`/`toor`. Overridable with `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`. Note: as an OS env var, `SPRING_DATASOURCE_URL` overrides the whole `spring.datasource.url` property through relaxed binding, so pass a **full JDBC URL** (as `compose.yml` does), not just `host:port`.
+   Defaults: `localhost:3306`, database `spring-boot-e-commerce`, `root`/`toor`. Overridable with
+   `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME`, `SPRING_DATASOURCE_PASSWORD`. Note: as an OS env var,
+   `SPRING_DATASOURCE_URL` overrides the whole `spring.datasource.url` property through relaxed binding, so pass a
+   **full JDBC URL** (as `compose.yml` does), not just `host:port`.
 
-   Other env-overridable settings: `JWT_ACCESS_TOKEN_TTL_MS` (default 5 min), `JWT_REFRESH_TOKEN_TTL_MS` (1 day), `JWT_REFRESH_TOKEN_MAX_LIFETIME_MS` (30 days), `COOKIE_SECURE` (default `true`).
+   Other env-overridable settings: `JWT_ACCESS_TOKEN_TTL_MS` (default 5 min), `JWT_REFRESH_TOKEN_TTL_MS` (1 day),
+   `JWT_REFRESH_TOKEN_MAX_LIFETIME_MS` (30 days), `COOKIE_SECURE` (default `true`).
 
 ## Common commands
 
@@ -39,14 +51,22 @@ docker compose down -v       # stop and drop the volume (reseeds on next up)
 
 ### Docker Compose
 
-`database/schema.sql` and `database/data.sql` are mounted into `/docker-entrypoint-initdb.d/`, so MySQL applies them only on first boot of an empty `ecommerce-spring-data` volume.
+`database/schema.sql` and `database/data.sql` are mounted into `/docker-entrypoint-initdb.d/`, so MySQL applies them
+only on first boot of an empty `ecommerce-spring-data` volume.
 
-Caveat: `.dockerignore` excludes `*.pem`, so `src/main/resources/certs/` is **not** copied into the build context and the image is built without RSA keys.
+Caveat: `.dockerignore` excludes `*.pem`, so `src/main/resources/certs/` is **not** copied into the build context and
+the image is built without RSA keys.
 
 ## Tests
 
-- Every test method is named `given<X>_when<Y>_then<Z>` and has a matching English `@DisplayName("Given ..., when ..., then ...")`; HTTP tests (`*ControllerTest`, `*ControllerIT`) prefix it with `"METHOD /path - "`.
-- Each resource gets `XServiceTest` (Mockito), `XControllerTest` (`MockMvc.standaloneSetup`) and `XControllerIT` (`@SpringBootTest` + Testcontainers MySQL, real RS256 JWTs from `JwtTestTokenFactory`), package-private, in the same package as the class under test. There are no service ITs. The one exception to `@Transactional` ITs is `AuthControllerCommitIT`, which goes through HTTP but is deliberately non-transactional (cleans up in `@AfterEach`) to verify that the invalid refresh token deletion is committed despite the 401 (`noRollbackFor`).
+- Every test method is named `given<X>_when<Y>_then<Z>` and has a matching English
+  `@DisplayName("Given ..., when ..., then ...")`; HTTP tests (`*ControllerTest`, `*ControllerIT`) prefix it with
+  `"METHOD /path - "`.
+- Each resource gets `XServiceTest` (Mockito), `XControllerTest` (`MockMvc.standaloneSetup`) and `XControllerIT`
+  (`@SpringBootTest` + Testcontainers MySQL, real RS256 JWTs from `JwtTestTokenFactory`), package-private, in the same
+  package as the class under test. There are no service ITs. The one exception to `@Transactional` ITs is
+  `AuthControllerCommitIT`, which goes through HTTP but is deliberately non-transactional (cleans up in `@AfterEach`) to
+  verify that the invalid refresh token deletion is committed despite the 401 (`noRollbackFor`).
 - `*IT` classes (and anything extending `support/AbstractIntegrationTest`) need Docker and run only in `./mvnw verify`.
 - Response fixtures live in `src/test/resources/responses/<module>/` (snake_case, explicit `null`s).
 
@@ -56,25 +76,32 @@ Caveat: `.dockerignore` excludes `*.pem`, so `src/main/resources/certs/` is **no
 
 Each domain package follows the same shape:
 
-- `XController` — thin REST endpoints (`produces = "application/json"`), delegates to the service. Authorization via `@PreAuthorize` (e.g. `hasRole('ADMIN')` on `/users`); `@EnableMethodSecurity` is on.
+- `XController` — thin REST endpoints (`produces = "application/json"`), delegates to the service. Authorization via
+  `@PreAuthorize` (e.g. `hasRole('ADMIN')` on `/users`); `@EnableMethodSecurity` is on.
 - `XService` — `@Service`, `@Transactional`, business logic, throws domain exceptions.
 - `XRepository` — `JpaRepository`, plus `JpaSpecificationExecutor` where the list endpoint supports filtering.
 - `dto/` — response DTOs, request DTOs (only in `auth`) and `*Specs` filter DTOs.
-- `entity/` — JPA entities plus status enums. The static metamodel (`User_`, `Order_`, …) is generated by `hibernate-jpamodelgen` at compile time — never hand-write it.
+- `entity/` — JPA entities plus status enums. The static metamodel (`User_`, `Order_`, …) is generated by
+  `hibernate-jpamodelgen` at compile time — never hand-write it.
 
 ### DTO mapping: MapStruct mapper nested in the DTO
 
-Response DTOs are Lombok classes (`@Getter @Setter @Builder`, etc.) that declare their own MapStruct `@Mapper` interface as a nested type, obtained via `Mappers.getMapper(...)` — **not** a Spring bean:
+Response DTOs are Lombok classes (`@Getter @Setter @Builder`, etc.) that declare their own MapStruct `@Mapper` interface
+as a nested type, obtained via `Mappers.getMapper(...)` — **not** a Spring bean:
 
 ```java
 public class UserResponse {
   ...
-  @Mapper(nullValuePropertyMappingStrategy = ..., unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {...})
-  public interface UserResponseMapper {
-    UserResponseMapper INSTANCE = Mappers.getMapper(UserResponseMapper.class);
-    UserResponse toDto(User entity);
-    List<UserResponse> toDtos(List<User> entities);
-  }
+  @Mapper(nullValuePropertyMappingStrategy =..., unmappedTargetPolicy = ReportingPolicy.IGNORE, uses = {...
+})
+
+public interface UserResponseMapper {
+  UserResponseMapper INSTANCE = Mappers.getMapper(UserResponseMapper.class);
+
+  UserResponse toDto(User entity);
+
+  List<UserResponse> toDtos(List<User> entities);
+}
 }
 ```
 
@@ -82,53 +109,98 @@ Services call `XResponseMapper.INSTANCE.toDto(entity)`. Follow this pattern for 
 
 ### Filtering and pagination
 
-List endpoints bind query params to a `*Specs` DTO via `@ModelAttribute` and build a `Specification<T>` with `core/specification/SpecificationBuilder` (`SpecificationBuilder.<T>builder()...build()`), whose null-safe combinators — `equalsIfPresent`, `likeIfPresent`, `betweenIfPresent`, `betweenDatesIfPresent`, `inIfPresent`, `isNullIfPresent` — take metamodel paths. Pages are wrapped by `PagedResponse.PagedResponseMapper.INSTANCE.toPagedResponse(page)` into `{ items, pagination }`.
+List endpoints bind query params to a `*Specs` DTO via `@ModelAttribute` and build a `Specification<T>` with
+`core/specification/SpecificationBuilder` (`SpecificationBuilder.<T>builder()...build()`), whose null-safe combinators —
+`equalsIfPresent`, `likeIfPresent`, `betweenIfPresent`, `betweenDatesIfPresent`, `inIfPresent`, `isNullIfPresent` — take
+metamodel paths. Pages are wrapped by `PagedResponse.PagedResponseMapper.INSTANCE.toPagedResponse(page)` into
+`{ items, pagination }`.
 
 ### JSON naming
 
-`spring.jackson.property-naming-strategy=SNAKE_CASE`: Java fields are camelCase, request/response bodies are **snake_case** on the wire. Query params bound via `@ModelAttribute` are not affected and stay **camelCase**. Keep this split.
+`spring.jackson.property-naming-strategy=SNAKE_CASE`: Java fields are camelCase, request/response bodies are
+**snake_case** on the wire. Query params bound via `@ModelAttribute` are not affected and stay **camelCase**. Keep this
+split.
 
 ### Error handling
 
-- Services throw subclasses of the abstract `core/exception/ApplicationException` (which carries its `HttpStatus`): `ResourceNotFoundException` (404), `BusinessException` (422), `ValidationException` (422), `ConflictException` (409), `ResourceAlreadyExistsException` (409), `UnauthorizedException` (401), `ForbiddenException` (403), `InternalServerException` (500, optional `cause`).
-- The message passed to an exception is a **key** of `src/main/resources/messages.properties`, referenced through a constant in `core/constant/MessageKeys`. To add a user-facing error: add the key to `messages.properties` and a constant to `MessageKeys`; don't inline texts.
-- `GlobalExceptionHandler` (`@RestControllerAdvice`) is the single translation point to RFC 9457 `ProblemDetail` (`application/problem+json`), built by `ProblemDetailFactory`: `type`, `title`, `status`, `detail`, `instance` (request path), plus an `errors` map (field → message) on 422 validation failures. It resolves the message key through `MessageSource` (falling back to the literal text). Handled: `ApplicationException`, unreadable body, type mismatch, no handler/resource, method not supported, `AuthenticationException`, `AccessDeniedException`, `MethodArgumentNotValidException` (→ **422**), and a catch-all `Exception` (→ 500).
-- `ResponseStatusException` is translated with its own status (the unimplemented `forgot-password`/`reset-password` surface as **501**); its reason is resolved as a message key like any other exception. An unknown `sort` property (`PropertyReferenceException`, possibly wrapped in `InvalidDataAccessApiUsageException`) is a **400** (`request.invalid-sort`).
-- `CustomAuthenticationEntryPoint` and `CustomAccessDeniedHandler` (`core/security`) bypass the advice and serialize the same `ProblemDetail` with the injected `ObjectMapper`.
-- **Logging of exceptions** happens only in `ExceptionLogger` (`@Component`), called by every handler above: `METHOD /path -> detail`, 4xx at `WARN` without stack trace, 5xx at `ERROR` with stack trace. Services and controllers must not log exceptions themselves.
+- Services throw subclasses of the abstract `core/exception/ApplicationException` (which carries its `HttpStatus`):
+  `ResourceNotFoundException` (404), `BusinessException` (422), `ValidationException` (422), `ConflictException` (409),
+  `ResourceAlreadyExistsException` (409), `UnauthorizedException` (401), `ForbiddenException` (403),
+  `InternalServerException` (500, optional `cause`).
+- The message passed to an exception is a **key** of `src/main/resources/messages.properties`, referenced through a
+  constant in `core/constant/MessageKeys`. To add a user-facing error: add the key to `messages.properties` and a
+  constant to `MessageKeys`; don't inline texts.
+- `GlobalExceptionHandler` (`@RestControllerAdvice`) is the single translation point to RFC 9457 `ProblemDetail`
+  (`application/problem+json`), built by `ProblemDetailFactory`: `type`, `title`, `status`, `detail`, `instance`
+  (request path), plus an `errors` map (field → message) on 422 validation failures. It resolves the message key through
+  `MessageSource` (falling back to the literal text). Handled: `ApplicationException`, unreadable body, type mismatch,
+  no handler/resource, method not supported, `AuthenticationException`, `AccessDeniedException`,
+  `MethodArgumentNotValidException` (→ **422**), and a catch-all `Exception` (→ 500).
+- `ResponseStatusException` is translated with its own status (the unimplemented `forgot-password`/`reset-password`
+  surface as **501**); its reason is resolved as a message key like any other exception. An unknown `sort` property
+  (`PropertyReferenceException`, possibly wrapped in `InvalidDataAccessApiUsageException`) is a **400**
+  (`request.invalid-sort`).
+- `CustomAuthenticationEntryPoint` and `CustomAccessDeniedHandler` (`core/security`) bypass the advice and serialize the
+  same `ProblemDetail` with the injected `ObjectMapper`.
+- **Logging of exceptions** happens only in `ExceptionLogger` (`@Component`), called by every handler above:
+  `METHOD /path -> detail`, 4xx at `WARN` without stack trace, 5xx at `ERROR` with stack trace. Services and controllers
+  must not log exceptions themselves.
 
 ### Logging / MDC
 
-Never put MDC keys from services/controllers. Only the filters in `core/filter` write them (details in `core/CLAUDE.md`).
+Never put MDC keys from services/controllers. Only the filters in `core/filter` write them (details in
+`core/CLAUDE.md`).
 
 ### Auth model
 
-- Two independent principal types: **STAFF** (`users` table, `user` package) and **CUSTOMER** (`customers` table, `customer` package), each with its own `UserDetailsService` (`StaffDetailsService`, `CustomerDetailsService`) and `AuthenticationProvider`, combined into one `AuthenticationManager`.
-- JWTs are RS256 signed/verified with the local RSA key pair via Nimbus (`core/config/JwtConfig`), consumed as an OAuth2 resource server (no external IdP). Roles travel in a `roles` claim and map to `ROLE_*`. Controllers that need the caller get an `AuthPrincipal` argument (e.g. `UserController`).
-- Stateless sessions. Refresh tokens are hashed (dedicated `refreshTokenPasswordEncoder` bean), bound to `(principal_id, principal_type, device_id)` in `refresh_tokens`, sent via cookie (`RefreshTokenCookie`, `CookieUtils`, `app.cookie.secure`).
+- Two independent principal types: **STAFF** (`users` table, `user` package) and **CUSTOMER** (`customers` table,
+  `customer` package), each with its own `UserDetailsService` (`StaffDetailsService`, `CustomerDetailsService`) and
+  `AuthenticationProvider`, combined into one `AuthenticationManager`.
+- JWTs are RS256 signed/verified with the local RSA key pair via Nimbus (`core/config/JwtConfig`), consumed as an OAuth2
+  resource server (no external IdP). Roles travel in a `roles` claim and map to `ROLE_*`. Controllers that need the
+  caller get an `AuthPrincipal` argument (e.g. `UserController`).
+- Stateless sessions. Refresh tokens are hashed (dedicated `refreshTokenPasswordEncoder` bean), bound to
+  `(principal_id, principal_type, device_id)` in `refresh_tokens`, sent via cookie (`RefreshTokenCookie`, `CookieUtils`,
+  `app.cookie.secure`).
 - CSRF: `CookieCsrfTokenRepository` + `CsrfCookieFilter` (double-submit `X-XSRF-TOKEN`), ignored only for `/auth/login`.
 - `/auth/**` and `/actuator/**` are `permitAll`; everything else requires authentication.
-- CORS from `app.cors.*` (`CorsProps`): origin `http://localhost:4200`, methods `GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS` — add any new HTTP verb there or browser preflights fail.
+- CORS from `app.cors.*` (`CorsProps`): origin `http://localhost:4200`, methods
+  `GET,POST,PUT,PATCH,DELETE,HEAD,OPTIONS` — add any new HTTP verb there or browser preflights fail.
 
 ### Time
 
-The current time always comes from the injected `java.time.Clock` bean (`core/config/ClockConfig`, system default zone). Use `LocalDateTime.now(clock)` / `Instant.now(clock)`, never a bare `now()`; unit tests declare `@Spy private Clock clock = Clock.fixed(...)` next to the `@Mock`s and let `@InjectMocks` build the service through its constructor. Because `clock` is a spy, don't call helpers that use it (e.g. `LocalDateTime.now(clock)`) inside a `when(...)` argument — build the object first, or Mockito throws `UnfinishedStubbing`. `RequestLoggingFilter` keeps `System.currentTimeMillis()` since it only measures duration.
+The current time always comes from the injected `java.time.Clock` bean (`core/config/ClockConfig`, system default zone).
+Use `LocalDateTime.now(clock)` / `Instant.now(clock)`, never a bare `now()`; unit tests declare
+`@Spy private Clock clock = Clock.fixed(...)` next to the `@Mock`s and let `@InjectMocks` build the service through its
+constructor. Because `clock` is a spy, don't call helpers that use it (e.g. `LocalDateTime.now(clock)`) inside a
+`when(...)` argument — build the object first, or Mockito throws `UnfinishedStubbing`. `RequestLoggingFilter` keeps
+`System.currentTimeMillis()` since it only measures duration.
 
 ### Database
 
-`database/schema.sql` (MySQL, InnoDB/utf8mb4) is the source of truth. Status-like columns are `VARCHAR` with `CHECK (... IN (...))` instead of lookup tables (e.g. `orders.status`, `payments.status`, `payments.method`), mirrored by Java enums in `entity/` (`OrderStatus`, `PaymentStatus`, `PaymentMethod`, `UserStatus`, `CustomerStatus`, …). When adding or renaming a value, keep `schema.sql`, the enum and `api-docs.yaml` in sync. `data.sql` holds the seed data (tests depend on it).
+`database/schema.sql` (MySQL, InnoDB/utf8mb4) is the source of truth. Status-like columns are `VARCHAR` with
+`CHECK (... IN (...))` instead of lookup tables (e.g. `orders.status`, `payments.status`, `payments.method`), mirrored
+by Java enums in `entity/` (`OrderStatus`, `PaymentStatus`, `PaymentMethod`, `UserStatus`, `CustomerStatus`, …). When
+adding or renaming a value, keep `schema.sql`, the enum and `api-docs.yaml` in sync. `data.sql` holds the seed data
+(tests depend on it).
 
 ### API documentation
 
-`docs/openapi/api-docs.yaml` is a hand-written OpenAPI 3.1 spec, not generated. Update it whenever a controller, DTO or `CHECK` constraint changes — nothing enforces it. A Postman collection lives in `docs/postman/postman_collection.json`.
+`docs/openapi/api-docs.yaml` is a hand-written OpenAPI 3.1 spec, not generated. Update it whenever a controller, DTO or
+`CHECK` constraint changes — nothing enforces it. A Postman collection lives in `docs/postman/postman_collection.json`.
 
 ## Javadoc
 
-All Javadoc is written in **Spanish** (the `auth` package is the style reference); identifiers, log and error messages and `@DisplayName` stay in English.
+All Javadoc is written in **Spanish** (the `auth` package is the style reference); identifiers, log and error messages
+and `@DisplayName` stay in English.
 
-- Third-person present-tense first sentence; `@param`/`@return` where meaningful, `@param <T>` for every type parameter; no `@author`/`@since`/`@see`.
-- Services declare domain exceptions with `@throws <Exception> con <status> si <condición>`; controllers do not use `@throws`.
-- Class-level Javadoc on every public class; method Javadoc (public **and private**) on controllers, services, repositories and `core/*`. Repositories: class-level naming the entity. Entities: class-level only. DTOs and nested MapStruct mappers: none.
+- Third-person present-tense first sentence; `@param`/`@return` where meaningful, `@param <T>` for every type parameter;
+  no `@author`/`@since`/`@see`.
+- Services declare domain exceptions with `@throws <Exception> con <status> si <condición>`; controllers do not use
+  `@throws`.
+- Class-level Javadoc on every public class; method Javadoc (public **and private**) on controllers, services,
+  repositories and `core/*`. Repositories: class-level naming the entity. Entities: class-level only. DTOs and nested
+  MapStruct mappers: none.
 
 ## Code conventions
 

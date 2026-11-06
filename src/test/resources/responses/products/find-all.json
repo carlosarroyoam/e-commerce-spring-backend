@@ -1,91 +1,297 @@
 {
   "items": [
-{
-  "id": 1,
-  "title": "Moto G100",
-  "slug": "moto-g100",
-  "description": "Moto G100",
-  "is_featured": false,
-  "is_active": true,
-  "category": {"id": 1, "title": "Smartphones", "slug": "smartphones", "deleted_at": null},
-  "properties": [
-    {"id": 1, "value": "Motorola", "property": {"id": 1, "title": "Brand", "deleted_at": null}},
-    {"id": 2, "value": "Moto G100", "property": {"id": 2, "title": "Model", "deleted_at": null}},
-    {"id": 3, "value": "6.7\"", "property": {"id": 6, "title": "Display", "deleted_at": null}},
-    {"id": 4, "value": "5000mAh", "property": {"id": 7, "title": "Battery", "deleted_at": null}},
-    {"id": 5, "value": "Snapdragon 870", "property": {"id": 8, "title": "Processor", "deleted_at": null}}
-  ],
-  "variants": [
     {
       "id": 1,
-      "sku": "motog100nimbusblue",
-      "price": 8999.00,
-      "compared_at_price": 9999.00,
-      "attributes": [
-        {"id": 1, "value": "Blue Nimbus", "attribute": {"id": 1, "title": "Color", "deleted_at": null}},
-        {"id": 2, "value": "128GB", "attribute": {"id": 2, "title": "Storage", "deleted_at": null}},
-        {"id": 3, "value": "8GB", "attribute": {"id": 3, "title": "RAM", "deleted_at": null}}
+      "title": "Moto G100",
+      "slug": "moto-g100",
+      "description": "Moto G100",
+      "is_featured": false,
+      "is_active": true,
+      "category": {
+        "id": 1,
+        "title": "Smartphones",
+        "slug": "smartphones",
+        "deleted_at": null
+      },
+      "properties": [
+        {
+          "id": 1,
+          "value": "Motorola",
+          "property": {
+            "id": 1,
+            "title": "Brand",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 2,
+          "value": "Moto G100",
+          "property": {
+            "id": 2,
+            "title": "Model",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 3,
+          "value": "6.7\"",
+          "property": {
+            "id": 6,
+            "title": "Display",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 4,
+          "value": "5000mAh",
+          "property": {
+            "id": 7,
+            "title": "Battery",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 5,
+          "value": "Snapdragon 870",
+          "property": {
+            "id": 8,
+            "title": "Processor",
+            "deleted_at": null
+          }
+        }
       ],
-      "images": [{"id": 1, "url": "motog100nimbusblue.jpg"}]
+      "variants": [
+        {
+          "id": 1,
+          "sku": "motog100nimbusblue",
+          "price": 8999.00,
+          "compared_at_price": 9999.00,
+          "attributes": [
+            {
+              "id": 1,
+              "value": "Blue Nimbus",
+              "attribute": {
+                "id": 1,
+                "title": "Color",
+                "deleted_at": null
+              }
+            },
+            {
+              "id": 2,
+              "value": "128GB",
+              "attribute": {
+                "id": 2,
+                "title": "Storage",
+                "deleted_at": null
+              }
+            },
+            {
+              "id": 3,
+              "value": "8GB",
+              "attribute": {
+                "id": 3,
+                "title": "RAM",
+                "deleted_at": null
+              }
+            }
+          ],
+          "images": [
+            {
+              "id": 1,
+              "url": "motog100nimbusblue.jpg"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "sku": "motog100borealgreen",
+          "price": 8999.00,
+          "compared_at_price": 9999.00,
+          "attributes": [
+            {
+              "id": 4,
+              "value": "Boreal Green",
+              "attribute": {
+                "id": 1,
+                "title": "Color",
+                "deleted_at": null
+              }
+            },
+            {
+              "id": 5,
+              "value": "128GB",
+              "attribute": {
+                "id": 2,
+                "title": "Storage",
+                "deleted_at": null
+              }
+            },
+            {
+              "id": 6,
+              "value": "8GB",
+              "attribute": {
+                "id": 3,
+                "title": "RAM",
+                "deleted_at": null
+              }
+            }
+          ],
+          "images": [
+            {
+              "id": 2,
+              "url": "motog100borealgreen.jpg"
+            }
+          ]
+        }
+      ],
+      "deleted_at": null
     },
     {
       "id": 2,
-      "sku": "motog100borealgreen",
-      "price": 8999.00,
-      "compared_at_price": 9999.00,
-      "attributes": [
-        {"id": 4, "value": "Boreal Green", "attribute": {"id": 1, "title": "Color", "deleted_at": null}},
-        {"id": 5, "value": "128GB", "attribute": {"id": 2, "title": "Storage", "deleted_at": null}},
-        {"id": 6, "value": "8GB", "attribute": {"id": 3, "title": "RAM", "deleted_at": null}}
+      "title": "Moto G60",
+      "slug": "moto-g60",
+      "description": "Moto G60",
+      "is_featured": true,
+      "is_active": true,
+      "category": {
+        "id": 1,
+        "title": "Smartphones",
+        "slug": "smartphones",
+        "deleted_at": null
+      },
+      "properties": [
+        {
+          "id": 6,
+          "value": "Motorola",
+          "property": {
+            "id": 1,
+            "title": "Brand",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 7,
+          "value": "Moto G60",
+          "property": {
+            "id": 2,
+            "title": "Model",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 8,
+          "value": "6.8\"",
+          "property": {
+            "id": 6,
+            "title": "Display",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 9,
+          "value": "6000mAh",
+          "property": {
+            "id": 7,
+            "title": "Battery",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 10,
+          "value": "Snapdragon 732G",
+          "property": {
+            "id": 8,
+            "title": "Processor",
+            "deleted_at": null
+          }
+        }
       ],
-      "images": [{"id": 2, "url": "motog100borealgreen.jpg"}]
+      "variants": [
+        {
+          "id": 3,
+          "sku": "motog60blue",
+          "price": 5499.00,
+          "compared_at_price": 5999.00,
+          "attributes": [
+            {
+              "id": 7,
+              "value": "Blue",
+              "attribute": {
+                "id": 1,
+                "title": "Color",
+                "deleted_at": null
+              }
+            },
+            {
+              "id": 8,
+              "value": "128GB",
+              "attribute": {
+                "id": 2,
+                "title": "Storage",
+                "deleted_at": null
+              }
+            },
+            {
+              "id": 9,
+              "value": "6GB",
+              "attribute": {
+                "id": 3,
+                "title": "RAM",
+                "deleted_at": null
+              }
+            }
+          ],
+          "images": [
+            {
+              "id": 3,
+              "url": "motog60blue.jpg"
+            }
+          ]
+        },
+        {
+          "id": 4,
+          "sku": "motog60grey",
+          "price": 5499.00,
+          "compared_at_price": 5999.00,
+          "attributes": [
+            {
+              "id": 10,
+              "value": "Grey",
+              "attribute": {
+                "id": 1,
+                "title": "Color",
+                "deleted_at": null
+              }
+            },
+            {
+              "id": 11,
+              "value": "128GB",
+              "attribute": {
+                "id": 2,
+                "title": "Storage",
+                "deleted_at": null
+              }
+            },
+            {
+              "id": 12,
+              "value": "6GB",
+              "attribute": {
+                "id": 3,
+                "title": "RAM",
+                "deleted_at": null
+              }
+            }
+          ],
+          "images": [
+            {
+              "id": 4,
+              "url": "motog60grey.jpg"
+            }
+          ]
+        }
+      ],
+      "deleted_at": null
     }
-  ],
-  "deleted_at": null
-},
-{
-  "id": 2,
-  "title": "Moto G60",
-  "slug": "moto-g60",
-  "description": "Moto G60",
-  "is_featured": true,
-  "is_active": true,
-  "category": {"id": 1, "title": "Smartphones", "slug": "smartphones", "deleted_at": null},
-  "properties": [
-    {"id": 6, "value": "Motorola", "property": {"id": 1, "title": "Brand", "deleted_at": null}},
-    {"id": 7, "value": "Moto G60", "property": {"id": 2, "title": "Model", "deleted_at": null}},
-    {"id": 8, "value": "6.8\"", "property": {"id": 6, "title": "Display", "deleted_at": null}},
-    {"id": 9, "value": "6000mAh", "property": {"id": 7, "title": "Battery", "deleted_at": null}},
-    {"id": 10, "value": "Snapdragon 732G", "property": {"id": 8, "title": "Processor", "deleted_at": null}}
-  ],
-  "variants": [
-    {
-      "id": 3,
-      "sku": "motog60blue",
-      "price": 5499.00,
-      "compared_at_price": 5999.00,
-      "attributes": [
-        {"id": 7, "value": "Blue", "attribute": {"id": 1, "title": "Color", "deleted_at": null}},
-        {"id": 8, "value": "128GB", "attribute": {"id": 2, "title": "Storage", "deleted_at": null}},
-        {"id": 9, "value": "6GB", "attribute": {"id": 3, "title": "RAM", "deleted_at": null}}
-      ],
-      "images": [{"id": 3, "url": "motog60blue.jpg"}]
-    },
-    {
-      "id": 4,
-      "sku": "motog60grey",
-      "price": 5499.00,
-      "compared_at_price": 5999.00,
-      "attributes": [
-        {"id": 10, "value": "Grey", "attribute": {"id": 1, "title": "Color", "deleted_at": null}},
-        {"id": 11, "value": "128GB", "attribute": {"id": 2, "title": "Storage", "deleted_at": null}},
-        {"id": 12, "value": "6GB", "attribute": {"id": 3, "title": "RAM", "deleted_at": null}}
-      ],
-      "images": [{"id": 4, "url": "motog60grey.jpg"}]
-    }
-  ],
-  "deleted_at": null
-}
   ],
   "pagination": {
     "page": 0,

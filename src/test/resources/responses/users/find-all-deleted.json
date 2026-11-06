@@ -6,7 +6,13 @@
       "last_name": "Flores Rivera",
       "email": "guadalupe.flores@e-comerce.com",
       "status": "DELETED",
-      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+      "roles": [
+        {
+          "id": 1,
+          "name": "ADMIN",
+          "description": "Admin user role"
+        }
+      ]
     },
     {
       "id": 32,
@@ -14,7 +20,13 @@
       "last_name": "Cervantes Tapia",
       "email": "fatima.cervantes@e-comerce.com",
       "status": "DELETED",
-      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+      "roles": [
+        {
+          "id": 1,
+          "name": "ADMIN",
+          "description": "Admin user role"
+        }
+      ]
     },
     {
       "id": 33,
@@ -22,7 +34,13 @@
       "last_name": "Mejía Villanueva",
       "email": "marco.mejia@e-comerce.com",
       "status": "DELETED",
-      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+      "roles": [
+        {
+          "id": 1,
+          "name": "ADMIN",
+          "description": "Admin user role"
+        }
+      ]
     },
     {
       "id": 40,
@@ -30,7 +48,13 @@
       "last_name": "Zúñiga Montoya",
       "email": "monica.zuniga@e-comerce.com",
       "status": "DELETED",
-      "roles": [{"id": 1, "name": "ADMIN", "description": "Admin user role"}]
+      "roles": [
+        {
+          "id": 1,
+          "name": "ADMIN",
+          "description": "Admin user role"
+        }
+      ]
     }
   ],
   "pagination": {

@@ -1,8 +1,23 @@
 {
   "items": [
-    {"id": 4, "title": "Tablets", "slug": "tablets", "deleted_at": null},
-    {"id": 5, "title": "Smartwatches", "slug": "smartwatches", "deleted_at": null},
-    {"id": 6, "title": "Laptops", "slug": "laptops", "deleted_at": null}
+    {
+      "id": 4,
+      "title": "Tablets",
+      "slug": "tablets",
+      "deleted_at": null
+    },
+    {
+      "id": 5,
+      "title": "Smartwatches",
+      "slug": "smartwatches",
+      "deleted_at": null
+    },
+    {
+      "id": 6,
+      "title": "Laptops",
+      "slug": "laptops",
+      "deleted_at": null
+    }
   ],
   "pagination": {
     "page": 1,

@@ -5,13 +5,58 @@
   "description": "Moto G100",
   "is_featured": false,
   "is_active": true,
-  "category": {"id": 1, "title": "Smartphones", "slug": "smartphones", "deleted_at": null},
+  "category": {
+    "id": 1,
+    "title": "Smartphones",
+    "slug": "smartphones",
+    "deleted_at": null
+  },
   "properties": [
-    {"id": 1, "value": "Motorola", "property": {"id": 1, "title": "Brand", "deleted_at": null}},
-    {"id": 2, "value": "Moto G100", "property": {"id": 2, "title": "Model", "deleted_at": null}},
-    {"id": 3, "value": "6.7\"", "property": {"id": 6, "title": "Display", "deleted_at": null}},
-    {"id": 4, "value": "5000mAh", "property": {"id": 7, "title": "Battery", "deleted_at": null}},
-    {"id": 5, "value": "Snapdragon 870", "property": {"id": 8, "title": "Processor", "deleted_at": null}}
+    {
+      "id": 1,
+      "value": "Motorola",
+      "property": {
+        "id": 1,
+        "title": "Brand",
+        "deleted_at": null
+      }
+    },
+    {
+      "id": 2,
+      "value": "Moto G100",
+      "property": {
+        "id": 2,
+        "title": "Model",
+        "deleted_at": null
+      }
+    },
+    {
+      "id": 3,
+      "value": "6.7\"",
+      "property": {
+        "id": 6,
+        "title": "Display",
+        "deleted_at": null
+      }
+    },
+    {
+      "id": 4,
+      "value": "5000mAh",
+      "property": {
+        "id": 7,
+        "title": "Battery",
+        "deleted_at": null
+      }
+    },
+    {
+      "id": 5,
+      "value": "Snapdragon 870",
+      "property": {
+        "id": 8,
+        "title": "Processor",
+        "deleted_at": null
+      }
+    }
   ],
   "variants": [
     {
@@ -20,11 +65,40 @@
       "price": 8999.00,
       "compared_at_price": 9999.00,
       "attributes": [
-        {"id": 1, "value": "Blue Nimbus", "attribute": {"id": 1, "title": "Color", "deleted_at": null}},
-        {"id": 2, "value": "128GB", "attribute": {"id": 2, "title": "Storage", "deleted_at": null}},
-        {"id": 3, "value": "8GB", "attribute": {"id": 3, "title": "RAM", "deleted_at": null}}
+        {
+          "id": 1,
+          "value": "Blue Nimbus",
+          "attribute": {
+            "id": 1,
+            "title": "Color",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 2,
+          "value": "128GB",
+          "attribute": {
+            "id": 2,
+            "title": "Storage",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 3,
+          "value": "8GB",
+          "attribute": {
+            "id": 3,
+            "title": "RAM",
+            "deleted_at": null
+          }
+        }
       ],
-      "images": [{"id": 1, "url": "motog100nimbusblue.jpg"}]
+      "images": [
+        {
+          "id": 1,
+          "url": "motog100nimbusblue.jpg"
+        }
+      ]
     },
     {
       "id": 2,
@@ -32,11 +106,40 @@
       "price": 8999.00,
       "compared_at_price": 9999.00,
       "attributes": [
-        {"id": 4, "value": "Boreal Green", "attribute": {"id": 1, "title": "Color", "deleted_at": null}},
-        {"id": 5, "value": "128GB", "attribute": {"id": 2, "title": "Storage", "deleted_at": null}},
-        {"id": 6, "value": "8GB", "attribute": {"id": 3, "title": "RAM", "deleted_at": null}}
+        {
+          "id": 4,
+          "value": "Boreal Green",
+          "attribute": {
+            "id": 1,
+            "title": "Color",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 5,
+          "value": "128GB",
+          "attribute": {
+            "id": 2,
+            "title": "Storage",
+            "deleted_at": null
+          }
+        },
+        {
+          "id": 6,
+          "value": "8GB",
+          "attribute": {
+            "id": 3,
+            "title": "RAM",
+            "deleted_at": null
+          }
+        }
       ],
-      "images": [{"id": 2, "url": "motog100borealgreen.jpg"}]
+      "images": [
+        {
+          "id": 2,
+          "url": "motog100borealgreen.jpg"
+        }
+      ]
     }
   ],
   "deleted_at": null
